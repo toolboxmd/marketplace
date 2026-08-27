@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.2] - 2026-08-27
+
+### Changed
+
+- Pin karpathy-wiki to 0.7.0 (schema-proposals retired).
+
 ## [0.1.1] - 2026-08-27
 
 ### Changed
