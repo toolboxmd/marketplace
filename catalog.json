@@ -10,21 +10,21 @@
       "name": "karpathy-wiki",
       "description": "Auto-maintained LLM wiki based on Andrej Karpathy's pattern.",
       "github": "toolboxmd/karpathy-wiki",
-      "sha": "9ac033a36104c13288141f9ad307d118ec39175d",
+      "sha": "ece193919db55c1c9c7cf9bae66bf8a32ff79b33",
       "category": "Developer Tools"
     },
     {
       "name": "use-grok",
       "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
       "github": "toolboxmd/use-grok",
-      "sha": "3fc4615af127bd07155de1b16cc137b56e5d4059",
+      "sha": "a8ae6ab3c862de836ca576276a221610e3fe274c",
       "category": "Developer Tools"
     },
     {
       "name": "agentsmd",
       "description": "Portable agent rules and deterministic repository version control.",
       "github": "toolboxmd/agentsmd",
-      "sha": "b465da008f9f2a91229be6c87663c8b280eccb8c",
+      "sha": "8fdb55f45b75905031ad6b2f5df07bd729164825",
       "category": "Developer Tools"
     }
   ]

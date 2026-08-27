@@ -12,7 +12,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/karpathy-wiki.git",
-        "sha": "9ac033a36104c13288141f9ad307d118ec39175d"
+        "sha": "ece193919db55c1c9c7cf9bae66bf8a32ff79b33"
       },
       "homepage": "https://github.com/toolboxmd/karpathy-wiki"
     },
@@ -23,7 +23,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/use-grok.git",
-        "sha": "3fc4615af127bd07155de1b16cc137b56e5d4059"
+        "sha": "a8ae6ab3c862de836ca576276a221610e3fe274c"
       },
       "homepage": "https://github.com/toolboxmd/use-grok"
     },
@@ -34,7 +34,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agentsmd.git",
-        "sha": "b465da008f9f2a91229be6c87663c8b280eccb8c"
+        "sha": "8fdb55f45b75905031ad6b2f5df07bd729164825"
       },
       "homepage": "https://github.com/toolboxmd/agentsmd"
     }

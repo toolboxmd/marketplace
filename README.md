@@ -128,4 +128,4 @@ bash tests/run-all.sh
 
 ## Version
 
-0.1.0. This repository versions the catalog, not the plugins.
+0.1.1. This repository versions the catalog, not the plugins.
