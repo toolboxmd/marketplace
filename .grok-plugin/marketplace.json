@@ -1,0 +1,42 @@
+{
+  "name": "toolboxmd",
+  "description": "Skills and plugins from toolbox.md.",
+  "owner": {
+    "name": "lukaszmaj"
+  },
+  "plugins": [
+    {
+      "name": "karpathy-wiki",
+      "description": "Auto-maintained LLM wiki based on Andrej Karpathy's pattern.",
+      "category": "developer-tools",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/toolboxmd/karpathy-wiki.git",
+        "sha": "9ac033a36104c13288141f9ad307d118ec39175d"
+      },
+      "homepage": "https://github.com/toolboxmd/karpathy-wiki"
+    },
+    {
+      "name": "use-grok",
+      "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
+      "category": "developer-tools",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/toolboxmd/use-grok.git",
+        "sha": "3fc4615af127bd07155de1b16cc137b56e5d4059"
+      },
+      "homepage": "https://github.com/toolboxmd/use-grok"
+    },
+    {
+      "name": "agentsmd",
+      "description": "Portable agent rules and deterministic repository version control.",
+      "category": "developer-tools",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/toolboxmd/agentsmd.git",
+        "sha": "b465da008f9f2a91229be6c87663c8b280eccb8c"
+      },
+      "homepage": "https://github.com/toolboxmd/agentsmd"
+    }
+  ]
+}
