@@ -22,9 +22,10 @@
     },
     {
       "name": "agentsmd",
-      "description": "Portable agent rules and deterministic repository version control.",
+      "description": "Portable agent rules and an owned workflow Skill Catalogue.",
       "github": "toolboxmd/agentsmd",
-      "sha": "8fdb55f45b75905031ad6b2f5df07bd729164825",
+      "release": "v3.0.0",
+      "sha": "614775091d5eb4bbd5e163ef79d3d344eeebd97c",
       "category": "Developer Tools"
     }
   ]

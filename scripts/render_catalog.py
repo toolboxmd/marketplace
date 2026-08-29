@@ -24,6 +24,28 @@ def git_url(plugin: dict) -> str:
     return f"https://github.com/{plugin['github']}.git"
 
 
+def codex_git_source(plugin: dict) -> dict:
+    source = {
+        "source": "url",
+        "url": git_url(plugin),
+        "sha": plugin["sha"],
+    }
+    if release := plugin.get("release"):
+        source["ref"] = release
+    return source
+
+
+def claude_git_source(plugin: dict) -> dict:
+    source = {
+        "source": "github",
+        "repo": plugin["github"],
+        "sha": plugin["sha"],
+    }
+    if release := plugin.get("release"):
+        source["ref"] = release
+    return source
+
+
 def published_codex(catalog: dict) -> dict:
     return {
         "name": catalog["name"],
@@ -32,7 +54,7 @@ def published_codex(catalog: dict) -> dict:
             {
                 "name": plugin["name"],
                 "description": plugin["description"],
-                "source": {"source": "url", "url": git_url(plugin)},
+                "source": codex_git_source(plugin),
                 "policy": {
                     "installation": "AVAILABLE",
                     "authentication": "ON_INSTALL",
@@ -53,7 +75,7 @@ def published_claude(catalog: dict) -> dict:
             {
                 "name": plugin["name"],
                 "description": plugin["description"],
-                "source": {"source": "github", "repo": plugin["github"]},
+                "source": claude_git_source(plugin),
             }
             for plugin in catalog["plugins"]
         ],

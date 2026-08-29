@@ -12,7 +12,8 @@
       "description": "Auto-maintained LLM wiki based on Andrej Karpathy's pattern.",
       "source": {
         "source": "github",
-        "repo": "toolboxmd/karpathy-wiki"
+        "repo": "toolboxmd/karpathy-wiki",
+        "sha": "d8107e727f4b585a9927cad813f90fda6b559ef3"
       }
     },
     {
@@ -20,15 +21,18 @@
       "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
       "source": {
         "source": "github",
-        "repo": "toolboxmd/use-grok"
+        "repo": "toolboxmd/use-grok",
+        "sha": "a8ae6ab3c862de836ca576276a221610e3fe274c"
       }
     },
     {
       "name": "agentsmd",
-      "description": "Portable agent rules and deterministic repository version control.",
+      "description": "Portable agent rules and an owned workflow Skill Catalogue.",
       "source": {
         "source": "github",
-        "repo": "toolboxmd/agentsmd"
+        "repo": "toolboxmd/agentsmd",
+        "sha": "614775091d5eb4bbd5e163ef79d3d344eeebd97c",
+        "ref": "v3.0.0"
       }
     }
   ]

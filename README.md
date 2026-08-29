@@ -87,16 +87,20 @@ Codex local sources stay inside that sibling root (`./karpathy-wiki`, and so
 on). Grok and Claude indexes for local-dev use the same names and in-root
 paths.
 
-## Refresh Grok pins
+## Refresh plugin pins
 
-Published Grok sources are git URLs pinned to a full commit sha. After a plugin
-release is on GitHub:
+Published Codex, Claude Code, and Grok Build sources are pinned to the full
+commit SHA recorded in `catalog.json`. A tagged release may also record its tag
+in `release`; Codex and Claude then verify both selectors. After a plugin
+release is on GitHub, set or update `release` when applicable, then run:
 
 ```bash
 python3 scripts/refresh_pins.py
 ```
 
-Commit the updated `catalog.json` and rendered indexes.
+Commit the updated `catalog.json` and rendered indexes. Entries without a
+`release` resolve the repository `HEAD` only when this explicit refresh command
+runs.
 
 ## Add a plugin
 
@@ -128,4 +132,4 @@ bash tests/run-all.sh
 
 ## Version
 
-0.1.2. This repository versions the catalog, not the plugins.
+0.2.0. This repository versions the catalog, not the plugins.

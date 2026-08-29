@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.0] - 2026-08-30
+
+### Added
+
+- Pin published plugin sources to immutable release identities
+
 ## [0.1.2] - 2026-08-27
 
 ### Changed
