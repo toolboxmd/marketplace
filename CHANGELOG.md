@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2026-08-30
+
+### Changed
+
+- Establish Marketplace direction and discovery research
+
 ## [0.2.0] - 2026-08-30
 
 ### Added
