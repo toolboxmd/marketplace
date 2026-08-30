@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import subprocess
@@ -10,8 +11,16 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
+REFRESH_SPEC = importlib.util.spec_from_file_location(
+    "marketplace_refresh_pins", ROOT / "scripts" / "refresh_pins.py"
+)
+assert REFRESH_SPEC and REFRESH_SPEC.loader
+refresh_pins = importlib.util.module_from_spec(REFRESH_SPEC)
+REFRESH_SPEC.loader.exec_module(refresh_pins)
 CATALOG = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd")
@@ -52,17 +61,29 @@ class PublishedCatalogTests(unittest.TestCase):
 
         for plugin in codex["plugins"]:
             source = plugin["source"]
+            catalog_plugin = by_name[plugin["name"]]
             self.assertEqual(source["source"], "url")
             self.assertEqual(
                 source["url"],
-                f"https://github.com/{by_name[plugin['name']]['github']}.git",
+                f"https://github.com/{catalog_plugin['github']}.git",
             )
+            self.assertEqual(source["sha"], catalog_plugin["sha"])
+            if release := catalog_plugin.get("release"):
+                self.assertEqual(source["ref"], release)
+            else:
+                self.assertNotIn("ref", source)
             self.assertFalse(_outside_root(source.get("path", "./ok")))
 
         for plugin in claude["plugins"]:
             source = plugin["source"]
+            catalog_plugin = by_name[plugin["name"]]
             self.assertEqual(source["source"], "github")
-            self.assertEqual(source["repo"], by_name[plugin["name"]]["github"])
+            self.assertEqual(source["repo"], catalog_plugin["github"])
+            self.assertEqual(source["sha"], catalog_plugin["sha"])
+            if release := catalog_plugin.get("release"):
+                self.assertEqual(source["ref"], release)
+            else:
+                self.assertNotIn("ref", source)
 
         for plugin in grok["plugins"]:
             source = plugin["source"]
@@ -73,6 +94,23 @@ class PublishedCatalogTests(unittest.TestCase):
             )
             self.assertRegex(source["sha"], SHA_RE)
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
+
+    def test_agentsmd_v3_release_identity(self) -> None:
+        agentsmd_sha = "614775091d5eb4bbd5e163ef79d3d344eeebd97c"
+        agentsmd = next(p for p in CATALOG["plugins"] if p["name"] == "agentsmd")
+        self.assertEqual(agentsmd["release"], "v3.0.0")
+        self.assertEqual(agentsmd["sha"], agentsmd_sha)
+
+        for index_path in (
+            ".agents/plugins/marketplace.json",
+            ".claude-plugin/marketplace.json",
+            ".grok-plugin/marketplace.json",
+        ):
+            index = _load(index_path)
+            source = next(
+                p["source"] for p in index["plugins"] if p["name"] == "agentsmd"
+            )
+            self.assertEqual(source["sha"], agentsmd_sha)
 
 
 class LocalCatalogTests(unittest.TestCase):
@@ -107,6 +145,36 @@ class LocalCatalogTests(unittest.TestCase):
                     self.assertTrue(path.startswith("./"), path)
                     self.assertFalse(_outside_root(path), path)
                     self.assertEqual(path, f"./{plugin['name']}")
+
+
+class RefreshPinTests(unittest.TestCase):
+    @patch.object(refresh_pins.subprocess, "run")
+    def test_annotated_release_resolves_to_peeled_commit(self, run) -> None:
+        release_commit = "614775091d5eb4bbd5e163ef79d3d344eeebd97c"
+        run.return_value = SimpleNamespace(
+            stdout=(
+                "eb158d1bd5c445121709009271388fb97cbe5c8f\t"
+                "refs/tags/v3.0.0\n"
+                f"{release_commit}\trefs/tags/v3.0.0^{{}}\n"
+            )
+        )
+
+        self.assertEqual(
+            refresh_pins.ls_remote_sha("toolboxmd/agentsmd", "v3.0.0"),
+            release_commit,
+        )
+        run.assert_called_once_with(
+            [
+                "git",
+                "ls-remote",
+                "https://github.com/toolboxmd/agentsmd.git",
+                "refs/tags/v3.0.0",
+                "refs/tags/v3.0.0^{}",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
 
 
 if __name__ == "__main__":
