@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 2026-08-31
+
+### Added
+
+- Add Project Record v1 and atomic manual ingestion
+
 ## [0.2.2] - 2026-08-31
 
 ### Changed

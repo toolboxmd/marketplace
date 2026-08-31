@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/toolboxmd/marketplace/v0.3.0/schemas/project-record-v1.schema.json",
+  "title": "ToolboxMD Project Record v1",
+  "description": "A minimal index over authoritative facts in one released Project tree.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "id",
+    "kind",
+    "outcome",
+    "factSources"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/toolboxmd/marketplace/v0.3.0/schemas/project-record-v1.schema.json"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "kind": {
+      "const": "agent-module"
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "factSources": {
+      "$ref": "#/$defs/factSources"
+    }
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    },
+    "paths": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/path"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "factSources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "delivery",
+        "documentation"
+      ],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/path"
+        },
+        "delivery": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/path"
+          },
+          "minProperties": 1
+        },
+        "skills": {
+          "$ref": "#/$defs/paths"
+        },
+        "documentation": {
+          "$ref": "#/$defs/paths"
+        },
+        "requirements": {
+          "$ref": "#/$defs/paths"
+        },
+        "proof": {
+          "$ref": "#/$defs/paths"
+        }
+      }
+    }
+  }
+}

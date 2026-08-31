@@ -1,18 +1,17 @@
 # Objective
 
-Make AgentsMD v5.0.0 the first Agent Module delivered end to end through the
-ToolboxMD discovery and distribution system, including Cursor support.
+Make AgentsMD the first Agent Module delivered end to end through the ToolboxMD
+discovery and distribution system, beginning with a project-owned released
+Project Record and including Cursor support.
 
 The Objective is complete when:
 
-- The stale public Marketplace record is replaced with outcome-accurate
-  AgentsMD v5.0.0 metadata and exact release provenance for commit
-  `b80dbf425bac2208992702f824950c8cba466fef`.
-- The corrected Marketplace patch is released first, without changing the
-  approved releases of `use-grok` or `karpathy-wiki`.
-- One released Project Record defines AgentsMD identity, version, immutable
-  source, outcomes, capabilities, Skills, dependencies, permissions,
-  documentation, supported harnesses, and required proof.
+- A released AgentsMD version contains a valid Project Record defining its
+  identity, version, release ref, outcomes, capabilities, Skills, dependencies,
+  permissions, documentation, supported harnesses, and required proof.
+- Marketplace ingests that exact record, records its release tag, peeled commit,
+  and record digest, and publishes it without changing the approved releases of
+  `use-grok` or `karpathy-wiki`.
 - Codex, Claude Code, and Grok Build distributions resolve the immutable
   AgentsMD release through their native source contracts.
 - A Cursor Plugin is generated from the same recorded release, preserves its
@@ -39,4 +38,4 @@ The Objective is complete when:
 
 Migrating other ToolboxMD Projects, admitting third-party Projects, creating a
 separate distribution service, centralizing every Project's deployment, and
-changing the released AgentsMD v5.0.0 artifact are outside this Objective.
+changing an already released AgentsMD artifact are outside this Objective.

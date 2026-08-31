@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/toolboxmd/marketplace/v0.3.0/schemas/project-record-v1.schema.json",
+  "id": "fixture-agent",
+  "kind": "agent-module",
+  "outcome": "Coordinate fixture work through one trusted agent workflow.",
+  "factSources": {
+    "version": "VERSION",
+    "delivery": {
+      "codex": ".codex-plugin/plugin.json",
+      "claude-code": ".claude-plugin/plugin.json",
+      "grok-build": ".grok-plugin/plugin.json"
+    },
+    "skills": [
+      "skills/example/SKILL.md"
+    ],
+    "documentation": [
+      "README.md"
+    ],
+    "proof": [
+      "tests/run-all.sh"
+    ]
+  }
+}

@@ -102,6 +102,24 @@ Commit the updated `catalog.json` and rendered indexes. Entries without a
 `release` resolve the repository `HEAD` only when this explicit refresh command
 runs.
 
+## Ingest a released Project Record
+
+Project Record v1 lets a released Project point to its existing authoritative
+version, delivery, Skill, documentation, requirement, and proof files without
+copying those facts into Marketplace.
+
+After the Project publishes a conforming immutable release, run:
+
+```bash
+python3 scripts/ingest_project.py <project-id> <release-tag>
+```
+
+The command reads repository membership from `catalog.json`, resolves the exact
+tag, validates the record and every referenced file from the same Git tree, and
+only then updates the catalog and all three host indexes. See
+[`docs/project-record-v1.md`](docs/project-record-v1.md) for the contract,
+deterministic local acceptance, and delivery-state boundaries.
+
 ## Add a plugin
 
 1. Give the plugin repo Codex, Claude, and Grok plugin manifests. Name is the
@@ -125,6 +143,8 @@ bash tests/run-all.sh
 ## Layout
 
 - `catalog.json` is the source of truth for membership and Grok pins.
+- `schemas/project-record-v1.schema.json` defines the minimal released record.
+- `scripts/ingest_project.py` validates and accepts one immutable release.
 - `.agents/plugins/marketplace.json` is the Codex index.
 - `.claude-plugin/marketplace.json` is the Claude Code index.
 - `.grok-plugin/marketplace.json` is the Grok Build index.
@@ -132,4 +152,5 @@ bash tests/run-all.sh
 
 ## Version
 
-0.2.0. This repository versions the catalog, not the plugins.
+`VERSION` is canonical. This repository versions the catalog and ingestion
+contract, not the Projects it distributes.

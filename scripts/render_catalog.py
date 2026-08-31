@@ -155,10 +155,17 @@ def local_grok(catalog: dict) -> dict:
     }
 
 
-def render_published(catalog: dict) -> None:
-    dump(ROOT / ".agents/plugins/marketplace.json", published_codex(catalog))
-    dump(ROOT / ".claude-plugin/marketplace.json", published_claude(catalog))
-    dump(ROOT / ".grok-plugin/marketplace.json", published_grok(catalog))
+def published_documents(catalog: dict) -> dict[str, dict]:
+    return {
+        ".agents/plugins/marketplace.json": published_codex(catalog),
+        ".claude-plugin/marketplace.json": published_claude(catalog),
+        ".grok-plugin/marketplace.json": published_grok(catalog),
+    }
+
+
+def render_published(catalog: dict, root: Path = ROOT) -> None:
+    for relative_path, document in published_documents(catalog).items():
+        dump(root / relative_path, document)
 
 
 def render_local(catalog: dict, local_root: Path) -> None:
