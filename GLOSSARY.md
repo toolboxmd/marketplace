@@ -54,9 +54,13 @@ implementation documentation.
 
 ## Project Record
 
-A machine-readable record released by a Project. It states identity, version,
-immutable source, outcomes, capabilities, delivery forms, dependencies,
-permissions, documentation, compatibility, and proof.
+A minimal machine-readable index released by a Project. It identifies the
+Project, states the outcome it provides, and points to the released files that
+own version, delivery, Skill, documentation, requirement, and proof facts.
+
+The Project Record does not duplicate facts that already have an authoritative
+owner in the same released Git tree. Marketplace supplies and records the
+immutable release provenance.
 
 ## Agent Search Optimization
 
