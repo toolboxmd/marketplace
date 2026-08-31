@@ -1,0 +1,21 @@
+{
+  "name": "agentsmd",
+  "displayName": "AgentsMD Workflow Suite",
+  "version": "5.1.0",
+  "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
+  "author": {
+    "name": "lukaszmaj"
+  },
+  "homepage": "https://github.com/toolboxmd/agentsmd#readme",
+  "repository": "https://github.com/toolboxmd/agentsmd",
+  "license": "MIT",
+  "keywords": [
+    "agents",
+    "git",
+    "semver",
+    "skills",
+    "version-control",
+    "workflow"
+  ],
+  "skills": "./skills/"
+}

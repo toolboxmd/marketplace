@@ -1,0 +1,17 @@
+{
+  "name": "toolboxmd",
+  "owner": {
+    "name": "lukaszmaj"
+  },
+  "metadata": {
+    "description": "Skills and plugins from toolbox.md."
+  },
+  "plugins": [
+    {
+      "name": "agentsmd",
+      "source": "./plugins/agentsmd",
+      "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
+      "version": "5.1.0"
+    }
+  ]
+}

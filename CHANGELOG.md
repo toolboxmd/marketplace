@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0] - 2026-08-31
+
+### Added
+
+- Add deterministic AgentsMD Cursor Plugin generation
+
 ## [0.3.1] - 2026-08-31
 
 ### Changed
