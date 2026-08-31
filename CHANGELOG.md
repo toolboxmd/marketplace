@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-08-31
+
+### Changed
+
+- Publish AgentsMD v5.0.0 metadata and immutable host pins
+
 ## [0.2.1] - 2026-08-30
 
 ### Changed
