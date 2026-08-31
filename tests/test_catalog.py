@@ -95,22 +95,39 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertRegex(source["sha"], SHA_RE)
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
 
-    def test_agentsmd_v3_release_identity(self) -> None:
-        agentsmd_sha = "614775091d5eb4bbd5e163ef79d3d344eeebd97c"
-        agentsmd = next(p for p in CATALOG["plugins"] if p["name"] == "agentsmd")
-        self.assertEqual(agentsmd["release"], "v3.0.0")
-        self.assertEqual(agentsmd["sha"], agentsmd_sha)
+    def test_issue_4_release_snapshot(self) -> None:
+        agentsmd_sha = "b80dbf425bac2208992702f824950c8cba466fef"
+        agentsmd_description = (
+            "Align agent work with mission, Project Direction, and an "
+            "evidence-driven delivery workflow."
+        )
+        by_name = {p["name"]: p for p in CATALOG["plugins"]}
 
-        for index_path in (
-            ".agents/plugins/marketplace.json",
-            ".claude-plugin/marketplace.json",
-            ".grok-plugin/marketplace.json",
+        self.assertEqual(by_name["agentsmd"]["release"], "v5.0.0")
+        self.assertEqual(by_name["agentsmd"]["sha"], agentsmd_sha)
+        self.assertEqual(by_name["agentsmd"]["description"], agentsmd_description)
+        self.assertEqual(
+            by_name["use-grok"]["sha"],
+            "a8ae6ab3c862de836ca576276a221610e3fe274c",
+        )
+        self.assertEqual(
+            by_name["karpathy-wiki"]["sha"],
+            "d8107e727f4b585a9927cad813f90fda6b559ef3",
+        )
+
+        for index_path, records_release in (
+            (".agents/plugins/marketplace.json", True),
+            (".claude-plugin/marketplace.json", True),
+            (".grok-plugin/marketplace.json", False),
         ):
             index = _load(index_path)
-            source = next(
-                p["source"] for p in index["plugins"] if p["name"] == "agentsmd"
-            )
-            self.assertEqual(source["sha"], agentsmd_sha)
+            agentsmd = next(p for p in index["plugins"] if p["name"] == "agentsmd")
+            self.assertEqual(agentsmd["description"], agentsmd_description)
+            self.assertEqual(agentsmd["source"]["sha"], agentsmd_sha)
+            if records_release:
+                self.assertEqual(agentsmd["source"]["ref"], "v5.0.0")
+            else:
+                self.assertNotIn("ref", agentsmd["source"])
 
 
 class LocalCatalogTests(unittest.TestCase):
@@ -150,17 +167,17 @@ class LocalCatalogTests(unittest.TestCase):
 class RefreshPinTests(unittest.TestCase):
     @patch.object(refresh_pins.subprocess, "run")
     def test_annotated_release_resolves_to_peeled_commit(self, run) -> None:
-        release_commit = "614775091d5eb4bbd5e163ef79d3d344eeebd97c"
+        release_commit = "b80dbf425bac2208992702f824950c8cba466fef"
         run.return_value = SimpleNamespace(
             stdout=(
-                "eb158d1bd5c445121709009271388fb97cbe5c8f\t"
-                "refs/tags/v3.0.0\n"
-                f"{release_commit}\trefs/tags/v3.0.0^{{}}\n"
+                "217ba7ee7aba3290e16b221562581fbc200b41d8\t"
+                "refs/tags/v5.0.0\n"
+                f"{release_commit}\trefs/tags/v5.0.0^{{}}\n"
             )
         )
 
         self.assertEqual(
-            refresh_pins.ls_remote_sha("toolboxmd/agentsmd", "v3.0.0"),
+            refresh_pins.ls_remote_sha("toolboxmd/agentsmd", "v5.0.0"),
             release_commit,
         )
         run.assert_called_once_with(
@@ -168,8 +185,8 @@ class RefreshPinTests(unittest.TestCase):
                 "git",
                 "ls-remote",
                 "https://github.com/toolboxmd/agentsmd.git",
-                "refs/tags/v3.0.0",
-                "refs/tags/v3.0.0^{}",
+                "refs/tags/v5.0.0",
+                "refs/tags/v5.0.0^{}",
             ],
             check=True,
             capture_output=True,

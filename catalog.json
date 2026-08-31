@@ -22,10 +22,10 @@
     },
     {
       "name": "agentsmd",
-      "description": "Portable agent rules and an owned workflow Skill Catalogue.",
+      "description": "Align agent work with mission, Project Direction, and an evidence-driven delivery workflow.",
       "github": "toolboxmd/agentsmd",
-      "release": "v3.0.0",
-      "sha": "614775091d5eb4bbd5e163ef79d3d344eeebd97c",
+      "release": "v5.0.0",
+      "sha": "b80dbf425bac2208992702f824950c8cba466fef",
       "category": "Developer Tools"
     }
   ]
