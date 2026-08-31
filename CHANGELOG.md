@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1] - 2026-08-31
+
+### Changed
+
+- Publish AgentsMD v5.1.0 from its Project Record
+
 ## [0.3.0] - 2026-08-31
 
 ### Added

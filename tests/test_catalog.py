@@ -95,17 +95,28 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertRegex(source["sha"], SHA_RE)
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
 
-    def test_issue_4_release_snapshot(self) -> None:
-        agentsmd_sha = "b80dbf425bac2208992702f824950c8cba466fef"
+    def test_agentsmd_project_record_publication(self) -> None:
+        agentsmd_sha = "26db0720dc9de2552e2f640b9d83cee012459616"
         agentsmd_description = (
-            "Align agent work with mission, Project Direction, and an "
-            "evidence-driven delivery workflow."
+            "Align agent work with mission and Project Direction, then shape, "
+            "deliver, and prove valuable outcomes through owned workflows."
         )
         by_name = {p["name"]: p for p in CATALOG["plugins"]}
 
-        self.assertEqual(by_name["agentsmd"]["release"], "v5.0.0")
+        self.assertEqual(by_name["agentsmd"]["release"], "v5.1.0")
         self.assertEqual(by_name["agentsmd"]["sha"], agentsmd_sha)
         self.assertEqual(by_name["agentsmd"]["description"], agentsmd_description)
+        self.assertEqual(by_name["agentsmd"]["kind"], "agent-module")
+        self.assertEqual(
+            by_name["agentsmd"]["projectRecord"],
+            {
+                "path": ".toolboxmd/project.json",
+                "sha256": (
+                    "470d247d853f8ccd93bafb9ced45a3cb"
+                    "5e7eb22ab8371d6e6d9a7519ddfb323a"
+                ),
+            },
+        )
         self.assertEqual(
             by_name["use-grok"]["sha"],
             "a8ae6ab3c862de836ca576276a221610e3fe274c",
@@ -125,7 +136,7 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(agentsmd["description"], agentsmd_description)
             self.assertEqual(agentsmd["source"]["sha"], agentsmd_sha)
             if records_release:
-                self.assertEqual(agentsmd["source"]["ref"], "v5.0.0")
+                self.assertEqual(agentsmd["source"]["ref"], "v5.1.0")
             else:
                 self.assertNotIn("ref", agentsmd["source"])
 
