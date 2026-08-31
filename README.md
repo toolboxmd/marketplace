@@ -1,7 +1,9 @@
 # toolboxmd marketplace
 
-One catalog for ToolboxMD plugins. Codex, Claude Code, and Grok Build add this
-marketplace, then install the plugins they want:
+One catalog for ToolboxMD plugins. Codex, Claude Code, Grok Build, and Cursor
+load host-native distributions from the same accepted Project releases.
+Codex, Claude Code, and Grok Build add this marketplace, then install the
+plugins they want:
 
 - `karpathy-wiki@toolboxmd`
 - `use-grok@toolboxmd`
@@ -120,6 +122,31 @@ only then updates the catalog and all three host indexes. See
 [`docs/project-record-v1.md`](docs/project-record-v1.md) for the contract,
 deterministic local acceptance, and delivery-state boundaries.
 
+## Generate the AgentsMD Cursor Plugin
+
+Generate the Cursor multi-plugin manifest and the AgentsMD package from the
+accepted `catalog.json` release:
+
+```bash
+python3 scripts/render_cursor.py agentsmd
+```
+
+For deterministic offline proof against an existing exact Git source, add
+`--source /path/to/agentsmd`. The command verifies the accepted release commit
+and Project Record digest before replacing generated output. It copies the
+complete active Skill directories, required `versionctl` runtime, licences,
+and provenance from that release and writes the source hashes to
+`plugins/agentsmd/SOURCE.json`.
+
+The Cursor package intentionally does not include AgentsMD's global
+`AGENTS.md`, lifecycle hooks, or the Project Direction hook executable. Those
+behaviors require separate host-level proof. The package exposes the released
+Skills and their required resources only.
+
+Validate the result with the current official
+[`cursor/plugin-template`](https://github.com/cursor/plugin-template)
+validator before local installation or submission.
+
 ## Add a plugin
 
 1. Give the plugin repo Codex, Claude, and Grok plugin manifests. Name is the
@@ -148,7 +175,10 @@ bash tests/run-all.sh
 - `.agents/plugins/marketplace.json` is the Codex index.
 - `.claude-plugin/marketplace.json` is the Claude Code index.
 - `.grok-plugin/marketplace.json` is the Grok Build index.
+- `.cursor-plugin/marketplace.json` is the generated Cursor multi-plugin index.
+- `plugins/agentsmd/` is the generated Cursor-native AgentsMD package.
 - `scripts/render_catalog.py` writes those indexes (and local-dev indexes).
+- `scripts/render_cursor.py` validates provenance and writes Cursor output.
 
 ## Version
 

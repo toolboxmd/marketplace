@@ -1,5 +1,19 @@
 {
   "name": "fixture-agent",
   "version": "1.2.3",
-  "description": "Coordinate fixture work through one trusted agent workflow."
+  "description": "Coordinate fixture work through one trusted agent workflow.",
+  "author": {
+    "name": "Fixture Maintainer"
+  },
+  "homepage": "https://github.com/toolboxmd/fixture-agent#readme",
+  "repository": "https://github.com/toolboxmd/fixture-agent",
+  "license": "MIT",
+  "keywords": [
+    "fixture",
+    "workflow"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Fixture Agent"
+  }
 }
