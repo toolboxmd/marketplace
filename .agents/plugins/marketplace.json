@@ -34,12 +34,12 @@
     },
     {
       "name": "agentsmd",
-      "description": "Align agent work with mission, Project Direction, and an evidence-driven delivery workflow.",
+      "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agentsmd.git",
-        "sha": "b80dbf425bac2208992702f824950c8cba466fef",
-        "ref": "v5.0.0"
+        "sha": "26db0720dc9de2552e2f640b9d83cee012459616",
+        "ref": "v5.1.0"
       },
       "policy": {
         "installation": "AVAILABLE",
