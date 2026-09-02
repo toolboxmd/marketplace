@@ -24,8 +24,8 @@
       "name": "agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "github": "toolboxmd/agentsmd",
-      "release": "v5.1.0",
-      "sha": "26db0720dc9de2552e2f640b9d83cee012459616",
+      "release": "v6.0.0",
+      "sha": "8d4b528e6be9841288665424de4ba9f16c4a58f3",
       "category": "Developer Tools",
       "kind": "agent-module",
       "projectRecord": {

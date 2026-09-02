@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v5.1.0",
-  "commit": "26db0720dc9de2552e2f640b9d83cee012459616",
+  "release": "v6.0.0",
+  "commit": "8d4b528e6be9841288665424de4ba9f16c4a58f3",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "470d247d853f8ccd93bafb9ced45a3cb5e7eb22ab8371d6e6d9a7519ddfb323a"
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "fbcbbe8f944997878e609aa505ac30b1f1cea48ece918df8fa5f09d6452b84e1",
+      "sha256": "77bb17d7040e6c6d06be20d65be13b7d056f8a19fdeb042f038f9c72191f42b1",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "c0eacacd7e27bbf341d21e7e0e2997a363840a210d8e358d4babaebd765b5bfd",
+      "sha256": "54ef76332b31df830699e9d4138396885ab72bae260a034a81ff02bf32d8e90a",
       "mode": "100644"
     },
     {
@@ -131,7 +131,7 @@
     {
       "path": "skills/project-direction/SKILL.md",
       "source": "skills/project-direction/SKILL.md",
-      "sha256": "affd757bf63d407d468981a9d5296adc3fb9a5a3646e25f7342f1510babf32c4",
+      "sha256": "a261cb3cf27cca3b36cac8c26a2d1cf261c59ffd35d7731f78310c9cf4f0a089",
       "mode": "100644"
     },
     {
@@ -143,37 +143,37 @@
     {
       "path": "skills/project-direction/evals/evals.json",
       "source": "skills/project-direction/evals/evals.json",
-      "sha256": "f456158fcfaa047534bba77cfb30552f1056f87ea4e7aea827ef3425c9f41b9e",
+      "sha256": "bf54d8859db8709f20492bc057d8f4b87259a02eaeb48ee89d8e0f311f588235",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/evals/trigger-evals.json",
       "source": "skills/project-direction/evals/trigger-evals.json",
-      "sha256": "05b8b2d300594858e28f584569f630551f2698399ec98345dae3a76a0972864f",
+      "sha256": "39fec279cb0d3c8924ef73ac513996a8bd5fca778f65fc1043c52aef7af74c27",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/references/file-contracts.md",
       "source": "skills/project-direction/references/file-contracts.md",
-      "sha256": "7695f80e34e9a1c3dc1e24f2c5ad6e967ae407b70e5eec0b37615074fd3cbc54",
+      "sha256": "6f99beb57efeb3e132801c2383cae619156d806a4749901c27eb17d55f003a3d",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/templates/MISSION.md",
       "source": "skills/project-direction/templates/MISSION.md",
-      "sha256": "24cf194378df51a6f2b7ff6b6f6059a841b14dbdeba8c72fdc9ddcef0a7e1bf3",
+      "sha256": "00381e925d20d0f8c6584867c000677e104614b856a72c8f35e8ab319c1e8a95",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/templates/OBJECTIVE.md",
       "source": "skills/project-direction/templates/OBJECTIVE.md",
-      "sha256": "aa0f578453edb56d9a43000eab3d98223f6eba24b958671e3c5013e93ca1a467",
+      "sha256": "eea27d0557025c04b35e46c657d4dd38755da64fa1af351a5e230df82ea80777",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/templates/VISION.md",
       "source": "skills/project-direction/templates/VISION.md",
-      "sha256": "6e55d09329bad6a51a0628064c43035067d74b47716d96252639894eb2ab0202",
+      "sha256": "8081ad2dab69e157f7d6020745a463b6066a4c220d17f54a73e4f4686eff10a4",
       "mode": "100644"
     },
     {

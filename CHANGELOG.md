@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.1] - 2026-09-02
+
+### Changed
+
+- Publish AgentsMD v6.0.0 across ToolboxMD marketplace outputs
+
 ## [0.4.0] - 2026-08-31
 
 ### Added

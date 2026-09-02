@@ -96,14 +96,14 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
 
     def test_agentsmd_project_record_publication(self) -> None:
-        agentsmd_sha = "26db0720dc9de2552e2f640b9d83cee012459616"
+        agentsmd_sha = "8d4b528e6be9841288665424de4ba9f16c4a58f3"
         agentsmd_description = (
             "Align agent work with mission and Project Direction, then shape, "
             "deliver, and prove valuable outcomes through owned workflows."
         )
         by_name = {p["name"]: p for p in CATALOG["plugins"]}
 
-        self.assertEqual(by_name["agentsmd"]["release"], "v5.1.0")
+        self.assertEqual(by_name["agentsmd"]["release"], "v6.0.0")
         self.assertEqual(by_name["agentsmd"]["sha"], agentsmd_sha)
         self.assertEqual(by_name["agentsmd"]["description"], agentsmd_description)
         self.assertEqual(by_name["agentsmd"]["kind"], "agent-module")
@@ -136,7 +136,7 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(agentsmd["description"], agentsmd_description)
             self.assertEqual(agentsmd["source"]["sha"], agentsmd_sha)
             if records_release:
-                self.assertEqual(agentsmd["source"]["ref"], "v5.1.0")
+                self.assertEqual(agentsmd["source"]["ref"], "v6.0.0")
             else:
                 self.assertNotIn("ref", agentsmd["source"])
 
