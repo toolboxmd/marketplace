@@ -1,41 +1,33 @@
 # Objective
 
-Make AgentsMD the first Agent Module delivered end to end through the ToolboxMD
-discovery and distribution system, beginning with a project-owned released
-Project Record and including Cursor support.
+Make ToolboxMD Marketplace the reliable distribution path for immutable
+ToolboxMD Agent Module releases, beginning with automatic, least-authority
+promotion of the newest eligible AgentsMD release.
 
 The Objective is complete when:
 
-- A released AgentsMD version contains a valid Project Record defining its
-  identity, version, release ref, outcomes, capabilities, Skills, dependencies,
-  permissions, documentation, supported harnesses, and required proof.
-- Marketplace ingests that exact record, records its release tag, peeled commit,
-  and record digest, and publishes it without changing the approved releases of
-  `use-grok` or `karpathy-wiki`.
-- Codex, Claude Code, and Grok Build distributions resolve the immutable
-  AgentsMD release through their native source contracts.
-- A Cursor Plugin is generated from the same recorded release, preserves its
-  source commit and digest, passes Cursor packaging checks, and is submitted
-  through Cursor's reviewed publication path.
-- AgentsMD is submitted to the available public provider discovery surfaces:
-  the OpenAI Plugins Directory, Anthropic community marketplace, official xAI
-  marketplace, and Cursor Marketplace. Submission, approval, publication, and
-  availability are reported separately.
-- `toolbox.md` publishes one canonical AgentsMD Project page, a real
-  machine-readable agent discovery document, and a Vercel-compatible
-  `/.well-known/agent-skills/index.json` without presenting that extension as
-  part of the Agent Skills standard.
-- One stable bootstrap entry point detects a supported harness and installs the
-  approved ToolboxMD core through host-native adapters after one explicit trust
-  grant. It does not create duplicate native-plugin and copied-Skill
-  installations.
-- An Agent Search Optimization benchmark covers product-name, unnamed-outcome,
-  capability, workflow, and negative queries across provider-native surfaces,
-  toolbox.md, skills.sh, and fresh in-harness Skill selection.
-- Fresh isolated acceptance on Codex, Claude Code, Grok Build, and Cursor proves
-  the full discovery funnel: discoverable, understandable, installable,
-  loadable, and outcome-ready through a representative real task.
+- Toolybara has one narrowly authorized GitHub App identity installed only on
+  `toolboxmd/marketplace`, with only the minimum metadata, contents, and
+  pull-request permissions proven necessary.
+- GitHub-hosted event and scheduled reconciliation independently resolve the
+  newest eligible immutable AgentsMD release and create or update only
+  Toolybara's expected promotion branch and pull request.
+- Marketplace validation proves App identity, expected branch and pull request,
+  exact head SHA, newest eligible release, generated-file allowlist, catalog
+  validity, version transition, and valid, duplicate, missed, invalid, stale,
+  competing, serialized, and idempotent cases.
+- A trusted final workflow job rechecks the exact validated head and merges it
+  with a Toolybara installation token. Failure leaves the pull request open and
+  preserves the last-known-good Marketplace state.
+- The resulting Marketplace state has exactly one SemVer transition and is
+  published through its exact tag and GitHub Release.
+- The promoted AgentsMD Project Record and generated Codex, Claude Code, Grok
+  Build, and Cursor distributions agree on exact source identity while the
+  approved `use-grok` and `karpathy-wiki` releases remain unchanged.
+- Distribution, provider publication, installation, loading, behavioral Live
+  Verification, and website parity remain separately reported.
 
-Migrating other ToolboxMD Projects, admitting third-party Projects, creating a
-separate distribution service, centralizing every Project's deployment, and
-changing an already released AgentsMD artifact are outside this Objective.
+Toolybara authority over arbitrary pull requests, Marketplace control-plane
+policy, product websites, runtime deployment, provider-owned publication
+decisions, unrelated repositories, or broader credentials is outside this
+Objective.
