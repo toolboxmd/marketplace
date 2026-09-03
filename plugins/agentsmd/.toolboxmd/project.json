@@ -11,10 +11,14 @@
       "grok-build": ".grok-plugin/plugin.json"
     },
     "skills": [
+      "skills/algorithm/SKILL.md",
+      "skills/delivery-profile/SKILL.md",
       "skills/domain-modeling/SKILL.md",
       "skills/grill-with-docs/SKILL.md",
       "skills/grilling/SKILL.md",
       "skills/project-direction/SKILL.md",
+      "skills/prototype/SKILL.md",
+      "skills/research/SKILL.md",
       "skills/to-spec/SKILL.md",
       "skills/to-tickets/SKILL.md",
       "skills/use-grok/SKILL.md",
@@ -24,15 +28,35 @@
     ],
     "documentation": [
       "README.md",
-      "SKILL_CATALOGUE.md"
+      "SKILL_CATALOGUE.md",
+      "docs/adr/0001-persistent-host-automation.md"
     ],
     "requirements": [
       "AGENTS.md",
-      ".version-policy.json"
+      ".version-policy.json",
+      ".toolboxmd/delivery.json",
+      "schemas/delivery-v1.schema.json"
     ],
     "proof": [
+      "tests/delivery_continuation_validator.py",
+      "tests/fixtures/delivery_continuation_cases.json",
+      "tests/fixtures/delivery_finalization_cases.json",
+      "tests/fixtures/persistent_host_automation_cases.json",
+      "tests/fixtures/repository_reconciliation_cases.json",
+      "tests/fixtures/review_ready_stack_cases.json",
+      "tests/fixtures/specify_workflow_cases.json",
+      "tests/fixtures/workspace_isolation_cases.json",
+      "tests/persistent_host_automation_validator.py",
+      "tests/repository_reconciliation_validator.py",
+      "tests/test_delivery_continuation_contract.py",
+      "tests/test_delivery_profile.py",
+      "tests/test_delivery_system_contract.py",
+      "tests/test_global_instructions.py",
+      "tests/test_persistent_host_automation_contract.py",
       "tests/test_plugin_packaging.py",
       "tests/test_project_direction_loader.py",
+      "tests/test_release_dispatch_contract.py",
+      "tests/test_repository_reconciliation_contract.py",
       "tests/test_skill_contracts.py"
     ]
   }
