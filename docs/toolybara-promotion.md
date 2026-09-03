@@ -22,7 +22,7 @@ repository and `contents: write`:
 ```
 
 `client_payload.release_tag` is only a Wake Hint. Marketplace also reconciles
-hourly at minute 17 and can be dispatched manually. Every trigger runs in one
+hourly at minute 43 and can be dispatched manually. Every trigger runs in one
 non-cancelling concurrency group, so two releases cannot race through separate
 merge jobs.
 

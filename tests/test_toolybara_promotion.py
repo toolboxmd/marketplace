@@ -750,7 +750,7 @@ class WorkflowContractTests(unittest.TestCase):
             "repository_dispatch:",
             "agentsmd_release_published",
             "schedule:",
-            "cron: '17 * * * *'",
+            "cron: '43 * * * *'",
             "workflow_dispatch:",
             "group: toolybara-agentsmd-promotion",
             "cancel-in-progress: false",
