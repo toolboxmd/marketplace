@@ -183,6 +183,18 @@ scripts/bootstrap_toolybara.sh
 The wizard does not configure branch protection, rulesets, native auto-merge,
 automatic branch deletion, bypass actors, or any other repository setting.
 
+## Promote AgentsMD through Toolybara
+
+The GitHub-hosted promotion workflow reconciles each event and an hourly
+schedule against the newest independently validated AgentsMD release. It
+creates one generated Toolybara pull request, revalidates the exact head in a
+trusted final job, merges through the SHA-bound pull-request API, and publishes
+the corresponding Marketplace tag and GitHub Release.
+
+The exact event payload, generated-file allowlist, failure behavior, and proof
+contract are documented in
+[`docs/toolybara-promotion.md`](docs/toolybara-promotion.md).
+
 ## Layout
 
 - `catalog.json` is the source of truth for membership and Grok pins.
@@ -195,6 +207,7 @@ automatic branch deletion, bypass actors, or any other repository setting.
 - `plugins/agentsmd/` is the generated Cursor-native AgentsMD package.
 - `scripts/render_catalog.py` writes those indexes (and local-dev indexes).
 - `scripts/render_cursor.py` validates provenance and writes Cursor output.
+- `scripts/toolybara_promotion.py` reconciles and validates Toolybara promotion.
 
 ## Version
 

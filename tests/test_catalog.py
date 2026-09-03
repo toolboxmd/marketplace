@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import re
@@ -96,27 +97,47 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
 
     def test_agentsmd_project_record_publication(self) -> None:
-        agentsmd_sha = "26db0720dc9de2552e2f640b9d83cee012459616"
-        agentsmd_description = (
-            "Align agent work with mission and Project Direction, then shape, "
-            "deliver, and prove valuable outcomes through owned workflows."
-        )
+        generated_source = _load("plugins/agentsmd/SOURCE.json")
+        project_record = _load("plugins/agentsmd/.toolboxmd/project.json")
+        agentsmd_version = (ROOT / "plugins/agentsmd/VERSION").read_text().strip()
+        agentsmd_release = f"v{agentsmd_version}"
+        agentsmd_sha = generated_source["commit"]
+        agentsmd_description = project_record["outcome"]
         by_name = {p["name"]: p for p in CATALOG["plugins"]}
 
-        self.assertEqual(by_name["agentsmd"]["release"], "v5.1.0")
+        self.assertEqual(generated_source["project"], "agentsmd")
+        self.assertEqual(generated_source["release"], agentsmd_release)
+        self.assertRegex(agentsmd_sha, SHA_RE)
+        self.assertEqual(by_name["agentsmd"]["release"], agentsmd_release)
         self.assertEqual(by_name["agentsmd"]["sha"], agentsmd_sha)
         self.assertEqual(by_name["agentsmd"]["description"], agentsmd_description)
         self.assertEqual(by_name["agentsmd"]["kind"], "agent-module")
         self.assertEqual(
             by_name["agentsmd"]["projectRecord"],
-            {
-                "path": ".toolboxmd/project.json",
-                "sha256": (
-                    "470d247d853f8ccd93bafb9ced45a3cb"
-                    "5e7eb22ab8371d6e6d9a7519ddfb323a"
-                ),
-            },
+            generated_source["projectRecord"],
         )
+        self.assertEqual(
+            hashlib.sha256(
+                (ROOT / "plugins/agentsmd/.toolboxmd/project.json").read_bytes()
+            ).hexdigest(),
+            generated_source["projectRecord"]["sha256"],
+        )
+        self.assertEqual(
+            generated_source["projectRecord"]["path"],
+            ".toolboxmd/project.json",
+        )
+        for published in generated_source["files"]:
+            path = ROOT / "plugins/agentsmd" / published["path"]
+            with self.subTest(published_path=published["path"]):
+                self.assertTrue(path.is_file())
+                self.assertEqual(
+                    hashlib.sha256(path.read_bytes()).hexdigest(),
+                    published["sha256"],
+                )
+                self.assertEqual(
+                    f"100{path.stat().st_mode & 0o777:o}",
+                    published["mode"],
+                )
         self.assertEqual(
             by_name["use-grok"]["sha"],
             "a8ae6ab3c862de836ca576276a221610e3fe274c",
@@ -136,7 +157,7 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(agentsmd["description"], agentsmd_description)
             self.assertEqual(agentsmd["source"]["sha"], agentsmd_sha)
             if records_release:
-                self.assertEqual(agentsmd["source"]["ref"], "v5.1.0")
+                self.assertEqual(agentsmd["source"]["ref"], agentsmd_release)
             else:
                 self.assertNotIn("ref", agentsmd["source"])
 
