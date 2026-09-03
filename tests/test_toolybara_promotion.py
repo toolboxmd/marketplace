@@ -16,7 +16,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 PROMOTION = ROOT / "scripts" / "toolybara_promotion.py"
-WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-promotion.yml"
+WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-reconciliation.yml"
 SPEC = importlib.util.spec_from_file_location("toolybara_promotion", PROMOTION)
 assert SPEC and SPEC.loader
 promotion = importlib.util.module_from_spec(SPEC)
@@ -142,7 +142,7 @@ class GeneratedScopeTests(unittest.TestCase):
         for unexpected in (
             "scripts/toolybara_promotion.py",
             "tests/test_catalog.py",
-            ".github/workflows/toolybara-promotion.yml",
+            ".github/workflows/toolybara-reconciliation.yml",
             "plugins/use-grok/SKILL.md",
         ):
             with self.subTest(unexpected=unexpected):
@@ -744,6 +744,7 @@ class TrustedPullRequestTests(unittest.TestCase):
 
 class WorkflowContractTests(unittest.TestCase):
     def test_receiver_is_event_driven_scheduled_serialized_and_trusted(self) -> None:
+        self.assertFalse((WORKFLOW.parent / "toolybara-promotion.yml").exists())
         workflow = WORKFLOW.read_text(encoding="utf-8")
         executable = workflow + PROMOTION.read_text(encoding="utf-8")
         required = (
