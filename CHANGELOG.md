@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.2] - 2026-09-03
+
+### Changed
+
+- Fix Claude AgentsMD installation to use public HTTPS
+
 ## [1.2.1] - 2026-09-03
 
 ### Changed
