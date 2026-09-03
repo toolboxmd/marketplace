@@ -1,0 +1,14 @@
+name: Schedule AgentsMD reconciliation
+
+on:
+  schedule:
+    - cron: '37 * * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  reconcile:
+    uses: ./.github/workflows/toolybara-reconciliation.yml
+    secrets: inherit

@@ -4,8 +4,13 @@ on:
   repository_dispatch:
     types:
       - agentsmd_release_published
-  schedule:
-    - cron: '43 * * * *'
+  workflow_call:
+    inputs:
+      wake_tag:
+        description: Optional untrusted release wake hint
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       wake_tag:

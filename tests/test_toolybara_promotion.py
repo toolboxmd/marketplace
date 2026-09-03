@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -17,6 +18,8 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 PROMOTION = ROOT / "scripts" / "toolybara_promotion.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-reconciliation.yml"
+SCHEDULE_WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-schedule.yml"
+TRUSTED_WORKFLOW_SHA256 = "9b4649b62b79fd7835736baeaa571ab3ba2afabda76fa45724778c3b92d6e489"
 SPEC = importlib.util.spec_from_file_location("toolybara_promotion", PROMOTION)
 assert SPEC and SPEC.loader
 promotion = importlib.util.module_from_spec(SPEC)
@@ -743,15 +746,76 @@ class TrustedPullRequestTests(unittest.TestCase):
 
 
 class WorkflowContractTests(unittest.TestCase):
-    def test_receiver_is_event_driven_scheduled_serialized_and_trusted(self) -> None:
+    def test_reusable_receiver_and_schedule_wrapper_are_exact_and_trusted(self) -> None:
         self.assertFalse((WORKFLOW.parent / "toolybara-promotion.yml").exists())
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        executable = workflow + PROMOTION.read_text(encoding="utf-8")
+        schedule_workflow = SCHEDULE_WORKFLOW.read_text(encoding="utf-8")
+        self.assertEqual(
+            schedule_workflow,
+            """name: Schedule AgentsMD reconciliation
+
+on:
+  schedule:
+    - cron: '37 * * * *'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  reconcile:
+    uses: ./.github/workflows/toolybara-reconciliation.yml
+    secrets: inherit
+""",
+        )
+        self.assertTrue(
+            workflow.startswith(
+                """name: Promote AgentsMD through Toolybara
+
+on:
+  repository_dispatch:
+    types:
+      - agentsmd_release_published
+  workflow_call:
+    inputs:
+      wake_tag:
+        description: Optional untrusted release wake hint
+        required: false
+        type: string
+        default: ''
+  workflow_dispatch:
+    inputs:
+      wake_tag:
+        description: Optional untrusted release wake hint
+        required: false
+        type: string
+
+"""
+            )
+        )
+        trusted_workflow = workflow[workflow.index("permissions:\n") :]
+        self.assertEqual(
+            hashlib.sha256(trusted_workflow.encode("utf-8")).hexdigest(),
+            TRUSTED_WORKFLOW_SHA256,
+        )
+        workflow_paths = sorted(
+            set(WORKFLOW.parent.glob("*.yml"))
+            | set(WORKFLOW.parent.glob("*.yaml"))
+        )
+        workflow_sources = {
+            path.name: path.read_text(encoding="utf-8") for path in workflow_paths
+        }
+        schedule_owners = sorted(
+            name
+            for name, source in workflow_sources.items()
+            if "\n  schedule:\n" in source
+        )
+        self.assertEqual(schedule_owners, [SCHEDULE_WORKFLOW.name])
+        executable = workflow + schedule_workflow + PROMOTION.read_text(encoding="utf-8")
         required = (
             "repository_dispatch:",
             "agentsmd_release_published",
-            "schedule:",
-            "cron: '43 * * * *'",
+            "workflow_call:",
             "workflow_dispatch:",
             "group: toolybara-agentsmd-promotion",
             "cancel-in-progress: false",
@@ -772,6 +836,11 @@ class WorkflowContractTests(unittest.TestCase):
         for text in required:
             with self.subTest(text=text):
                 self.assertIn(text, workflow)
+        for prohibited_trigger in ("repository_dispatch:", "workflow_dispatch:"):
+            with self.subTest(prohibited_trigger=prohibited_trigger):
+                self.assertNotIn(prohibited_trigger, schedule_workflow)
+        self.assertNotIn("write", schedule_workflow)
+        self.assertNotIn("\n  schedule:\n", workflow)
         for prohibited in (
             "pull_request_target",
             "enablePullRequestAutoMerge",
