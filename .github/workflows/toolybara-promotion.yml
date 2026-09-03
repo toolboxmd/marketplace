@@ -5,7 +5,7 @@ on:
     types:
       - agentsmd_release_published
   schedule:
-    - cron: '17 * * * *'
+    - cron: '43 * * * *'
   workflow_dispatch:
     inputs:
       wake_tag:
