@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - 2026-09-03
+
+### Added
+
+- Add the guided Toolybara bootstrap and least-authority verification contract
+
 ## [1.0.0] - 2026-09-03
 
 ### Changed

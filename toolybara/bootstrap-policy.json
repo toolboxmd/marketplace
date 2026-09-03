@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "app": {
+    "owner": "toolboxmd",
+    "name": "Toolybara",
+    "slug": "toolybara",
+    "actor": "toolybara[bot]",
+    "description": "The ToolboxMD release courier. Toolybara carries verified ToolboxMD releases into the Marketplace and merges them when every check is green.",
+    "homepage": "https://github.com/toolboxmd/marketplace",
+    "public": false,
+    "webhookActive": false,
+    "repositoryPermissions": {
+      "metadata": "read",
+      "contents": "write",
+      "pull_requests": "write"
+    },
+    "organizationPermissions": {},
+    "accountPermissions": {},
+    "events": []
+  },
+  "installation": {
+    "owner": "toolboxmd",
+    "repositorySelection": "selected",
+    "repositories": [
+      "marketplace"
+    ]
+  },
+  "actionsCredentials": {
+    "variable": {
+      "name": "TOOLYBARA_CLIENT_ID",
+      "scope": "organization",
+      "visibility": "selected",
+      "repositories": [
+        "agentsmd",
+        "marketplace"
+      ]
+    },
+    "secret": {
+      "name": "TOOLYBARA_PRIVATE_KEY",
+      "scope": "organization",
+      "visibility": "selected",
+      "repositories": [
+        "agentsmd",
+        "marketplace"
+      ]
+    }
+  },
+  "repositorySettings": {
+    "repository": "toolboxmd/marketplace",
+    "defaultBranch": "main",
+    "allowAutoMerge": false,
+    "deleteBranchOnMerge": false,
+    "branchProtection": false,
+    "requiredStatusChecks": false,
+    "blockedDirectPushes": false,
+    "forcePushesBlocked": false,
+    "bypassActors": [],
+    "rulesets": []
+  }
+}

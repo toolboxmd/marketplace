@@ -167,6 +167,22 @@ repos under github.com/toolboxmd.
 bash tests/run-all.sh
 ```
 
+## Bootstrap Toolybara
+
+Toolybara's credential-independent policy, guided bootstrap, and proof contract
+are documented in
+[`docs/toolybara-bootstrap.md`](docs/toolybara-bootstrap.md). The provisioning
+wizard is intentionally not run during ordinary development or tests. It
+creates the GitHub App, installation, organization Actions variable, and
+organization Actions secret only when a human explicitly runs it:
+
+```bash
+scripts/bootstrap_toolybara.sh
+```
+
+The wizard does not configure branch protection, rulesets, native auto-merge,
+automatic branch deletion, bypass actors, or any other repository setting.
+
 ## Layout
 
 - `catalog.json` is the source of truth for membership and Grok pins.
