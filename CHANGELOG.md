@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.0] - 2026-09-03
+
+### Changed
+
+- Adopt reliable immutable Agent Module promotion as Marketplace Objective
+
 ## [0.4.0] - 2026-08-31
 
 ### Added
