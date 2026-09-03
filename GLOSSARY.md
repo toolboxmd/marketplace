@@ -83,3 +83,13 @@ the approved core through host-native adapters after the required trust grant.
 The state in which an exact released Project is visible and usable through a
 named distribution surface. Submission, approval, publication, installation,
 and loading are separate states.
+
+## Toolybara
+
+The private ToolboxMD GitHub App that carries validated immutable Agent Module
+releases into Marketplace through one expected promotion branch and pull
+request. It is installed only on `toolboxmd/marketplace` and uses a trusted
+final workflow job to merge an exact revalidated head.
+
+Do not use `Toolybara` for GitHub Actions generally, a human account, or an
+agent with authority outside Marketplace promotion.

@@ -1,0 +1,88 @@
+name: Verify Toolybara bootstrap
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the exact default-branch commit
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Mint a Marketplace-only Toolybara token
+        id: toolybara
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.TOOLYBARA_CLIENT_ID }}
+          private-key: ${{ secrets.TOOLYBARA_PRIVATE_KEY }}
+          owner: toolboxmd
+          repositories: marketplace
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Mint an installation-wide metadata-only audit token
+        id: installation-scope
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.TOOLYBARA_CLIENT_ID }}
+          private-key: ${{ secrets.TOOLYBARA_PRIVATE_KEY }}
+          owner: toolboxmd
+          permission-metadata: read
+
+      - name: Read installation scope without exposing the token
+        env:
+          APP_CLIENT_ID: ${{ vars.TOOLYBARA_CLIENT_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.TOOLYBARA_PRIVATE_KEY }}
+          APP_SLUG: ${{ steps.toolybara.outputs.app-slug }}
+          INSTALLATION_ID: ${{ steps.toolybara.outputs.installation-id }}
+          INSTALLATION_SCOPE_TOKEN: ${{ steps.installation-scope.outputs.token }}
+          INSTALLATION_TOKEN: ${{ steps.toolybara.outputs.token }}
+        run: |
+          test "$APP_SLUG" = "toolybara"
+          base64url() {
+            openssl base64 -A | tr '+/' '-_' | tr -d '='
+          }
+          issued_at=$(($(date +%s) - 60))
+          expires_at=$((issued_at + 540))
+          header=$(printf '%s' '{"alg":"RS256","typ":"JWT"}' | base64url)
+          payload=$(printf '{"iat":%s,"exp":%s,"iss":"%s"}' \
+            "$issued_at" "$expires_at" "$APP_CLIENT_ID" | base64url)
+          unsigned_token="$header.$payload"
+          signature=$(printf '%s' "$unsigned_token" \
+            | openssl dgst -sha256 -sign <(printf '%s' "$APP_PRIVATE_KEY") -binary \
+            | base64url)
+          app_jwt="$unsigned_token.$signature"
+          echo "::add-mask::$app_jwt"
+          curl --fail-with-body --silent --show-error \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $app_jwt" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/app" \
+            > "$RUNNER_TEMP/app.json"
+          curl --fail-with-body --silent --show-error \
+            --header "Accept: application/vnd.github+json" \
+            --header "Authorization: Bearer $app_jwt" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "https://api.github.com/app/installations/$INSTALLATION_ID" \
+            > "$RUNNER_TEMP/installation.json"
+          GH_TOKEN="$INSTALLATION_SCOPE_TOKEN" \
+            gh api '/installation/repositories?per_page=100' \
+            > "$RUNNER_TEMP/installation-repositories.json"
+          GH_TOKEN="$INSTALLATION_TOKEN" \
+            gh api '/installation/repositories?per_page=100' \
+            > "$RUNNER_TEMP/token-repositories.json"
+          unset app_jwt unsigned_token signature APP_PRIVATE_KEY
+          python3 scripts/verify_toolybara_bootstrap.py verify-installation \
+            --app-slug "$APP_SLUG" \
+            --app "$RUNNER_TEMP/app.json" \
+            --installation "$RUNNER_TEMP/installation.json" \
+            --installation-repositories "$RUNNER_TEMP/installation-repositories.json" \
+            --token-repositories "$RUNNER_TEMP/token-repositories.json" \
+            >> "$GITHUB_STEP_SUMMARY"
