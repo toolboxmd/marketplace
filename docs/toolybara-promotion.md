@@ -2,8 +2,8 @@
 
 Toolybara reconciles the newest Eligible Release from AgentsMD into Marketplace
 without trusting an event payload or a pull request merely because it is green.
-The implementation lives in
-`.github/workflows/toolybara-reconciliation.yml` and
+`.github/workflows/toolybara-schedule.yml` owns the hourly trigger and calls the
+trusted implementation in `.github/workflows/toolybara-reconciliation.yml` and
 `scripts/toolybara_promotion.py`.
 
 ## Trigger contract
@@ -22,7 +22,7 @@ repository and `contents: write`:
 ```
 
 `client_payload.release_tag` is only a Wake Hint. Marketplace also reconciles
-hourly at minute 43 and can be dispatched manually. Every trigger runs in one
+hourly at minute 37 and can be dispatched manually. Every trigger runs in one
 non-cancelling concurrency group, so two releases cannot race through separate
 merge jobs.
 
