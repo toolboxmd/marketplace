@@ -3,7 +3,7 @@
 Toolybara reconciles the newest Eligible Release from AgentsMD into Marketplace
 without trusting an event payload or a pull request merely because it is green.
 The implementation lives in
-`.github/workflows/toolybara-promotion.yml` and
+`.github/workflows/toolybara-reconciliation.yml` and
 `scripts/toolybara_promotion.py`.
 
 ## Trigger contract

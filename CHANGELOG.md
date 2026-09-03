@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.4] - 2026-09-03
+
+### Changed
+
+- Create fresh Toolybara workflow identity
+
 ## [1.2.3] - 2026-09-03
 
 ### Changed
