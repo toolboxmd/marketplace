@@ -1,0 +1,165 @@
+name: Promote AgentsMD through Toolybara
+
+on:
+  repository_dispatch:
+    types:
+      - agentsmd_release_published
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+    inputs:
+      wake_tag:
+        description: Optional untrusted release wake hint
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: toolybara-agentsmd-promotion
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    outputs:
+      state: ${{ steps.reconcile.outputs.state }}
+      pr_number: ${{ steps.reconcile.outputs.pr_number }}
+      base_sha: ${{ steps.reconcile.outputs.base_sha }}
+      head_sha: ${{ steps.reconcile.outputs.head_sha }}
+      release: ${{ steps.reconcile.outputs.release }}
+      source_sha: ${{ steps.reconcile.outputs.source_sha }}
+      record_sha256: ${{ steps.reconcile.outputs.record_sha256 }}
+      marketplace_version: ${{ steps.reconcile.outputs.marketplace_version }}
+    steps:
+      - name: Check out the trusted Marketplace control plane
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Mint a Marketplace-only Toolybara reconciliation token
+        id: toolybara
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.TOOLYBARA_CLIENT_ID }}
+          private-key: ${{ secrets.TOOLYBARA_PRIVATE_KEY }}
+          owner: toolboxmd
+          repositories: marketplace
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Verify Toolybara reconciliation identity
+        env:
+          APP_SLUG: ${{ steps.toolybara.outputs.app-slug }}
+        run: test "$APP_SLUG" = "toolybara"
+
+      - name: Reconcile the newest eligible AgentsMD release
+        id: reconcile
+        env:
+          GH_TOKEN: ${{ steps.toolybara.outputs.token }}
+          READ_TOKEN: ${{ github.token }}
+          WAKE_TAG: ${{ github.event.client_payload.release_tag || inputs.wake_tag || '' }}
+        run: |
+          python3 scripts/toolybara_promotion.py reconcile \
+            --wake-tag "$WAKE_TAG" \
+            --output "$GITHUB_OUTPUT" \
+            --summary "$GITHUB_STEP_SUMMARY"
+
+  validate:
+    needs: reconcile
+    if: needs.reconcile.outputs.state == 'candidate'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the trusted base
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ needs.reconcile.outputs.base_sha }}
+          fetch-depth: 0
+          path: control
+          persist-credentials: false
+
+      - name: Check out the exact candidate head
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ needs.reconcile.outputs.head_sha }}
+          fetch-depth: 0
+          path: candidate
+          persist-credentials: false
+
+      - name: Validate the exact Toolybara candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          READ_TOKEN: ${{ github.token }}
+        run: |
+          python3 control/scripts/toolybara_promotion.py validate \
+            --base-root control \
+            --candidate-root candidate \
+            --pr-number "${{ needs.reconcile.outputs.pr_number }}" \
+            --base-sha "${{ needs.reconcile.outputs.base_sha }}" \
+            --head-sha "${{ needs.reconcile.outputs.head_sha }}" \
+            --release "${{ needs.reconcile.outputs.release }}" \
+            --source-sha "${{ needs.reconcile.outputs.source_sha }}" \
+            --record-sha256 "${{ needs.reconcile.outputs.record_sha256 }}" \
+            --marketplace-version "${{ needs.reconcile.outputs.marketplace_version }}" \
+            --summary "$GITHUB_STEP_SUMMARY"
+
+  finalize:
+    needs:
+      - reconcile
+      - validate
+    if: needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the trusted base
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ needs.reconcile.outputs.base_sha }}
+          fetch-depth: 0
+          path: control
+          persist-credentials: false
+
+      - name: Check out the exact validated candidate head
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ needs.reconcile.outputs.head_sha }}
+          fetch-depth: 0
+          path: candidate
+          persist-credentials: false
+
+      - name: Mint a fresh Marketplace-only Toolybara finalization token
+        id: toolybara
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.TOOLYBARA_CLIENT_ID }}
+          private-key: ${{ secrets.TOOLYBARA_PRIVATE_KEY }}
+          owner: toolboxmd
+          repositories: marketplace
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Verify Toolybara finalization identity
+        env:
+          APP_SLUG: ${{ steps.toolybara.outputs.app-slug }}
+        run: test "$APP_SLUG" = "toolybara"
+
+      - name: Recheck, merge, release, and supersede the manual proposal
+        env:
+          GH_TOKEN: ${{ github.token }}
+          READ_TOKEN: ${{ github.token }}
+          TOOLYBARA_TOKEN: ${{ steps.toolybara.outputs.token }}
+        run: |
+          python3 control/scripts/toolybara_promotion.py finalize \
+            --base-root control \
+            --candidate-root candidate \
+            --pr-number "${{ needs.reconcile.outputs.pr_number }}" \
+            --base-sha "${{ needs.reconcile.outputs.base_sha }}" \
+            --head-sha "${{ needs.reconcile.outputs.head_sha }}" \
+            --release "${{ needs.reconcile.outputs.release }}" \
+            --source-sha "${{ needs.reconcile.outputs.source_sha }}" \
+            --record-sha256 "${{ needs.reconcile.outputs.record_sha256 }}" \
+            --marketplace-version "${{ needs.reconcile.outputs.marketplace_version }}" \
+            --require-mergeable \
+            --summary "$GITHUB_STEP_SUMMARY"
