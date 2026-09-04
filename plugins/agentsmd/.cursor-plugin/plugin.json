@@ -1,7 +1,7 @@
 {
   "name": "agentsmd",
   "displayName": "AgentsMD Workflow Suite",
-  "version": "8.6.1",
+  "version": "8.6.2",
   "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
   "author": {
     "name": "lukaszmaj"
