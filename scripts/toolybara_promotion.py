@@ -1105,6 +1105,122 @@ def _validate_drifted_merge(
         }
 
 
+def _is_toolybara_supersession_receipt(
+    comment: object, *, exact_body: str | None = None
+) -> bool:
+    return (
+        _toolybara_supersession_receipt(comment, exact_body=exact_body)
+        is not None
+    )
+
+
+def _toolybara_supersession_receipt(
+    comment: object, *, exact_body: str | None = None
+) -> dict[str, str | int] | None:
+    if not isinstance(comment, dict):
+        return None
+    user = comment.get("user")
+    if not isinstance(user, dict) or user.get("login") != EXPECTED_ACTOR:
+        return None
+    body = comment.get("body")
+    if not isinstance(body, str):
+        return None
+    match = re.fullmatch(
+        r"Superseded by Toolybara-authored PR #(?P<pull>[1-9][0-9]*), "
+        r"merged as `(?P<merge>[0-9a-f]{40})` and published at "
+        r"https://github\.com/toolboxmd/marketplace/releases/tag/"
+        r"(?P<tag>v[0-9]+\.[0-9]+\.[0-9]+)\. PR #15 was a manual "
+        r"proposal and was not merged or automatic delivery\.",
+        body,
+    )
+    valid = (
+        match is not None
+        and VERSION_TAG_RE.fullmatch(match["tag"]) is not None
+    )
+    if not valid or exact_body is not None and body != exact_body:
+        return None
+    return {
+        "pull": int(match["pull"]),
+        "merge": match["merge"],
+        "tag": match["tag"],
+    }
+
+
+def _supersession_comments(
+    request: Callable[..., dict | list | None],
+) -> list[dict]:
+    comments: list[dict] = []
+    page = 1
+    while True:
+        batch = request(
+            "GET",
+            f"/repos/{MARKETPLACE_REPOSITORY}/issues/15/comments"
+            f"?per_page=100&page={page}",
+        )
+        if not isinstance(batch, list):
+            raise PromotionError("manual pull request #15 comments were not found")
+        comments.extend(
+            comment for comment in batch if isinstance(comment, dict)
+        )
+        if len(batch) < 100:
+            return comments
+        page += 1
+
+
+def _require_manual_pr_closed_unmerged(
+    request: Callable[..., dict | list | None],
+) -> None:
+    verified = request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/pulls/15")
+    if (
+        not isinstance(verified, dict)
+        or verified.get("state") != "closed"
+        or verified.get("merged") is not False
+    ):
+        raise PromotionError("manual pull request #15 is not closed and unmerged")
+
+
+def _validate_supersession_receipt_identity(
+    receipt: dict[str, str | int],
+    request: Callable[..., dict | list | None],
+) -> None:
+    pull_number = receipt["pull"]
+    merge_sha = receipt["merge"]
+    tag = receipt["tag"]
+    pull = request(
+        "GET", f"/repos/{MARKETPLACE_REPOSITORY}/pulls/{pull_number}"
+    )
+    pull_user = pull.get("user") if isinstance(pull, dict) else None
+    merged_by = pull.get("merged_by") if isinstance(pull, dict) else None
+    if (
+        not isinstance(pull, dict)
+        or pull.get("state") != "closed"
+        or pull.get("merged") is not True
+        or pull.get("merge_commit_sha") != merge_sha
+        or not isinstance(pull_user, dict)
+        or pull_user.get("login") != EXPECTED_ACTOR
+        or not isinstance(merged_by, dict)
+        or merged_by.get("login") != EXPECTED_ACTOR
+    ):
+        raise PromotionError(
+            "manual pull request #15 supersession receipt pull request changed"
+        )
+    release = request(
+        "GET", f"/repos/{MARKETPLACE_REPOSITORY}/releases/tags/{tag}"
+    )
+    if (
+        not isinstance(release, dict)
+        or release.get("tag_name") != tag
+        or release.get("target_commitish") != merge_sha
+        or release.get("draft") is not False
+        or release.get("prerelease") is not False
+        or release.get("html_url")
+        != f"https://github.com/{MARKETPLACE_REPOSITORY}/releases/tag/{tag}"
+    ):
+        raise PromotionError(
+            "manual pull request #15 supersession receipt release changed"
+        )
+
+
 def _supersede_manual_pr(
     toolybara_pr: int,
     merge_sha: str,
@@ -1117,34 +1233,48 @@ def _supersede_manual_pr(
         raise PromotionError("manual pull request #15 was not found")
     if manual.get("merged") is not False:
         raise PromotionError("manual pull request #15 is not proven unmerged")
-    if manual.get("state") not in {"open", "closed"}:
+    manual_state = manual.get("state")
+    if not isinstance(manual_state, str) or manual_state not in {"open", "closed"}:
         raise PromotionError("manual pull request #15 has an invalid state")
     body = (
         f"Superseded by Toolybara-authored PR #{toolybara_pr}, merged as `{merge_sha}` "
         f"and published at {release_url}. PR #15 was a manual proposal and was not "
         "merged or automatic delivery."
     )
-    comments = request(
-        "GET", f"/repos/{MARKETPLACE_REPOSITORY}/issues/15/comments?per_page=100"
-    )
-    if not isinstance(comments, list):
-        raise PromotionError("manual pull request #15 comments were not found")
+    comments = _supersession_comments(request)
     has_exact_comment = any(
-        isinstance(comment, dict) and comment.get("body") == body
+        _is_toolybara_supersession_receipt(comment, exact_body=body)
         for comment in comments
     )
-    if manual.get("state") == "closed":
-        if not has_exact_comment:
+    if manual_state == "closed":
+        receipt = next(
+            (
+                parsed
+                for comment in comments
+                if (parsed := _toolybara_supersession_receipt(comment))
+                is not None
+            ),
+            None,
+        )
+        if receipt is None:
             raise PromotionError(
                 "closed manual pull request #15 lacks exact supersession evidence"
             )
+        _validate_supersession_receipt_identity(receipt, request)
+        _require_manual_pr_closed_unmerged(request)
         return
     if not has_exact_comment:
-        request(
+        posted = request(
             "POST",
             f"/repos/{MARKETPLACE_REPOSITORY}/issues/15/comments",
             {"body": body},
         )
+        if not _is_toolybara_supersession_receipt(
+            posted, exact_body=body
+        ):
+            raise PromotionError(
+                "manual pull request #15 supersession receipt was not recorded"
+            )
     closed = request(
         "PATCH", f"/repos/{MARKETPLACE_REPOSITORY}/pulls/15", {"state": "closed"}
     )
@@ -1154,13 +1284,7 @@ def _supersede_manual_pr(
         or closed.get("merged") is not False
     ):
         raise PromotionError("manual pull request #15 did not close")
-    verified = request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/pulls/15")
-    if (
-        not isinstance(verified, dict)
-        or verified.get("state") != "closed"
-        or verified.get("merged") is not False
-    ):
-        raise PromotionError("manual pull request #15 is not closed and unmerged")
+    _require_manual_pr_closed_unmerged(request)
 
 
 def finalize(args: argparse.Namespace) -> dict:
