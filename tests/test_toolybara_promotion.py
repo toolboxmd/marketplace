@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from argparse import Namespace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -126,6 +127,266 @@ class ReleaseSelectionTests(unittest.TestCase):
             "newest eligible release changed",
         ):
             promotion.require_same_candidate(decision, "v8.6.0")
+
+
+class AcceptedDuplicateTests(unittest.TestCase):
+    @staticmethod
+    def _write_accepted_state(
+        root: Path,
+        *,
+        source_sha: str,
+        record_sha256: str,
+    ) -> None:
+        (root / "catalog.json").write_text(
+            json.dumps(
+                {
+                    "plugins": [
+                        {
+                            "name": "agentsmd",
+                            "release": "v8.6.1",
+                            "sha": source_sha,
+                            "projectRecord": {
+                                "path": ".toolboxmd/project.json",
+                                "sha256": record_sha256,
+                            },
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+        provenance = root / "plugins" / "agentsmd" / "SOURCE.json"
+        provenance.parent.mkdir(parents=True)
+        provenance.write_text(
+            json.dumps(
+                {
+                    "release": "v8.6.1",
+                    "commit": source_sha,
+                    "projectRecord": {
+                        "path": ".toolboxmd/project.json",
+                        "sha256": record_sha256,
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+
+    def test_duplicate_requires_the_accepted_release_to_remain_published(self) -> None:
+        releases = [
+            {"tag_name": "v8.6.1", "draft": True, "prerelease": False},
+            {"tag_name": "v8.6.0", "draft": False, "prerelease": False},
+        ]
+
+        with self.assertRaisesRegex(
+            promotion.PromotionError,
+            "accepted AgentsMD release is not published stable",
+        ):
+            promotion.require_published_release(releases, "v8.6.1")
+
+    def test_duplicate_evidence_reports_the_revalidated_accepted_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source_sha = "s" * 40
+            record_sha256 = "r" * 64
+            self._write_accepted_state(
+                root,
+                source_sha=source_sha,
+                record_sha256=record_sha256,
+            )
+
+            evidence = promotion.accepted_duplicate_evidence(
+                root,
+                {
+                    "release": "v8.6.1",
+                    "commit": source_sha,
+                    "recordSha256": record_sha256,
+                },
+                base_sha="b" * 40,
+            )
+
+            self.assertEqual(
+                evidence,
+                {
+                    "state": "duplicate",
+                    "base_sha": "b" * 40,
+                    "release": "v8.6.1",
+                    "source_sha": source_sha,
+                    "record_sha256": record_sha256,
+                },
+            )
+
+    def test_duplicate_rejects_source_identity_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_accepted_state(
+                root,
+                source_sha="s" * 40,
+                record_sha256="r" * 64,
+            )
+
+            with self.assertRaisesRegex(
+                promotion.PromotionError,
+                "accepted AgentsMD identity disagrees",
+            ):
+                promotion.accepted_duplicate_evidence(
+                    root,
+                    {
+                        "release": "v8.6.1",
+                        "commit": "x" * 40,
+                        "recordSha256": "r" * 64,
+                    },
+                    base_sha="b" * 40,
+                )
+
+    def test_reconcile_duplicate_reinspects_and_reports_exact_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source_sha = "s" * 40
+            record_sha256 = "r" * 64
+            base_sha = "b" * 40
+            self._write_accepted_state(
+                root,
+                source_sha=source_sha,
+                record_sha256=record_sha256,
+            )
+            output = root / "output"
+            summary = root / "summary"
+            inspected = {
+                "release": "v8.6.1",
+                "commit": source_sha,
+                "recordSha256": record_sha256,
+            }
+
+            with (
+                patch.object(
+                    promotion,
+                    "__file__",
+                    str(root / "scripts" / "toolybara_promotion.py"),
+                ),
+                patch.object(promotion, "_main_sha", return_value=base_sha),
+                patch.object(promotion, "_run", return_value=base_sha),
+                patch.object(promotion, "_clone") as clone,
+                patch.object(
+                    promotion,
+                    "_published_releases",
+                    return_value=[
+                        {
+                            "tag_name": "v8.6.1",
+                            "draft": False,
+                            "prerelease": False,
+                        }
+                    ],
+                ),
+                patch.object(
+                    promotion,
+                    "_inspect_release",
+                    return_value=inspected,
+                ) as inspect,
+            ):
+                result = promotion.reconcile(
+                    Namespace(wake_tag="", output=output, summary=summary)
+                )
+
+            self.assertEqual(
+                result,
+                {
+                    "state": "duplicate",
+                    "base_sha": base_sha,
+                    "release": "v8.6.1",
+                    "source_sha": source_sha,
+                    "record_sha256": record_sha256,
+                },
+            )
+            self.assertEqual(inspect.call_count, 1)
+            self.assertEqual(inspect.call_args.args[0], root.resolve())
+            self.assertEqual(inspect.call_args.args[1].name, "agentsmd")
+            self.assertEqual(inspect.call_args.args[2], "v8.6.1")
+            clone.assert_called_once_with(
+                "https://github.com/toolboxmd/agentsmd.git",
+                inspect.call_args.args[1],
+            )
+            self.assertEqual(
+                output.read_text(encoding="utf-8"),
+                "\n".join(
+                    (
+                        "state=duplicate",
+                        f"base_sha={base_sha}",
+                        "release=v8.6.1",
+                        f"source_sha={source_sha}",
+                        f"record_sha256={record_sha256}",
+                        "",
+                    )
+                ),
+            )
+            self.assertEqual(
+                summary.read_text(encoding="utf-8"),
+                "\n".join(
+                    (
+                        "### Toolybara reconciliation",
+                        "",
+                        "- State: duplicate/no-op",
+                        "- Accepted AgentsMD release: `v8.6.1`",
+                        f"- Peeled source commit: `{source_sha}`",
+                        f"- Project Record SHA-256: `{record_sha256}`",
+                        "- Wake hint: `none`",
+                        "",
+                    )
+                ),
+            )
+
+    def test_reconcile_duplicate_fails_closed_before_reporting_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            base_sha = "b" * 40
+            self._write_accepted_state(
+                root,
+                source_sha="s" * 40,
+                record_sha256="r" * 64,
+            )
+            output = root / "output"
+            summary = root / "summary"
+
+            with (
+                patch.object(
+                    promotion,
+                    "__file__",
+                    str(root / "scripts" / "toolybara_promotion.py"),
+                ),
+                patch.object(promotion, "_main_sha", return_value=base_sha),
+                patch.object(promotion, "_run", return_value=base_sha),
+                patch.object(promotion, "_clone"),
+                patch.object(
+                    promotion,
+                    "_published_releases",
+                    return_value=[
+                        {
+                            "tag_name": "v8.6.1",
+                            "draft": False,
+                            "prerelease": False,
+                        }
+                    ],
+                ),
+                patch.object(
+                    promotion,
+                    "_inspect_release",
+                    return_value={
+                        "release": "v8.6.1",
+                        "commit": "x" * 40,
+                        "recordSha256": "r" * 64,
+                    },
+                ) as inspect,
+            ):
+                with self.assertRaisesRegex(
+                    promotion.PromotionError,
+                    "accepted AgentsMD identity disagrees",
+                ):
+                    promotion.reconcile(
+                        Namespace(wake_tag="", output=output, summary=summary)
+                    )
+
+            self.assertEqual(inspect.call_count, 1)
+            self.assertFalse(output.exists())
+            self.assertFalse(summary.exists())
 
 
 class GeneratedScopeTests(unittest.TestCase):
