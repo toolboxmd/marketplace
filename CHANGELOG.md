@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.6] - 2026-09-04
+
+### Changed
+
+- Revalidate accepted identity on scheduled duplicate reconciliation
+
 ## [1.2.5] - 2026-09-03
 
 ### Changed

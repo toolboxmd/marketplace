@@ -347,6 +347,20 @@ def select_candidate(
     return ReconciliationDecision(state, None, rejected, wake_tag)
 
 
+def require_published_release(releases: list[dict], release: str) -> None:
+    """Fail closed when the accepted release is no longer published stable."""
+
+    if not any(
+        item.get("tag_name") == release
+        and not item.get("draft")
+        and not item.get("prerelease")
+        for item in releases
+    ):
+        raise PromotionError(
+            f"accepted AgentsMD release is not published stable: {release}"
+        )
+
+
 def require_same_candidate(
     decision: ReconciliationDecision, expected_release: str
 ) -> dict:
@@ -530,6 +544,59 @@ def _current_release(root: Path) -> str:
     return release
 
 
+def accepted_duplicate_evidence(
+    root: Path,
+    source: dict,
+    *,
+    base_sha: str,
+) -> dict[str, str]:
+    """Bind a duplicate result to its revalidated immutable source identity."""
+
+    catalog = _catalog_by_name(root)["agentsmd"]
+    catalog_record = catalog.get("projectRecord")
+    provenance = json.loads(
+        (root / "plugins" / "agentsmd" / "SOURCE.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    provenance_record = provenance.get("projectRecord")
+    if (
+        not isinstance(catalog_record, dict)
+        or catalog_record.get("path") != ".toolboxmd/project.json"
+        or not isinstance(provenance_record, dict)
+        or provenance_record.get("path") != ".toolboxmd/project.json"
+    ):
+        raise PromotionError("accepted AgentsMD Project Record path is invalid")
+
+    inspected = {
+        "release": source.get("release"),
+        "commit": source.get("commit"),
+        "recordSha256": source.get("recordSha256"),
+    }
+    catalog_identity = {
+        "release": catalog.get("release"),
+        "commit": catalog.get("sha"),
+        "recordSha256": catalog_record.get("sha256"),
+    }
+    provenance_identity = {
+        "release": provenance.get("release"),
+        "commit": provenance.get("commit"),
+        "recordSha256": provenance_record.get("sha256"),
+    }
+    if inspected != catalog_identity or inspected != provenance_identity:
+        raise PromotionError(
+            "accepted AgentsMD identity disagrees with the immutable source release"
+        )
+
+    return {
+        "state": "duplicate",
+        "base_sha": base_sha,
+        "release": inspected["release"],
+        "source_sha": inspected["commit"],
+        "record_sha256": inspected["recordSha256"],
+    }
+
+
 def _published_releases() -> list[dict]:
     releases: list[dict] = []
     page = 1
@@ -612,9 +679,11 @@ def reconcile(args: argparse.Namespace) -> dict:
         source_root = temp / "agentsmd"
         candidate_root = temp / "marketplace"
         _clone(f"https://github.com/{SOURCE_REPOSITORY}.git", source_root)
+        current_release = _current_release(root)
+        published_releases = _published_releases()
         decision = select_candidate(
-            _published_releases(),
-            current_tag=_current_release(root),
+            published_releases,
+            current_tag=current_release,
             wake_tag=args.wake_tag or None,
             inspect=lambda tag: _inspect_release(root, source_root, tag),
         )
@@ -625,11 +694,24 @@ def reconcile(args: argparse.Namespace) -> dict:
             )
             raise PromotionError(f"no valid unreconciled release: {decision.rejected}")
         if decision.state == "duplicate":
-            values = {"state": "duplicate", "base_sha": base_sha}
+            require_published_release(published_releases, current_release)
+            values = accepted_duplicate_evidence(
+                root,
+                _inspect_release(root, source_root, current_release),
+                base_sha=base_sha,
+            )
             _write_outputs(args.output, values)
             _append_summary(
                 args.summary,
-                ["### Toolybara reconciliation", "", "- State: duplicate/no-op", f"- Accepted AgentsMD release: `{_current_release(root)}`", f"- Wake hint: `{args.wake_tag or 'none'}`"],
+                [
+                    "### Toolybara reconciliation",
+                    "",
+                    "- State: duplicate/no-op",
+                    f"- Accepted AgentsMD release: `{values['release']}`",
+                    f"- Peeled source commit: `{values['source_sha']}`",
+                    f"- Project Record SHA-256: `{values['record_sha256']}`",
+                    f"- Wake hint: `{args.wake_tag or 'none'}`",
+                ],
             )
             return values
 
