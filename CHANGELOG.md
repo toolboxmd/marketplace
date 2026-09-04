@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.8] - 2026-09-04
+
+### Changed
+
+- Make Toolybara manual-PR supersession idempotent
+
 ## [1.2.7] - 2026-09-04
 
 ### Changed

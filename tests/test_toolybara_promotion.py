@@ -609,10 +609,14 @@ class TrustedPullRequestTests(unittest.TestCase):
                     "state": "closed" if open_request.closed else "open",
                     "merged": False,
                 }
-            if endpoint.endswith("/comments?per_page=100"):
+            if "/comments?per_page=100&page=" in endpoint:
                 return []
             if endpoint.endswith("/comments"):
-                return {"id": 1}
+                return {
+                    "id": 1,
+                    "body": payload["body"],
+                    "user": {"login": "toolybara[bot]"},
+                }
             if endpoint.endswith("/pulls/15") and method == "PATCH":
                 open_request.closed = True
                 return {"state": "closed", "merged": False}
@@ -622,7 +626,7 @@ class TrustedPullRequestTests(unittest.TestCase):
 
         promotion._supersede_manual_pr(
             21,
-            "m" * 40,
+            "a" * 40,
             "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.1",
             request=open_request,
         )
@@ -635,16 +639,83 @@ class TrustedPullRequestTests(unittest.TestCase):
         self.assertIn("PR #15 was a manual proposal", comment_body)
         self.assertIn("was not merged or automatic delivery", comment_body)
 
+        def untrusted_post_request(
+            method: str, endpoint: str, payload: dict | None = None
+        ) -> dict | list:
+            if endpoint.endswith("/pulls/15") and method == "GET":
+                return {"state": "open", "merged": False}
+            if "/comments?per_page=100&page=" in endpoint:
+                return []
+            if endpoint.endswith("/comments"):
+                return {
+                    "body": payload["body"],
+                    "user": {"login": "github-actions[bot]"},
+                }
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        with self.assertRaisesRegex(
+            promotion.PromotionError,
+            "supersession receipt was not recorded",
+        ):
+            promotion._supersede_manual_pr(
+                21,
+                "a" * 40,
+                "https://github.com/toolboxmd/marketplace/releases/"
+                "tag/v1.2.1",
+                request=untrusted_post_request,
+            )
+
+        prior_body = (
+            "Superseded by Toolybara-authored PR #22, merged as "
+            "`d9d73acda21010e3f6f0f7c48f9d6dfeeb598119` and published at "
+            "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.1. "
+            "PR #15 was a manual proposal and was not merged or automatic "
+            "delivery."
+        )
+
+        def prior_identity(endpoint: str) -> dict | None:
+            if endpoint.endswith("/pulls/22"):
+                return {
+                    "state": "closed",
+                    "merged": True,
+                    "merge_commit_sha": (
+                        "d9d73acda21010e3f6f0f7c48f9d6dfeeb598119"
+                    ),
+                    "user": {"login": "toolybara[bot]"},
+                    "merged_by": {"login": "toolybara[bot]"},
+                }
+            if endpoint.endswith("/releases/tags/v1.2.1"):
+                return {
+                    "tag_name": "v1.2.1",
+                    "target_commitish": (
+                        "d9d73acda21010e3f6f0f7c48f9d6dfeeb598119"
+                    ),
+                    "draft": False,
+                    "prerelease": False,
+                    "html_url": (
+                        "https://github.com/toolboxmd/marketplace/releases/"
+                        "tag/v1.2.1"
+                    ),
+                }
+            return None
+
         closed_calls = []
 
         def closed_request(
             method: str, endpoint: str, payload: dict | None = None
         ) -> dict | list:
             closed_calls.append((method, endpoint, payload))
+            if (identity := prior_identity(endpoint)) is not None:
+                return identity
             if endpoint.endswith("/pulls/15"):
                 return {"state": "closed", "merged": False}
-            if endpoint.endswith("/comments?per_page=100"):
-                return [{"body": comment_body}]
+            if "/comments?per_page=100&page=" in endpoint:
+                return [
+                    {
+                        "body": prior_body,
+                        "user": {"login": "toolybara[bot]"},
+                    }
+                ]
             self.fail(f"unexpected request: {method} {endpoint}")
 
         promotion._supersede_manual_pr(
@@ -653,7 +724,85 @@ class TrustedPullRequestTests(unittest.TestCase):
             "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.1",
             request=closed_request,
         )
-        self.assertEqual(len(closed_calls), 2)
+        self.assertEqual(len(closed_calls), 5)
+
+        def changed_identity_request(
+            method: str, endpoint: str, payload: dict | None = None
+        ) -> dict | list:
+            if endpoint.endswith("/pulls/15"):
+                return {"state": "closed", "merged": False}
+            if endpoint.endswith("/pulls/22"):
+                changed = prior_identity(endpoint)
+                changed["merge_commit_sha"] = "0" * 40
+                return changed
+            if "/comments?per_page=100&page=" in endpoint:
+                return [
+                    {
+                        "body": prior_body,
+                        "user": {"login": "toolybara[bot]"},
+                    }
+                ]
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        with self.assertRaisesRegex(
+            promotion.PromotionError, "receipt pull request changed"
+        ):
+            promotion._supersede_manual_pr(
+                32,
+                "9" * 40,
+                "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.7",
+                request=changed_identity_request,
+            )
+
+        invalid_receipts = {
+            "missing": [],
+            "foreign-actor": [
+                {
+                    "body": prior_body,
+                    "user": {"login": "github-actions[bot]"},
+                }
+            ],
+            "malformed-merge": [
+                {
+                    "body": prior_body.replace(
+                        "d9d73acda21010e3f6f0f7c48f9d6dfeeb598119",
+                        "not-a-commit",
+                    ),
+                    "user": {"login": "toolybara[bot]"},
+                }
+            ],
+            "malformed-release": [
+                {
+                    "body": prior_body.replace("v1.2.1", "latest"),
+                    "user": {"login": "toolybara[bot]"},
+                }
+            ],
+        }
+        for receipt_kind, comments in invalid_receipts.items():
+            with self.subTest(receipt=receipt_kind):
+                def invalid_request(
+                    method: str,
+                    endpoint: str,
+                    payload: dict | None = None,
+                ) -> dict | list:
+                    if endpoint.endswith("/pulls/15"):
+                        return {"state": "closed", "merged": False}
+                    if "/comments?per_page=100&page=" in endpoint:
+                        return comments
+                    self.fail(f"unexpected request: {method} {endpoint}")
+
+                with self.assertRaisesRegex(
+                    promotion.PromotionError,
+                    "closed manual pull request #15 lacks exact "
+                    "supersession evidence",
+                ):
+                    promotion._supersede_manual_pr(
+                        32,
+                        "9" * 40,
+                        "https://github.com/toolboxmd/marketplace/releases/"
+                        "tag/v1.2.7",
+                        request=invalid_request,
+                    )
 
         with self.assertRaisesRegex(
             promotion.PromotionError, "manual pull request #15 is not proven unmerged"
@@ -668,6 +817,126 @@ class TrustedPullRequestTests(unittest.TestCase):
                 },
             )
 
+        with self.assertRaisesRegex(
+            promotion.PromotionError, "manual pull request #15 has an invalid state"
+        ):
+            promotion._supersede_manual_pr(
+                21,
+                "a" * 40,
+                "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.1",
+                request=lambda *_args, **_kwargs: {
+                    "state": [],
+                    "merged": False,
+                },
+            )
+
+        invalid_identity_calls = []
+
+        def invalid_identity_request(
+            method: str, endpoint: str, payload: dict | None = None
+        ) -> dict | list:
+            invalid_identity_calls.append((method, endpoint, payload))
+            if endpoint.endswith("/pulls/15"):
+                return {"state": "open", "merged": False}
+            if "/comments?per_page=100&page=" in endpoint:
+                return []
+            if endpoint.endswith("/comments"):
+                return {
+                    "body": payload["body"],
+                    "user": {"login": "toolybara[bot]"},
+                }
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        with self.assertRaisesRegex(
+            promotion.PromotionError, "supersession receipt was not recorded"
+        ):
+            promotion._supersede_manual_pr(
+                21,
+                "not-a-commit",
+                "https://evil.example/release",
+                request=invalid_identity_request,
+            )
+        self.assertFalse(
+            any(
+                method == "PATCH"
+                for method, _endpoint, _payload in invalid_identity_calls
+            )
+        )
+
+        closed_race_reads = 0
+
+        def closed_race_request(
+            method: str, endpoint: str, payload: dict | None = None
+        ) -> dict | list:
+            nonlocal closed_race_reads
+            if (identity := prior_identity(endpoint)) is not None:
+                return identity
+            if endpoint.endswith("/pulls/15"):
+                closed_race_reads += 1
+                return {
+                    "state": "closed",
+                    "merged": closed_race_reads > 1,
+                }
+            if "/comments?per_page=100&page=" in endpoint:
+                return [
+                    {
+                        "body": prior_body,
+                        "user": {"login": "toolybara[bot]"},
+                    }
+                ]
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        with self.assertRaisesRegex(
+            promotion.PromotionError, "is not closed and unmerged"
+        ):
+            promotion._supersede_manual_pr(
+                32,
+                "9" * 40,
+                "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.7",
+                request=closed_race_request,
+            )
+        self.assertEqual(closed_race_reads, 2)
+
+        paged_calls = []
+
+        def paged_request(
+            method: str, endpoint: str, payload: dict | None = None
+        ) -> dict | list:
+            paged_calls.append((method, endpoint, payload))
+            if (identity := prior_identity(endpoint)) is not None:
+                return identity
+            if endpoint.endswith("/pulls/15"):
+                return {"state": "closed", "merged": False}
+            if endpoint.endswith("/comments?per_page=100&page=1"):
+                return [
+                    {
+                        "body": f"unrelated {index}",
+                        "user": {"login": "toolybara[bot]"},
+                    }
+                    for index in range(100)
+                ]
+            if endpoint.endswith("/comments?per_page=100&page=2"):
+                return [
+                    {
+                        "body": prior_body,
+                        "user": {"login": "toolybara[bot]"},
+                    }
+                ]
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        promotion._supersede_manual_pr(
+            32,
+            "9" * 40,
+            "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.7",
+            request=paged_request,
+        )
+        self.assertTrue(
+            any(
+                endpoint.endswith("page=2")
+                for _method, endpoint, _payload in paged_calls
+            )
+        )
+
         race_reads = 0
 
         def raced_request(
@@ -680,10 +949,14 @@ class TrustedPullRequestTests(unittest.TestCase):
                     "state": "open" if race_reads == 1 else "closed",
                     "merged": race_reads > 1,
                 }
-            if endpoint.endswith("/comments?per_page=100"):
+            if "/comments?per_page=100&page=" in endpoint:
                 return []
             if endpoint.endswith("/comments"):
-                return {"id": 1}
+                return {
+                    "id": 1,
+                    "body": payload["body"],
+                    "user": {"login": "toolybara[bot]"},
+                }
             if endpoint.endswith("/pulls/15") and method == "PATCH":
                 return {"state": "closed", "merged": False}
             self.fail(f"unexpected request: {method} {endpoint}")
@@ -693,7 +966,7 @@ class TrustedPullRequestTests(unittest.TestCase):
         ):
             promotion._supersede_manual_pr(
                 21,
-                "m" * 40,
+                "a" * 40,
                 "https://github.com/toolboxmd/marketplace/releases/tag/v1.2.1",
                 request=raced_request,
             )
