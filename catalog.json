@@ -32,6 +32,22 @@
         "path": ".toolboxmd/project.json",
         "sha256": "44d7f764b2d5e00bcadc1ecf714bc45c658439ce3128e7349d4e7b84575babe9"
       }
+    },
+    {
+      "name": "codex-thinking-knob",
+      "description": "Let Astra adjust reasoning effort within its active Codex App Server turn through an independently installed wrapper.",
+      "github": "toolboxmd/codex-thinking-knob",
+      "sha": "8fd2037126a789830dd57d788e554616ff4f3c95",
+      "release": "v0.1.1",
+      "category": "Developer Tools",
+      "hosts": [
+        "codex"
+      ],
+      "kind": "agent-module",
+      "projectRecord": {
+        "path": ".toolboxmd/project.json",
+        "sha256": "a4ef3ada3ef0514b2afb4540b82a135e97ace8fd0894c5889a9caf1e0f5a47d1"
+      }
     }
   ]
 }

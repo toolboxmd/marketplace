@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.0] - 2026-09-07
+
+### Added
+
+- Publish Codex Thinking Knob selectively using released host delivery facts
+
 ## [1.2.8] - 2026-09-04
 
 ### Changed

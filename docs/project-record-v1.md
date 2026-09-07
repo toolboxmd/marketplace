@@ -60,3 +60,16 @@ On success, inspect the diff, run `bash tests/run-all.sh`, and complete the
 repository version and release workflow. Ingestion and rendering prove accepted
 Marketplace publication data. They do not prove provider submission,
 installation, loading, or a representative agent outcome.
+
+## Host-specific publication
+
+The released `factSources.delivery` keys select supported marketplace indexes:
+`codex`, `claude-code`, and `grok-build`. Ingestion records a `hosts` list when
+coverage is narrower than all three. Legacy entries without this field retain
+all three indexes. A Project must declare at least one supported marketplace
+host. Local sibling indexes use the same filter as published indexes.
+
+Delivery key `package` may reference an npm package manifest named either the
+Project id or `@scope/<project-id>`, with the exact released version. It is an
+artifact reference and does not add a marketplace host. Harness manifests must
+still use the exact unscoped Project id.

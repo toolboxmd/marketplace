@@ -15,7 +15,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Iterator
 
-from render_catalog import published_documents
+from render_catalog import MARKETPLACE_HOSTS, published_documents
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORD_PATH = ".toolboxmd/project.json"
@@ -173,9 +173,14 @@ def _load_candidate(
             f"release ref {release!r} does not match version source {version!r}"
         )
 
-    for path in sources["delivery"].values():
+    for host, path in sources["delivery"].items():
         manifest = _read_tree_json(source, commit, path)
-        if manifest.get("name") != project_id:
+        name = manifest.get("name")
+        valid_name = name == project_id or (
+            host == "package" and isinstance(name, str)
+            and re.fullmatch(r"@[a-z0-9][a-z0-9._-]*/" + re.escape(project_id), name)
+        )
+        if not valid_name:
             raise IngestionError(f"delivery identity mismatch in {path}")
         if manifest.get("version") != version:
             raise IngestionError(f"delivery version mismatch in {path}")
@@ -262,6 +267,13 @@ def ingest(
     entry["kind"] = record["kind"]
     entry["release"] = release
     entry["sha"] = commit
+    hosts = [host for host in MARKETPLACE_HOSTS if host in record["factSources"]["delivery"]]
+    if not hosts:
+        raise IngestionError("Project has no supported marketplace delivery host")
+    if hosts == list(MARKETPLACE_HOSTS):
+        entry.pop("hosts", None)
+    else:
+        entry["hosts"] = hosts
     entry["projectRecord"] = {"path": RECORD_PATH, "sha256": digest}
     _write_outputs(marketplace_root, _accepted_outputs(catalog))
     return {

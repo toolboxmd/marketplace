@@ -53,6 +53,19 @@ def claude_git_source(plugin: dict) -> dict:
     return source
 
 
+MARKETPLACE_HOSTS = ("codex", "claude-code", "grok-build")
+
+
+def supports_host(plugin: dict, host: str) -> bool:
+    """Legacy entries support all indexes; accepted records can narrow them."""
+    hosts = plugin.get("hosts", list(MARKETPLACE_HOSTS))
+    if (not isinstance(hosts, list) or not hosts
+            or any(item not in MARKETPLACE_HOSTS for item in hosts)
+            or len(hosts) != len(set(hosts))):
+        raise ValueError(f"invalid marketplace hosts for {plugin['name']}")
+    return host in hosts
+
+
 def published_codex(catalog: dict) -> dict:
     return {
         "name": catalog["name"],
@@ -69,6 +82,7 @@ def published_codex(catalog: dict) -> dict:
                 "category": plugin["category"],
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "codex")
         ],
     }
 
@@ -85,6 +99,7 @@ def published_claude(catalog: dict) -> dict:
                 "source": claude_git_source(plugin),
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "claude-code")
         ],
     }
 
@@ -107,6 +122,7 @@ def published_grok(catalog: dict) -> dict:
                 "homepage": f"https://github.com/{plugin['github']}",
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "grok-build")
         ],
     }
 
@@ -126,6 +142,7 @@ def local_codex(catalog: dict) -> dict:
                 "category": plugin["category"],
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "codex")
         ],
     }
 
@@ -142,6 +159,7 @@ def local_claude(catalog: dict) -> dict:
                 "source": f"./{plugin['name']}",
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "claude-code")
         ],
     }
 
@@ -158,6 +176,7 @@ def local_grok(catalog: dict) -> dict:
                 "source": {"type": "local", "path": f"./{plugin['name']}"},
             }
             for plugin in catalog["plugins"]
+            if supports_host(plugin, "grok-build")
         ],
     }
 
