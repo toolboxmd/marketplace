@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v8.6.2",
-  "commit": "d0cb11b6a1986cb992b5b49ee50fbefac12f2537",
+  "release": "v8.7.0",
+  "commit": "4ffe78481f94a3b61416a2583ef04d21928c6aa5",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "44d7f764b2d5e00bcadc1ecf714bc45c658439ce3128e7349d4e7b84575babe9"
+    "sha256": "b49b8744cc568b0fbb282925d3ca5884d598bb722351223467d162cef7ea21fb"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "44d7f764b2d5e00bcadc1ecf714bc45c658439ce3128e7349d4e7b84575babe9",
+      "sha256": "b49b8744cc568b0fbb282925d3ca5884d598bb722351223467d162cef7ea21fb",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "b8237e54858e4146bdda9040917a498dc251d26b3c63bfe5b3c9e2dd86c0119d",
+      "sha256": "331890b9bae605c036309f3f56e1cfca916aff3dfd61aebe50370d4bfa125c78",
       "mode": "100644"
     },
     {
@@ -72,6 +72,12 @@
       "path": "docs/adr/0001-persistent-host-automation.md",
       "source": "docs/adr/0001-persistent-host-automation.md",
       "sha256": "ef2856ac59bc4d08c69ead330a8a2195b55fb1befba1f2af5f02b8efe13f4e31",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/opencode.md",
+      "source": "docs/opencode.md",
+      "sha256": "858041b2ff64bb48cdf5092afd6549696ffb3ae7221494cae390b4bae68127db",
       "mode": "100644"
     },
     {
