@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Catalog indexes must name toolboxmd and list the same plugins on every host."""
+"""Catalog indexes publish each module only on its supported hosts."""
 
 from __future__ import annotations
 
@@ -22,9 +22,13 @@ REFRESH_SPEC = importlib.util.spec_from_file_location(
 assert REFRESH_SPEC and REFRESH_SPEC.loader
 refresh_pins = importlib.util.module_from_spec(REFRESH_SPEC)
 REFRESH_SPEC.loader.exec_module(refresh_pins)
+sys.path.insert(0, str(ROOT / "scripts"))
+import render_catalog
+
 CATALOG = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd")
+PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd", "codex-thinking-knob")
+SHARED_PLUGIN_NAMES = PLUGIN_NAMES[:-1]
 
 
 def _load(rel: str) -> dict:
@@ -49,9 +53,9 @@ class PublishedCatalogTests(unittest.TestCase):
         codex = _load(".agents/plugins/marketplace.json")
         claude = _load(".claude-plugin/marketplace.json")
         grok = _load(".grok-plugin/marketplace.json")
-        for index in (codex, claude, grok):
+        for index, names in ((codex, PLUGIN_NAMES), (claude, SHARED_PLUGIN_NAMES), (grok, SHARED_PLUGIN_NAMES)):
             self.assertEqual(index["name"], "toolboxmd")
-            self.assertEqual(tuple(_plugin_names(index)), PLUGIN_NAMES)
+            self.assertEqual(tuple(_plugin_names(index)), names)
         self.assertEqual(codex.get("interface", {}).get("displayName"), "toolbox.md")
 
     def test_published_sources_are_legal(self) -> None:
@@ -189,9 +193,9 @@ class LocalCatalogTests(unittest.TestCase):
             grok = json.loads(
                 (root / ".grok-plugin/marketplace.json").read_text(encoding="utf-8")
             )
-            for index in (codex, claude, grok):
+            for index, names in ((codex, PLUGIN_NAMES), (claude, SHARED_PLUGIN_NAMES), (grok, SHARED_PLUGIN_NAMES)):
                 self.assertEqual(index["name"], "toolboxmd")
-                self.assertEqual(tuple(_plugin_names(index)), PLUGIN_NAMES)
+                self.assertEqual(tuple(_plugin_names(index)), names)
                 for plugin in index["plugins"]:
                     source = plugin["source"]
                     if isinstance(source, str):
@@ -203,6 +207,24 @@ class LocalCatalogTests(unittest.TestCase):
                     self.assertTrue(path.startswith("./"), path)
                     self.assertFalse(_outside_root(path), path)
                     self.assertEqual(path, f"./{plugin['name']}")
+
+
+class SupportedHostTests(unittest.TestCase):
+    def test_codex_only_module_is_absent_from_other_published_and_local_hosts(self) -> None:
+        catalog = {**CATALOG, "plugins": [{
+            "name": "codex-only", "description": "Codex only", "github": "example/codex-only",
+            "sha": "a" * 40, "category": "Developer Tools", "hosts": ["codex"]
+        }]}
+        for renderer in (render_catalog.published_codex, render_catalog.local_codex):
+            self.assertEqual(_plugin_names(renderer(catalog)), ["codex-only"])
+        for renderer in (render_catalog.published_claude, render_catalog.published_grok,
+                         render_catalog.local_claude, render_catalog.local_grok):
+            self.assertEqual(_plugin_names(renderer(catalog)), [])
+
+    def test_invalid_host_declarations_fail(self) -> None:
+        for hosts in ([], ["unknown"], ["codex", "codex"], "codex"):
+            with self.subTest(hosts=hosts), self.assertRaises(ValueError):
+                render_catalog.supports_host({"name": "invalid", "hosts": hosts}, "codex")
 
 
 class RefreshPinTests(unittest.TestCase):

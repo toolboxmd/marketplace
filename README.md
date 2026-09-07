@@ -1,13 +1,14 @@
 # toolboxmd marketplace
 
 One catalog for ToolboxMD plugins. Codex, Claude Code, Grok Build, and Cursor
-load host-native distributions from the same accepted Project releases.
+load supported host-native distributions from the same accepted Project releases.
 Codex, Claude Code, and Grok Build add this marketplace, then install the
 plugins they want:
 
 - `karpathy-wiki@toolboxmd`
 - `use-grok@toolboxmd`
 - `agentsmd@toolboxmd`
+- `codex-thinking-knob@toolboxmd` (Codex only)
 
 A plugin repository is a plugin, not this marketplace. Do not path-install a
 plugin checkout as the happy path.
@@ -68,6 +69,24 @@ codex plugin add use-grok@toolboxmd
 codex plugin add agentsmd@toolboxmd
 ```
 
+### Codex Thinking Knob only
+
+```bash
+codex plugin add codex-thinking-knob@toolboxmd
+```
+
+This selects only the wrapper and its setup Skill. It does not install AgentsMD
+or other ToolboxMD modules. Use a configurable Codex App Server client to launch
+the installed wrapper with `--adaptive`, following the
+[release installation guide](https://github.com/toolboxmd/codex-thinking-knob/blob/v0.1.1/docs/install.md).
+Installing the plugin alone does not attach it to an existing desktop session.
+The source release also provides a standalone package artifact for isolated
+installation without adding this Marketplace.
+
+```bash
+codex plugin remove codex-thinking-knob@toolboxmd
+```
+
 Uninstall is per plugin. Removing one plugin leaves the others installed.
 Removing the marketplace is optional and host-specific. Wiki data, the wiki
 pointer, and per-wiki runtime files survive uninstalling karpathy-wiki.
@@ -81,9 +100,8 @@ For live checkouts next to each other (this machine: `karpathy-wiki`,
 python3 scripts/render_catalog.py --local-root /path/to/sibling-root
 ```
 
-Then add that sibling root as marketplace toolboxmd on each host. The generated
-plugin set always matches this catalog. Do not hand-edit three JSON files into
-three different lists. Do not nest plugins inside karpathy-wiki.
+Then add that sibling root as marketplace toolboxmd on each host. Each generated index includes only the catalog entries supporting that host.
+Do not hand-edit generated JSON indexes. Do not nest plugins inside karpathy-wiki.
 
 Codex local sources stay inside that sibling root (`./karpathy-wiki`, and so
 on). Grok and Claude indexes for local-dev use the same names and in-root
@@ -118,7 +136,11 @@ python3 scripts/ingest_project.py <project-id> <release-tag>
 
 The command reads repository membership from `catalog.json`, resolves the exact
 tag, validates the record and every referenced file from the same Git tree, and
-only then updates the catalog and all three host indexes. See
+only then updates the catalog and all three host indexes. A released Project
+Record limits publication to its declared `codex`, `claude-code`, and
+`grok-build` delivery hosts. A `package` delivery validates its package artifact
+and does not imply another harness is supported. Legacy catalog entries without
+`hosts` retain their existing three-host coverage. See
 [`docs/project-record-v1.md`](docs/project-record-v1.md) for the contract,
 deterministic local acceptance, and delivery-state boundaries.
 
@@ -149,7 +171,7 @@ validator before local installation or submission.
 
 ## Add a plugin
 
-1. Give the plugin repo Codex, Claude, and Grok plugin manifests. Name is the
+1. Give the plugin repo manifests for its supported hosts only. Name is the
    short plugin id (`use-grok`, not `toolboxmd-use-grok`). Version mirrors
    that repo's `VERSION`.
 2. Add one object to `catalog.json` (`name`, `description`, `github`, `sha`,

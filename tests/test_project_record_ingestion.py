@@ -237,6 +237,27 @@ class ProjectRecordIngestionTests(unittest.TestCase):
             }
             self.assertEqual(actual, expected)
 
+    def test_codex_only_record_and_scoped_package_publish_only_codex(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            source, marketplace = _prepare_fixture(Path(tmp), "pending")
+            record_path = source / ".toolboxmd/project.json"
+            record = _load(record_path)
+            record["factSources"]["delivery"] = {
+                "codex": ".codex-plugin/plugin.json", "package": "package.json"
+            }
+            record_path.write_text(json.dumps(record) + "\n")
+            (source / "package.json").write_text(json.dumps({
+                "name": "@toolboxmd/fixture-agent", "version": "1.2.3"
+            }) + "\n")
+            _commit_fixture(source, "v1.2.3", "Codex-only release")
+            _run(sys.executable, str(INGEST), "fixture-agent", "v1.2.3",
+                 "--source", str(source), "--marketplace-root", str(marketplace), cwd=ROOT)
+            entry = _entry(_load(marketplace / "catalog.json"), "fixture-agent")
+            self.assertEqual(entry["hosts"], ["codex"])
+            self.assertEqual(_entry(_load(marketplace / INDEX_PATHS[0]), "fixture-agent")["source"]["ref"], "v1.2.3")
+            for index in INDEX_PATHS[1:]:
+                self.assertNotIn("fixture-agent", [p["name"] for p in _load(marketplace / index)["plugins"]])
+
     def test_every_rejection_preserves_accepted_state(self) -> None:
         def mutate_record(source: Path, key: str, value: object) -> None:
             path = source / ".toolboxmd" / "project.json"
@@ -263,6 +284,22 @@ class ProjectRecordIngestionTests(unittest.TestCase):
                 value = _load(manifest)
                 value["version"] = "9.9.9"
                 manifest.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8")
+            elif case == "wrong-package-identity":
+                record_path = source / ".toolboxmd/project.json"
+                record = _load(record_path)
+                record["factSources"]["delivery"]["package"] = "package.json"
+                record_path.write_text(json.dumps(record) + "\n")
+                (source / "package.json").write_text(json.dumps({
+                    "name": "@toolboxmd/unrelated", "version": "1.2.3"
+                }) + "\n")
+            elif case == "no-marketplace-host":
+                record_path = source / ".toolboxmd/project.json"
+                record = _load(record_path)
+                record["factSources"]["delivery"] = {"package": "package.json"}
+                record_path.write_text(json.dumps(record) + "\n")
+                (source / "package.json").write_text(json.dumps({
+                    "name": "@toolboxmd/fixture-agent", "version": "1.2.3"
+                }) + "\n")
             elif case == "malformed-manifest":
                 (source / ".grok-plugin" / "plugin.json").write_text(
                     "{\n", encoding="utf-8"
@@ -286,6 +323,8 @@ class ProjectRecordIngestionTests(unittest.TestCase):
             "missing-reference",
             "version-disagreement",
             "malformed-manifest",
+            "wrong-package-identity",
+            "no-marketplace-host",
             "release-ref-mismatch",
             "path-escape",
         )
