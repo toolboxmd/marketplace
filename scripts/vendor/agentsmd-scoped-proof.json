@@ -1,0 +1,7 @@
+{
+  "repository": "toolboxmd/agentsmd",
+  "commit": "5ce0dd9cefaf31c8c14ef637bc71c5038f4aadb4",
+  "path": "bin/scoped_proof.py",
+  "sha256": "c471e945a41daec266021acd98c68813a918bbd18f73ff72c02be577ba2f6511",
+  "interface": "docs/scoped-proof.md, policy/record schema 1, run and validate_complete"
+}

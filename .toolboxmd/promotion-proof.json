@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "repository": "toolboxmd/marketplace",
+  "policyPath": ".toolboxmd/promotion-proof.json",
+  "maxAgeSeconds": 86400,
+  "blocked": [
+    "scripts/*",
+    "tests/*",
+    ".github/*",
+    ".toolboxmd/*",
+    ".version-policy.json"
+  ],
+  "checks": {
+    "suite": {
+      "argv": [
+        "bash",
+        "tests/run-all.sh"
+      ],
+      "inputs": [
+        "*"
+      ],
+      "environment": [
+        "python",
+        "platform",
+        "git",
+        "runnerImage",
+        "identity",
+        "control",
+        "candidateTree"
+      ],
+      "kind": "behavior"
+    },
+    "generated": {
+      "argv": [
+        "python3",
+        "scripts/toolybara_proof.py",
+        "check-generated"
+      ],
+      "inputs": [
+        "*"
+      ],
+      "environment": [
+        "python",
+        "platform",
+        "git",
+        "runnerImage",
+        "identity",
+        "control",
+        "candidateTree"
+      ],
+      "kind": "artifact"
+    }
+  },
+  "rules": [
+    {
+      "paths": [
+        "catalog.json",
+        ".agents/plugins/marketplace.json",
+        ".claude-plugin/marketplace.json",
+        ".cursor-plugin/marketplace.json",
+        ".grok-plugin/marketplace.json",
+        "plugins/agentsmd/*",
+        "VERSION",
+        "CHANGELOG.md"
+      ],
+      "checks": [
+        "suite",
+        "generated"
+      ],
+      "reason": "Only deterministic AgentsMD distribution and one Marketplace patch; all candidate tests and deterministic regeneration run once."
+    }
+  ]
+}

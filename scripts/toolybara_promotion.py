@@ -485,6 +485,7 @@ def prepare_existing_branch(
     closed_pull_requests: list[dict],
     request: Callable[..., dict | list | None] = _gh_request,
     push: Callable[..., None] = _push,
+    before_update: Callable[[str], None] = lambda _head: None,
 ) -> str:
     """Bind or recover the retained promotion branch without trusting its owner."""
 
@@ -519,6 +520,7 @@ def prepare_existing_branch(
         # A prior run may have pushed successfully and failed before PR creation.
         # Rewrite only the reserved branch with an exact lease and the current
         # Toolybara token, then let the caller create and validate the PR.
+        before_update(candidate_head)
         push(root, EXPECTED_BRANCH, previous=previous)
         return candidate_head
 
@@ -531,7 +533,9 @@ def prepare_existing_branch(
         else None
     )
     if remote_tree == candidate_tree:
+        before_update(previous)
         return previous
+    before_update(candidate_head)
     push(root, EXPECTED_BRANCH, previous=previous)
     return candidate_head
 
@@ -668,6 +672,27 @@ def _expected_pull_requests(state: str) -> list[dict]:
     return value
 
 
+def _proof_adapter():
+    spec = importlib.util.spec_from_file_location(
+        "toolybara_proof", Path(__file__).resolve().with_name("toolybara_proof.py")
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _fresh_source(base_root: Path, source_root: Path, expected: dict) -> None:
+    # The pre-proof clone is immutable evidence, not a fresh remote tag read.
+    _run("git", "fetch", "--force", "--tags", "origin", cwd=source_root)
+    decision = select_candidate(
+        _published_releases(), current_tag=_current_release(base_root), wake_tag=None,
+        inspect=lambda tag: _inspect_release(base_root, source_root, tag),
+    )
+    source = require_same_candidate(decision, expected["release"])
+    if source["commit"] != expected["commit"] or source["recordSha256"] != expected["recordSha256"]:
+        raise PromotionError("source identity moved immediately before mutation")
+
+
 def reconcile(args: argparse.Namespace) -> dict:
     root = Path(__file__).resolve().parents[1]
     base_sha = _main_sha()
@@ -727,15 +752,6 @@ def reconcile(args: argparse.Namespace) -> dict:
             source_root=source_root,
             release=source["release"],
         )
-        second = build_generated_candidate(
-            base_root=root,
-            candidate_root=candidate_root,
-            source_root=source_root,
-            release=source["release"],
-        )
-        if first != second:
-            raise PromotionError("second generation run was not idempotent")
-        _run("bash", "tests/run-all.sh", cwd=candidate_root)
         _run("git", "config", "user.name", "Toolybara", cwd=candidate_root)
         _run(
             "git",
@@ -754,11 +770,32 @@ def reconcile(args: argparse.Namespace) -> dict:
         )
         candidate_head = _run("git", "rev-parse", "HEAD", cwd=candidate_root)
         candidate_tree = _run("git", "rev-parse", "HEAD^{tree}", cwd=candidate_root)
-        _run(
-            str(root / "plugins" / "agentsmd" / "tools" / "versionctl" / "bin" / "versionctl"),
-            "release-check",
-            cwd=candidate_root,
-        )
+
+        proof_result = {}
+
+        def prove_before_update(exact_head: str) -> None:
+            if exact_head != candidate_head:
+                _run("git", "fetch", "origin", exact_head, cwd=candidate_root)
+                _run("git", "checkout", "--detach", exact_head, cwd=candidate_root)
+            # Never attach new-commit proof to an equivalent older tree. Freeze
+            # the exact retained head first and prove that actual source.
+            if _run("git", "rev-parse", "HEAD^", cwd=candidate_root) != base_sha:
+                raise PromotionError("retained candidate no longer has the exact promotion base")
+            adapter = _proof_adapter()
+            proof_result.update(adapter.record(
+                root, candidate_root, source_root,
+                adapter.identity(base_sha, exact_head, source), args.proof_output,
+            ))
+            if _main_sha() != base_sha:
+                raise PromotionError("Marketplace main moved during proof")
+            _fresh_source(root, source_root, source)
+            current_prs = _expected_pull_requests("open")
+            if len(current_prs) != len(pull_requests):
+                raise PromotionError("expected promotion pull request changed during proof")
+            for current, prior in zip(current_prs, pull_requests):
+                validate_pull_request(current, {
+                    "number": prior["number"], "head": previous, "base": base_sha,
+                }, require_mergeable=False)
 
         branch_ref = _gh_request(
             "GET",
@@ -778,12 +815,17 @@ def reconcile(args: argparse.Namespace) -> dict:
                 closed_pull_requests=(
                     [] if pull_requests else _expected_pull_requests("closed")
                 ),
+                before_update=prove_before_update,
             )
         else:
             if pull_requests:
                 raise PromotionError("expected pull request exists without its promotion branch")
+            prove_before_update(candidate_head)
             _push(candidate_root, EXPECTED_BRANCH, previous=None)
 
+        if _main_sha() != base_sha:
+            raise PromotionError("Marketplace main moved before pull request update")
+        _fresh_source(root, source_root, source)
         body = _promotion_body(source, first["marketplaceVersion"])
         if pull_requests:
             pull_request = _gh_request(
@@ -823,6 +865,8 @@ def reconcile(args: argparse.Namespace) -> dict:
             "source_sha": source["commit"],
             "record_sha256": source["recordSha256"],
             "marketplace_version": first["marketplaceVersion"],
+            "proof_sha256": proof_result["sha256"],
+            "proof_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
         }
         _write_outputs(args.output, values)
         _append_summary(
@@ -837,6 +881,7 @@ def reconcile(args: argparse.Namespace) -> dict:
                 f"- Peeled source commit: `{source['commit']}`",
                 f"- Project Record SHA-256: `{source['recordSha256']}`",
                 f"- Rejected newer candidates: `{json.dumps(decision.rejected, sort_keys=True)}`",
+                f"- Executed once on frozen head: `{json.dumps(proof_result, sort_keys=True)}`",
             ],
         )
         return values
@@ -879,6 +924,7 @@ def _validate_candidate_checkout(
     *,
     require_newest: bool,
     release_check: bool = True,
+    proof_mode: str = "reuse",
 ) -> dict:
     base_root = args.base_root.resolve()
     candidate_root = args.candidate_root.resolve()
@@ -915,9 +961,24 @@ def _validate_candidate_checkout(
         version = validate_candidate_state(base_root, candidate_root, source)
         if version != args.marketplace_version:
             raise PromotionError("Marketplace version changed after reconciliation")
-        _regenerate_and_compare(base_root, candidate_root, source_root, source)
 
-    _run("bash", "tests/run-all.sh", cwd=candidate_root)
+        if proof_mode == "complete-moved-base":
+            # Existing interrupted-merge recovery has an explicit complete lane.
+            # The old record cannot cover a different parent or squash commit.
+            _regenerate_and_compare(base_root, candidate_root, source_root, source)
+
+    if proof_mode == "complete-moved-base":
+        _run("bash", "tests/run-all.sh", cwd=candidate_root)
+        proof = {"mode": "complete-moved-base", "executedHere": ["deterministic regeneration", "tests/run-all.sh"],
+                 "reusedHere": [], "reason": "actual merge base/head invalidated the prior complete record"}
+    elif proof_mode == "reuse":
+        adapter = _proof_adapter()
+        proof = adapter.reuse(
+            base_root, candidate_root, adapter.identity(args.base_sha, args.head_sha, source),
+            args.proof_file, os.environ.get("TOOLYBARA_PROOF_DIGEST"),
+        )
+    else:
+        raise PromotionError("unsupported proof lane")
     if release_check:
         _run(
             str(
@@ -941,6 +1002,8 @@ def _validate_candidate_checkout(
         "recordSha256": args.record_sha256,
         "marketplaceVersion": args.marketplace_version,
         "changedPaths": sorted(paths),
+        "proof": proof,
+        "freshChecks": ["generated scope", "PR actor/branch/base/head", "newest eligible source" if require_newest else "frozen merged source", "immutable source identity", "preservation", "version"],
     }
     _append_summary(
         args.summary,
@@ -1096,6 +1159,7 @@ def _validate_drifted_merge(
         evidence = _validate_candidate_checkout(
             merged_args,
             require_newest=require_newest,
+            proof_mode="complete-moved-base",
         )
         return {
             **evidence,
@@ -1408,6 +1472,7 @@ def _common_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--marketplace-version", required=True)
     parser.add_argument("--require-mergeable", action="store_true")
     parser.add_argument("--summary", type=Path)
+    parser.add_argument("--proof-file", type=Path, required=True)
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -1417,6 +1482,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     reconcile_parser.add_argument("--wake-tag", default="")
     reconcile_parser.add_argument("--output", type=Path)
     reconcile_parser.add_argument("--summary", type=Path)
+    reconcile_parser.add_argument("--proof-output", type=Path, required=True)
     validate_parser = commands.add_parser("validate")
     _common_parser(validate_parser)
     finalize_parser = commands.add_parser("finalize")

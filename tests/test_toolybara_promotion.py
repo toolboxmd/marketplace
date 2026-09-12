@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMOTION = ROOT / "scripts" / "toolybara_promotion.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-reconciliation.yml"
 SCHEDULE_WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-schedule.yml"
-TRUSTED_WORKFLOW_SHA256 = "9b4649b62b79fd7835736baeaa571ab3ba2afabda76fa45724778c3b92d6e489"
+TRUSTED_WORKFLOW_SHA256 = "3db7bf39e7a6cf3ee90542145bde6f5c55d674e4f4f7c7c49fb9837ebfae2b16"
 SPEC = importlib.util.spec_from_file_location("toolybara_promotion", PROMOTION)
 assert SPEC and SPEC.loader
 promotion = importlib.util.module_from_spec(SPEC)

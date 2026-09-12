@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 2026-09-12
+
+### Added
+
+- Reuse exact generated promotion proof across Toolybara jobs
+
 ## [1.3.2] - 2026-09-12
 
 ### Changed
