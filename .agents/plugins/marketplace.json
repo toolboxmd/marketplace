@@ -24,7 +24,8 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/use-grok.git",
-        "sha": "a8ae6ab3c862de836ca576276a221610e3fe274c"
+        "sha": "02cfb3c9d990c77bbcc7775049e174e4306854a9",
+        "ref": "v0.3.0"
       },
       "policy": {
         "installation": "AVAILABLE",

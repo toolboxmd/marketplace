@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.2] - 2026-09-12
+
+### Changed
+
+- Pin use-grok v0.3.0 in the ToolboxMD catalog
+
 ## [1.3.1] - 2026-09-07
 
 ### Changed
