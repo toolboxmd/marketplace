@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1] - 2026-09-12
+
+### Changed
+
+- Wait for the exact published Marketplace base and preserve failed proof diagnostics
+
 ## [1.4.0] - 2026-09-12
 
 ### Added

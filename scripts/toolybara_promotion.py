@@ -693,11 +693,53 @@ def _fresh_source(base_root: Path, source_root: Path, expected: dict) -> None:
         raise PromotionError("source identity moved immediately before mutation")
 
 
+def base_release_ready(root: Path, base_sha: str, *, request=None) -> bool:
+    """A next patch needs the exact current base's published version anchor."""
+    request = request or _gh_request
+    version = (root / "VERSION").read_text(encoding="utf-8").strip()
+    tag = f"v{version}"
+    _version(tag)
+    release = request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/releases/tags/{tag}", allow_not_found=True)
+    if release is None:
+        return False
+    if not isinstance(release, dict):
+        raise PromotionError("Marketplace base release metadata is invalid")
+    if release.get("draft") is True:
+        return False
+    if release.get("tag_name") != tag or release.get("prerelease") is not False or not release.get("published_at"):
+        raise PromotionError("Marketplace base release is not the expected stable published release")
+    reference = request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/git/ref/tags/{tag}", allow_not_found=True)
+    if reference is None:
+        return False
+    if not isinstance(reference, dict):
+        raise PromotionError("Marketplace base tag metadata is invalid")
+    target = reference.get("object", {})
+    if target.get("type") != "tag":
+        raise PromotionError("Marketplace base release requires its exact annotated tag")
+    annotation = request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/git/tags/{target.get('sha')}")
+    if (not isinstance(annotation, dict) or annotation.get("tag") != tag or
+            annotation.get("object", {}).get("type") != "commit" or
+            annotation.get("object", {}).get("sha") != base_sha):
+        raise PromotionError("Marketplace base release tag does not identify exact main")
+    return True
+
+
 def reconcile(args: argparse.Namespace) -> dict:
     root = Path(__file__).resolve().parents[1]
     base_sha = _main_sha()
     if _run("git", "rev-parse", "HEAD", cwd=root) != base_sha:
         raise PromotionError("trusted workflow checkout is not the live main commit")
+
+    if not base_release_ready(root, base_sha):
+        values = {"state": "deferred-base-release", "base_sha": base_sha}
+        _write_outputs(args.output, values)
+        _append_summary(args.summary, [
+            "### Toolybara reconciliation", "", "- State: deferred-base-release",
+            f"- Exact Marketplace base: `{base_sha}`",
+            "- Waiting for this base's annotated tag and published GitHub Release before generating the next patch.",
+            "- No candidate generated or pushed; scheduled or event reconciliation can retry.",
+        ])
+        return values
 
     with tempfile.TemporaryDirectory(prefix="toolybara-reconcile-") as tmp:
         temp = Path(tmp)

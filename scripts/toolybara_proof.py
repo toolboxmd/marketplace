@@ -99,6 +99,15 @@ def record(base_root, candidate_root, source_root, expected, output):
                 os.environ.pop(key, None)
             else:
                 os.environ[key] = value
+    # Report the executed failure before coverage validation can mask it as an
+    # incomplete record. Keep exact logs beside proof.json for artifact upload.
+    for name, result in shared.decode(raw)["results"].items():
+        if result["exitCode"]:
+            for stream in ("stdout", "stderr"):
+                log = Path(output) / name / stream
+                print(f"Proof command {name} {stream}:\n{log.read_text(errors='replace')}", file=sys.stderr)
+            raise shared.ProofError(f"proof command {name} failed (exit {result['exitCode']}); execution logs retained")
+
     # Exact bytes returned by our protected executor are authenticated here.
     def executed(data):
         shared.require(data == raw, "execution bytes changed")

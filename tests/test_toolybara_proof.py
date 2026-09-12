@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Execute once and authenticate exact promotion proof at the command seam."""
 import copy
+from contextlib import redirect_stderr
+import io
 import hashlib
 import importlib.util
 import json
@@ -69,6 +71,44 @@ class ProofTests(unittest.TestCase):
     def reuse(self, expected=None, digest=None):
         return adapter.reuse(self.base, self.candidate, expected or self.expected,
                              self.output / "proof.json", digest or self.receipt["sha256"])
+
+    def test_failed_execution_reports_the_command_and_preserves_its_stderr(self):
+        self.counter.mkdir()  # The real generated check now fails on its output.
+        diagnostic = io.StringIO()
+        with redirect_stderr(diagnostic), self.assertRaisesRegex(shared.ProofError, "proof command generated failed"):
+            self.record()
+        self.assertIn("IsADirectoryError", diagnostic.getvalue())
+        self.assertIn("IsADirectoryError", (self.output / "generated/stderr").read_text())
+        self.assertNotIn("suite", json.loads((self.output / "proof.json").read_bytes())["results"])
+
+    def test_version_check_requires_the_published_base_anchor_before_the_next_patch(self):
+        # Reproduce the rollout order: latest tag 1.3.1, merged base 1.4.0,
+        # candidate 1.4.1. Publication of only the missing base tag fixes it.
+        root = self.root / "version-reproduction"
+        root.mkdir()
+        def git(*args):
+            return subprocess.check_output(["git", *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+        git("init", "-q")
+        git("config", "user.name", "Tests")
+        git("config", "user.email", "tests@example.invalid")
+        (root / ".version-policy.json").write_bytes((ROOT / ".version-policy.json").read_bytes())
+        def commit_version(version):
+            (root / "VERSION").write_text(version + "\n")
+            (root / "CHANGELOG.md").write_text(f"# Changelog\n\n## [{version}] - 2026-09-12\n\n### Changed\n\n- Test version.\n")
+            git("add", ".")
+            git("commit", "-qm", version)
+            return git("rev-parse", "HEAD")
+        commit_version("1.3.1")
+        git("tag", "-a", "v1.3.1", "-m", "Released prior")
+        base = commit_version("1.4.0")
+        commit_version("1.4.1")
+        command = [str(ROOT / "plugins/agentsmd/tools/versionctl/bin/versionctl"), "release-check"]
+        before = subprocess.run(command, cwd=root, capture_output=True, text=True)
+        self.assertNotEqual(before.returncode, 0)
+        self.assertIn("skips the next valid transition", before.stderr)
+        git("tag", "-a", "v1.4.0", base, "-m", "Published base")
+        after = subprocess.run(command, cwd=root, capture_output=True, text=True)
+        self.assertEqual(after.returncode, 0, after.stderr)
 
     def test_exact_complete_execution_is_reused_twice_without_test_execution(self):
         self.receipt = self.record()
@@ -170,6 +210,8 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(workflow.count("TOOLYBARA_PROOF_DIGEST: ${{ needs.reconcile.outputs.proof_sha256 }}"), 2)
         self.assertIn("proof_attempt: ${{ steps.reconcile.outputs.proof_attempt }}", workflow)
         self.assertIn("if: needs.validate.result == 'success'", workflow)
+        self.assertIn("if: always() && steps.reconcile.outcome != 'skipped'", workflow)
+        self.assertIn("if-no-files-found: ignore", workflow)
 
 
 if __name__ == "__main__":
