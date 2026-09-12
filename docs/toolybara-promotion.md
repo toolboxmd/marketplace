@@ -40,9 +40,13 @@ The reconciliation job starts from the live `main` commit and independently:
 5. Generates the catalog, Codex, Claude Code, Grok Build, Cursor index, and
    Cursor package in an ephemeral Marketplace clone.
 6. Applies exactly one Marketplace patch transition with `versionctl`.
-7. Runs generation twice and requires identical output, the generated-file
-   allowlist, preserved non-AgentsMD catalog records, and the complete test
-   suite before any push.
+7. Freezes the final generated commit, including its version transition, before
+   proof. A retained equivalent branch is checked out at its exact existing SHA
+   before execution; tree equivalence never substitutes for commit identity.
+8. Executes the complete suite and deterministic regeneration once, records
+   actual commands, results and output digests, then freshly rechecks live state
+   before any push. The generated-file allowlist and unrelated records remain
+   protected.
 
 Invalid candidates never mutate `main`. If no unreconciled candidate is valid,
 the run fails with the rejection evidence. If the accepted release is already
@@ -77,10 +81,12 @@ separate directories. It reads the live pull request and proves the Toolybara
 actor, expected repository and branch, open state, base, exact head SHA,
 generated-file allowlist, current newest Eligible Release, peeled source
 commit, record digest, catalog identity, preserved `use-grok` and
-`karpathy-wiki` records, one patch transition, deterministic regeneration,
-complete tests, and `versionctl release-check`.
+`karpathy-wiki` records, one patch transition, and `versionctl release-check`. It authenticates and reuses
+the exact reconciliation execution record for deterministic regeneration and
+complete tests. No tests execute again in validation or ordinary finalization.
 
-The Trusted Final Job then reruns the same checks with mergeability required,
+The Trusted Final Job reuses the same complete execution proof and repeats the
+live checks with mergeability required,
 rereads the pull request and live `main`, and mints a fresh Toolybara token. It
 calls GitHub's pull-request merge API with `merge_method: squash` and the exact
 validated `sha`. It rereads the merged pull request and requires Toolybara to be
@@ -99,6 +105,68 @@ After the Toolybara promotion is released, the job comments on and closes pull
 request #15 as a superseded manual proposal. It states explicitly that #15 was
 not merged and was not automatic delivery, then rereads #15 to prove it is
 closed and unmerged.
+
+## Exact candidate proof
+
+`.toolboxmd/promotion-proof.json` is the reviewed generated-promotion scope. It
+uses precisely the generated allowlist above. Scripts, workflows, tests, policy,
+permissions, unknown paths and unrelated Project records cannot expand this lane.
+The cumulative trusted-base-to-candidate diff is admitted independently of proof.
+
+The shared implementation is vendored unchanged from AgentsMD commit
+`5ce0dd9cefaf31c8c14ef637bc71c5038f4aadb4`, with its source and byte digest in
+`scripts/vendor/agentsmd-scoped-proof.json`. The source interface is
+`docs/scoped-proof.md`, schema 1, `run` and `validate_complete`. Marketplace loads
+both adapter and policy from its pinned trusted base, never from PR-selected
+control. This pin does not claim AgentsMD release, installation or loading.
+
+The first candidate containing the policy receives its own direct complete
+proof. Reconciliation runs `bash tests/run-all.sh` and
+`python3 scripts/toolybara_proof.py check-generated` on that clean, versioned
+commit. The second command checks two deterministic regenerations against the
+frozen tree, unrelated catalog preservation, immutable source and version.
+There is no historical baseline relabeling, scoped-baseline chain, fabricated
+empty record or tree-to-commit exception. All required coverage runs once;
+this adapter reuses complete proof across jobs rather than skipping unrelated
+checks within that initial execution.
+
+The protected reconciliation job publishes a same-run immutable Actions artifact
+and exposes the record digest and producing attempt through trusted job outputs.
+SHA-pinned `download-artifact` steps select only that artifact in the current run,
+after successful reconciliation. They do not accept another run or repository.
+The adapter binds downloaded bytes to that protected digest, repository, allowed
+workflow at `main`, exact workflow revision, run and producing attempt. The
+record's issuer or digest alone does not authenticate evidence. Job retries use
+the original producing attempt; full workflow reruns create new evidence.
+No additional GitHub token or App permissions are required.
+
+Records bind the exact candidate, base, policy, generator/control inputs,
+immutable AgentsMD release/commit/record digest, runtime, Git, runner image,
+complete tracked input tree, selected argv, exit status, output digests and
+execution times. A changed input, failed/incomplete result, dirty checkout,
+changed policy or proof older than 24 hours fails closed. Missing artifacts
+require a new reconciliation run. Cross-run caching is intentionally unsupported.
+A base movement after merge explicitly enters the existing complete moved-base
+recovery lane: regeneration and tests execute against the actual merged source,
+and the old proof is reported as invalidated rather than reused.
+
+Workflow summaries distinguish execution from reuse and fresh admission. The
+artifact retains stdout/stderr and per-check records; its issuer identifies the
+run and producing attempt, and summaries report elapsed verification seconds.
+GitHub's job timeline supplies runner time and stage/coordination gaps. There is
+no production build, deployment, request-to-live measurement or provider
+publication in this proof path. Finalization still proves the unchanged merged
+tree (or performs complete moved-base proof), exact tag and GitHub Release.
+
+Algorithm decision: Issue #39 owns the requirement to remove repeated execution
+without weakening promotion admission. Delete duplicate suite and regeneration
+runs in ordinary validation/finalization. Retain one complete frozen-candidate
+execution, generated scope, preservation, version checks and fresh external
+state because each proves a distinct requirement. Use the existing same-run
+artifact transport and the shared complete-proof validator as the smallest
+surviving path. Focused command tests shorten feedback; automation applies only
+to the already authorized Toolybara loop. Website impact is none: this changes
+internal proof execution without changing public distribution or setup behavior.
 
 ## Settings and authority boundary
 
