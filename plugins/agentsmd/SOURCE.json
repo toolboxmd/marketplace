@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v8.7.0",
-  "commit": "4ffe78481f94a3b61416a2583ef04d21928c6aa5",
+  "release": "v8.8.0",
+  "commit": "c3fa48da8f6037fb08b1d5fc439464903fec1270",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "b49b8744cc568b0fbb282925d3ca5884d598bb722351223467d162cef7ea21fb"
+    "sha256": "c0995b4adf1d6862c5d28fffa02d9dc167268469e9ad2fb3102556ed9c36d773"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "b49b8744cc568b0fbb282925d3ca5884d598bb722351223467d162cef7ea21fb",
+      "sha256": "c0995b4adf1d6862c5d28fffa02d9dc167268469e9ad2fb3102556ed9c36d773",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "331890b9bae605c036309f3f56e1cfca916aff3dfd61aebe50370d4bfa125c78",
+      "sha256": "e0368c3454cc690f7ce48497f88b737c115c06c18bdea907fedb3781477017a2",
       "mode": "100644"
     },
     {
@@ -78,6 +78,12 @@
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
       "sha256": "858041b2ff64bb48cdf5092afd6549696ffb3ae7221494cae390b4bae68127db",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/scoped-proof.md",
+      "source": "docs/scoped-proof.md",
+      "sha256": "082945f23c1c8b028865f1df618d14da2a48f827277d57f4cf558c4d0882be34",
       "mode": "100644"
     },
     {
@@ -119,7 +125,7 @@
     {
       "path": "skills/delivery-profile/SKILL.md",
       "source": "skills/delivery-profile/SKILL.md",
-      "sha256": "ccb0295fed6d8eb82ffc68c577f5bb0296cf243ad89bbefa0d48d988da5e540f",
+      "sha256": "cdfe9e2a23ccef4e693c6bb26e80d9af79044f52bc542feb35877a6b2d572288",
       "mode": "100644"
     },
     {
@@ -305,7 +311,7 @@
     {
       "path": "skills/version-control/SKILL.md",
       "source": "skills/version-control/SKILL.md",
-      "sha256": "46ca541e7ac9ea822551a875f39b03b2b39113aedf7958375ef6eb93981c0993",
+      "sha256": "a9125412c452f3cf302a445eec53c3a157f37fa1a8e5ec4716f9fce8e06a5337",
       "mode": "100644"
     },
     {
