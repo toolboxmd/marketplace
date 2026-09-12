@@ -76,13 +76,13 @@ jobs:
             --output "$GITHUB_OUTPUT" \
             --summary "$GITHUB_STEP_SUMMARY"
 
-      - name: Preserve exact execution proof from this successful reconciliation
-        if: steps.reconcile.outputs.state == 'candidate'
+      - name: Preserve execution proof and failure logs
+        if: always() && steps.reconcile.outcome != 'skipped'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: toolybara-proof-${{ github.run_attempt }}
           path: ${{ runner.temp }}/toolybara-proof
-          if-no-files-found: error
+          if-no-files-found: ignore
           retention-days: 7
 
   validate:

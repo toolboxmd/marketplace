@@ -28,6 +28,14 @@ merge jobs.
 
 ## Reconciliation
 
+Before generating the next patch, reconciliation requires the current `main`
+version's stable GitHub Release and exact annotated tag to be published. An
+absent or draft release returns `deferred-base-release` without generating,
+pushing or opening a candidate. Scheduled or event reconciliation retries later.
+An existing tag pointing elsewhere fails closed. This prevents a source-release
+event racing the Marketplace base release and making `versionctl` reject the
+next patch for skipping an unpublished version anchor.
+
 The reconciliation job starts from the live `main` commit and independently:
 
 1. Lists published non-draft, non-prerelease AgentsMD releases.
@@ -151,7 +159,7 @@ recovery lane: regeneration and tests execute against the actual merged source,
 and the old proof is reported as invalidated rather than reused.
 
 Workflow summaries distinguish execution from reuse and fresh admission. The
-artifact retains stdout/stderr and per-check records; its issuer identifies the
+artifact retains stdout/stderr and per-check records, including failed checks; its issuer identifies the
 run and producing attempt, and summaries report elapsed verification seconds.
 GitHub's job timeline supplies runner time and stage/coordination gaps. There is
 no production build, deployment, request-to-live measurement or provider
@@ -178,3 +186,7 @@ uninstalled on AgentsMD.
 
 Marketplace release, distribution, installation, loading, behavioral Live
 Verification, and website parity remain separate delivery states.
+
+Failed execution reports the failed command and its original stdout/stderr before
+coverage validation. The upload step retains partial proof even when reconciliation
+fails; dependent jobs still require successful reconciliation and cannot reuse it.

@@ -20,11 +20,38 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMOTION = ROOT / "scripts" / "toolybara_promotion.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-reconciliation.yml"
 SCHEDULE_WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-schedule.yml"
-TRUSTED_WORKFLOW_SHA256 = "3db7bf39e7a6cf3ee90542145bde6f5c55d674e4f4f7c7c49fb9837ebfae2b16"
+TRUSTED_WORKFLOW_SHA256 = "66ec8a71c391f6ae758329ecebc56364d786e26487e8d0dcfb6db82fb660b51f"
 SPEC = importlib.util.spec_from_file_location("toolybara_promotion", PROMOTION)
 assert SPEC and SPEC.loader
 promotion = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(promotion)
+
+
+class BaseReleaseTests(unittest.TestCase):
+    def test_unpublished_base_defers_and_only_its_exact_public_tag_is_ready(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "VERSION").write_text("1.4.0\n")
+            documents = {
+                "/repos/toolboxmd/marketplace/releases/tags/v1.4.0": {"tag_name": "v1.4.0", "draft": False, "prerelease": False, "published_at": "2026-09-12T15:06:25Z"},
+                "/repos/toolboxmd/marketplace/git/ref/tags/v1.4.0": {"object": {"type": "tag", "sha": "a" * 40}},
+                "/repos/toolboxmd/marketplace/git/tags/" + "a" * 40: {"tag": "v1.4.0", "object": {"type": "commit", "sha": "b" * 40}},
+            }
+            request = lambda _method, endpoint, **kwargs: documents.get(endpoint)
+            self.assertTrue(promotion.base_release_ready(root, "b" * 40, request=request))
+            with self.assertRaisesRegex(promotion.PromotionError, "exact main"):
+                promotion.base_release_ready(root, "c" * 40, request=request)
+            documents["/repos/toolboxmd/marketplace/releases/tags/v1.4.0"]["draft"] = True
+            self.assertFalse(promotion.base_release_ready(root, "b" * 40, request=request))
+            del documents["/repos/toolboxmd/marketplace/releases/tags/v1.4.0"]
+            self.assertFalse(promotion.base_release_ready(root, "b" * 40, request=request))
+
+    def test_deferred_base_returns_before_source_clone_generation_or_push(self):
+        with patch.object(promotion, "_main_sha", return_value="b" * 40), patch.object(promotion, "_run", return_value="b" * 40), patch.object(promotion, "base_release_ready", return_value=False), patch.object(promotion, "_clone") as clone, patch.object(promotion, "_push") as push:
+            result = promotion.reconcile(Namespace(output=None, summary=None))
+        self.assertEqual(result, {"state": "deferred-base-release", "base_sha": "b" * 40})
+        clone.assert_not_called()
+        push.assert_not_called()
 
 
 class ReleaseSelectionTests(unittest.TestCase):
@@ -283,7 +310,8 @@ class AcceptedDuplicateTests(unittest.TestCase):
                     return_value=inspected,
                 ) as inspect,
             ):
-                result = promotion.reconcile(
+                with patch.object(promotion, "base_release_ready", return_value=True):
+                    result = promotion.reconcile(
                     Namespace(wake_tag="", output=output, summary=summary)
                 )
 
@@ -380,7 +408,8 @@ class AcceptedDuplicateTests(unittest.TestCase):
                     promotion.PromotionError,
                     "accepted AgentsMD identity disagrees",
                 ):
-                    promotion.reconcile(
+                    with patch.object(promotion, "base_release_ready", return_value=True):
+                        promotion.reconcile(
                         Namespace(wake_tag="", output=output, summary=summary)
                     )
 
