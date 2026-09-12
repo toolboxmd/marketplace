@@ -34,7 +34,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agentsmd.git",
-        "sha": "4ffe78481f94a3b61416a2583ef04d21928c6aa5"
+        "sha": "c3fa48da8f6037fb08b1d5fc439464903fec1270"
       },
       "homepage": "https://github.com/toolboxmd/agentsmd"
     }
