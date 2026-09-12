@@ -153,8 +153,9 @@ class PublishedCatalogTests(unittest.TestCase):
                 )
         self.assertEqual(
             by_name["use-grok"]["sha"],
-            "a8ae6ab3c862de836ca576276a221610e3fe274c",
+            "02cfb3c9d990c77bbcc7775049e174e4306854a9",
         )
+        self.assertEqual(by_name["use-grok"]["release"], "v0.3.0")
         self.assertEqual(
             by_name["karpathy-wiki"]["sha"],
             "d8107e727f4b585a9927cad813f90fda6b559ef3",
