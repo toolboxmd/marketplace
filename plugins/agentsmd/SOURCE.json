@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v9.1.0",
-  "commit": "d07c9aa789e2bc46e8fe29b046a57e37ddab2b55",
+  "release": "v9.2.0",
+  "commit": "188528f0e1ae656e707d155cb17339ec7130ed6c",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "5d669657c34d9c92a5bd28ec2c63423a55b3415134a673ba48857d0bb325a4ac"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "077ee5b3a3a7fc2622ceff6466fea0c28f3fb08b24653dcc7f4baab29b9aef36",
+      "sha256": "1b9487d55bea47fea50d226cc9c53bc548877ad2a318bac8fbc8b320f429e5c5",
       "mode": "100644"
     },
     {
@@ -197,25 +197,25 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "e96d5ee15544ca390c6b16c9042fd9baba2de2e3ca6f04f23b34aede82c81059",
+      "sha256": "656e954a60dd20b6e0b8ea007f57c7507f2e1fa614778e7cd4f122185b129ac2",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "32773671dc4380653c97d74ec9263c91a24c3d114776f7bb40b3be8ded89a225",
+      "sha256": "cefd4395ebe6a87121933bafb338fa05ca25aa53e0d7968d16bdadd962ae603d",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "04230006d8ea33ea149a11019440acedbb700c4dbfb6232db85095a40aa89a84",
+      "sha256": "e23f13ab3222b73351636003bb796749e5398dc69e8ead353c667c963929d63b",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "b7a17545642f530782b465876c4248cd77477ce15594a202fa63064e0f1dfe14",
+      "sha256": "e5dd1ab565c0da45631b42190fd4c41f2dd2bd467167800a9282e341281573d7",
       "mode": "100644"
     },
     {
@@ -371,7 +371,7 @@
     {
       "path": "skills/version-control/SKILL.md",
       "source": "skills/version-control/SKILL.md",
-      "sha256": "a9125412c452f3cf302a445eec53c3a157f37fa1a8e5ec4716f9fce8e06a5337",
+      "sha256": "1a6f2701a7345b2a6a866d7989ae90b7cbe5a4a8d942e52cb33480fa88e77d79",
       "mode": "100644"
     },
     {
