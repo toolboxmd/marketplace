@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v9.2.1",
-  "commit": "c1dc04a7d4b97dd653e2f52716c135153da2e4c1",
+  "release": "v9.3.0",
+  "commit": "8972c0dd4e3c539338e075db11cdf958eeadf079",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "5d669657c34d9c92a5bd28ec2c63423a55b3415134a673ba48857d0bb325a4ac"
+    "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "5d669657c34d9c92a5bd28ec2c63423a55b3415134a673ba48857d0bb325a4ac",
+      "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0",
       "mode": "100644"
     },
     {
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "f3eee20b1145a37a719c49e987bc170c323c46648d0a4360e460365a59e7191a",
+      "sha256": "0c9c2927eef76bb99213fa827ae80948e52fb871a415f618281a6903d44c1aef",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "8d744967a099e22b4fa4a4702ad64b68556f2f246ec1fd4508b6cb81505cba80",
+      "sha256": "14ebdd5f5d8dfccb0fc574ea9aabecc07d7cdd99d53e4fc01e58f9c3d23d18ef",
       "mode": "100644"
     },
     {
@@ -101,13 +101,13 @@
     {
       "path": "skills/algorithm/SKILL.md",
       "source": "skills/algorithm/SKILL.md",
-      "sha256": "e9867661898d5a476fee7d6f209fb788a230ee275f2393268b9002f96998baf2",
+      "sha256": "8ef98ebb109d49530e2fdecd99adae43d7c32e94e6e6026a6967df684c56e299",
       "mode": "100644"
     },
     {
       "path": "skills/algorithm/agents/openai.yaml",
       "source": "skills/algorithm/agents/openai.yaml",
-      "sha256": "4ab1fb7ec1f8d2ac098c8cbb33806b73e79453f935ed3d6568906519147d2006",
+      "sha256": "5fb3f53ece4a9383310da01cdff3d792a6556ea67a5e9b5b99ba80ec8a3fb174",
       "mode": "100644"
     },
     {
@@ -119,7 +119,7 @@
     {
       "path": "skills/algorithm/references/marketplace-project-record-regression.md",
       "source": "skills/algorithm/references/marketplace-project-record-regression.md",
-      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
+      "sha256": "e16d58d4967e7cc39b143cdd0c3a63e4c4fbe95a571faedc6311aae087af6c0b",
       "mode": "100644"
     },
     {
@@ -159,6 +159,54 @@
       "mode": "100644"
     },
     {
+      "path": "skills/elon-method/SKILL.md",
+      "source": "skills/elon-method/SKILL.md",
+      "sha256": "9e4481861e024d31f67ccc2fa0e99a692090aac8ae532d1cf936f517fb06d723",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/agents/openai.yaml",
+      "source": "skills/elon-method/agents/openai.yaml",
+      "sha256": "ccc603430c435734a93d3f9e89c77f10bf7eca1067c30100c6afefcb6df84677",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/evals/trigger-evals.json",
+      "source": "skills/elon-method/evals/trigger-evals.json",
+      "sha256": "6d6f559303d137d01c4856f55052193fd23d782fc4bb54746cf43367e03ea3bc",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/references/algorithm.md",
+      "source": "skills/elon-method/references/algorithm.md",
+      "sha256": "54aa8d4706078e7d6f830f09b991362cbd4db0b16117de1e202302ea5df0577a",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/references/current-constraint.md",
+      "source": "skills/elon-method/references/current-constraint.md",
+      "sha256": "6bd664d90759ecbfc3e89e3d4b5f1e28d57ff4036800de97dee6468a470f00af",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/references/first-principles.md",
+      "source": "skills/elon-method/references/first-principles.md",
+      "sha256": "c3232e82f609af84ab438f40b876fed65026cc3df0678fc48b86b3ea7325d13f",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/references/idiot-index.md",
+      "source": "skills/elon-method/references/idiot-index.md",
+      "sha256": "5efd4777b349c186c21cb316063f8b564a4db6fd547899c22d6d2fcf7db27cc3",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/elon-method/references/marketplace-project-record-regression.md",
+      "source": "skills/elon-method/references/marketplace-project-record-regression.md",
+      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
+      "mode": "100644"
+    },
+    {
       "path": "skills/grill-with-docs/SKILL.md",
       "source": "skills/grill-with-docs/SKILL.md",
       "sha256": "f0391d8b80b6e58d6d3663186b4fc157c51028b78ac433066752952ef524ce2d",
@@ -185,7 +233,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "63e6883f65c43f8f4f1ce13f08efc551668f4ca7b75e9b5a12518cfe547c4900",
+      "sha256": "bf8c52aa86074574fdd15a7c3874cb9fc7c4a92b4be44e1281d7529ebb19a7de",
       "mode": "100644"
     },
     {
