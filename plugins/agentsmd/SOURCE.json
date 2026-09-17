@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v8.8.2",
-  "commit": "bbc959f60fb8b13a4908c568e31ab97d1e93d386",
+  "release": "v9.0.0",
+  "commit": "ac3ff3076ce9664eb97ac26120a42d929cdec03d",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "c0995b4adf1d6862c5d28fffa02d9dc167268469e9ad2fb3102556ed9c36d773"
+    "sha256": "5d669657c34d9c92a5bd28ec2c63423a55b3415134a673ba48857d0bb325a4ac"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "c0995b4adf1d6862c5d28fffa02d9dc167268469e9ad2fb3102556ed9c36d773",
+      "sha256": "5d669657c34d9c92a5bd28ec2c63423a55b3415134a673ba48857d0bb325a4ac",
       "mode": "100644"
     },
     {
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "a35b60bab01e3cb5ed3b1c8f72ef292200bc2ef4daa2a8632c5a38dbff561c43",
+      "sha256": "f3eee20b1145a37a719c49e987bc170c323c46648d0a4360e460365a59e7191a",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "cea4a8fb60b94c00c4417718127f134eb26a229b3e2673a80cc84eb0279b8acc",
+      "sha256": "cdecb300baad839a6f62791229f551a4fa33f3cbdca08e378dc976466354e778",
       "mode": "100644"
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "skills/delivery-profile/SKILL.md",
       "source": "skills/delivery-profile/SKILL.md",
-      "sha256": "cdfe9e2a23ccef4e693c6bb26e80d9af79044f52bc542feb35877a6b2d572288",
+      "sha256": "2d1c56fd290b5ee697cab4cd053a3fcf9ef61b70aa664fdb01b01305f2ecb53a",
       "mode": "100644"
     },
     {
@@ -183,9 +183,63 @@
       "mode": "100644"
     },
     {
+      "path": "skills/operations/SKILL.md",
+      "source": "skills/operations/SKILL.md",
+      "sha256": "63e6883f65c43f8f4f1ce13f08efc551668f4ca7b75e9b5a12518cfe547c4900",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/agents/openai.yaml",
+      "source": "skills/operations/agents/openai.yaml",
+      "sha256": "27f527a041ff3fa87f424e67ca676c2d111599202d1a661d7f6c3352682c51d0",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/delivery.md",
+      "source": "skills/operations/references/delivery.md",
+      "sha256": "e96d5ee15544ca390c6b16c9042fd9baba2de2e3ca6f04f23b34aede82c81059",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/finalization.md",
+      "source": "skills/operations/references/finalization.md",
+      "sha256": "32773671dc4380653c97d74ec9263c91a24c3d114776f7bb40b3be8ded89a225",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/implementation.md",
+      "source": "skills/operations/references/implementation.md",
+      "sha256": "04230006d8ea33ea149a11019440acedbb700c4dbfb6232db85095a40aa89a84",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/orchestration.md",
+      "source": "skills/operations/references/orchestration.md",
+      "sha256": "b7a17545642f530782b465876c4248cd77477ce15594a202fa63064e0f1dfe14",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/reconciliation.md",
+      "source": "skills/operations/references/reconciliation.md",
+      "sha256": "b741d78835d3f48ce55714eb62a323b719b2ed0e3c667bfa655dd78d7c4f7a34",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/repository-setup.md",
+      "source": "skills/operations/references/repository-setup.md",
+      "sha256": "266fd1b7a849b544487313b8d33ee31c0deed2759cc9dc05e10321851c43b227",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/verification.md",
+      "source": "skills/operations/references/verification.md",
+      "sha256": "08504efdcec0c870661bc07a783564c21c615ffdbc28058982867de1c9378a04",
+      "mode": "100644"
+    },
+    {
       "path": "skills/project-direction/SKILL.md",
       "source": "skills/project-direction/SKILL.md",
-      "sha256": "29622abcea1d19c5dab6fb32b530e31ea1dca64f1741e841046c2b3f3ecd02f4",
+      "sha256": "ed7bea1e1e30c1bdc1b1d68e9c457fe67317b2888fb373cbd54266b6ea977325",
       "mode": "100644"
     },
     {
@@ -204,6 +258,12 @@
       "path": "skills/project-direction/evals/trigger-evals.json",
       "source": "skills/project-direction/evals/trigger-evals.json",
       "sha256": "39fec279cb0d3c8924ef73ac513996a8bd5fca778f65fc1043c52aef7af74c27",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/project-direction/references/context.md",
+      "source": "skills/project-direction/references/context.md",
+      "sha256": "4e46b1359e677b18989f2012fd52be505c9c13b2a9ac4ce725e4c503f6e18541",
       "mode": "100644"
     },
     {
@@ -269,7 +329,7 @@
     {
       "path": "skills/to-spec/SKILL.md",
       "source": "skills/to-spec/SKILL.md",
-      "sha256": "08034b5aebb365c0d46cfd4f854eaff123db9b97337c82867194ba9109a89dc1",
+      "sha256": "b2b066e166e082554e3dd110e6e7a68c30758a096fbe9ba4a8f9ae397d72add5",
       "mode": "100644"
     },
     {
@@ -281,7 +341,7 @@
     {
       "path": "skills/to-tickets/SKILL.md",
       "source": "skills/to-tickets/SKILL.md",
-      "sha256": "c369cb64591f18aa441ce90b8dd07aedeaadd4561c24fdb86e9f4c22db062c37",
+      "sha256": "32d7adb13948c5d03156bd35bc77ac1c300f0d50c48d193ce18d462e12b8fcea",
       "mode": "100644"
     },
     {
