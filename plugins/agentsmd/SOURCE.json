@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v9.3.0",
-  "commit": "8972c0dd4e3c539338e075db11cdf958eeadf079",
+  "release": "v10.0.0",
+  "commit": "7bacbb3a0f69e8f864ec50b526352c0bb02b748d",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "0c9c2927eef76bb99213fa827ae80948e52fb871a415f618281a6903d44c1aef",
+      "sha256": "64bd3a216449c294c406dbfa4f76b9e620a180c1fa6ae2e100046528be1b6842",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "14ebdd5f5d8dfccb0fc574ea9aabecc07d7cdd99d53e4fc01e58f9c3d23d18ef",
+      "sha256": "21653d2744fdd071f9ef138c805393901bb9547cf3e777ebf50215a191f986ea",
       "mode": "100644"
     },
     {
@@ -179,7 +179,7 @@
     {
       "path": "skills/elon-method/references/algorithm.md",
       "source": "skills/elon-method/references/algorithm.md",
-      "sha256": "54aa8d4706078e7d6f830f09b991362cbd4db0b16117de1e202302ea5df0577a",
+      "sha256": "a366d57aa46b8c54aad472bfbaf47434b2804b662dccab50179917e0716f2797",
       "mode": "100644"
     },
     {
@@ -257,13 +257,13 @@
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "e23f13ab3222b73351636003bb796749e5398dc69e8ead353c667c963929d63b",
+      "sha256": "01fe36342d02cc32a7e96cfa0c9e2e82934c0065b54b5de94f4fe9a0029f62f6",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "e5dd1ab565c0da45631b42190fd4c41f2dd2bd467167800a9282e341281573d7",
+      "sha256": "dfdbe4583775dcb42fcab18d7cbdf709d30d907e81a97e80b2403e3b339b4739",
       "mode": "100644"
     },
     {
@@ -467,13 +467,13 @@
     {
       "path": "skills/writing-for-agents/SKILL-MECHANICS.md",
       "source": "skills/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "c768e6307c7c10728c401c213f2c4ba71c542127eeb7ad2956aabd15a0fa0059",
+      "sha256": "cad90832b7c9b57b24ef5a6addc1961e180e38a324ce64fd2fc5c03e05afe518",
       "mode": "100644"
     },
     {
       "path": "skills/writing-for-agents/SKILL.md",
       "source": "skills/writing-for-agents/SKILL.md",
-      "sha256": "855327000294660fce847c101c9b05ccf1289f43f2e9c4552c210c8c1bae1130",
+      "sha256": "354429d07214f2ea601092c65737266f89467788a786b8c20e9da862d33b943c",
       "mode": "100644"
     },
     {
