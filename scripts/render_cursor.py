@@ -350,17 +350,47 @@ def _validate_staged(stage: Path, project_id: str, skill_names: list[str]) -> No
         raise CursorGenerationError("generated package contains an unproved instruction or hook")
 
 
+def _file_digests(root: Path) -> dict[str, str]:
+    return {
+        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+def _retired_legacy(root: Path, stage: Path, project_id: str) -> tuple[Path, ...]:
+    """Retire a legacy package only when it is exactly the generated output.
+
+    An earlier generator staged the package under `plugins/<project>`. Grok
+    Build loads that location from Claude Code marketplace clones, so a tree
+    that still carries it must not keep it beside the new package. Anything
+    that is not byte-identical to the generated package may be user-owned, so
+    generation fails closed instead of deleting it.
+    """
+
+    legacy = Path(REJECTED_PACKAGE_DIRECTORY) / project_id
+    if not (root / legacy).is_dir():
+        return ()
+    if _file_digests(root / legacy) != _file_digests(stage / PACKAGE_DIRECTORY / project_id):
+        raise CursorGenerationError(
+            f"legacy {legacy.as_posix()} does not match the generated package; "
+            "review and remove it before regenerating"
+        )
+    return (legacy,)
+
+
 def _replace_generated(root: Path, stage: Path, project_id: str) -> None:
     targets = (
         Path(".cursor-plugin/marketplace.json"),
         Path(PACKAGE_DIRECTORY) / project_id,
     )
+    retired = _retired_legacy(root, stage, project_id)
     with tempfile.TemporaryDirectory(prefix=".cursor-backup-", dir=root) as tmp:
         backup = Path(tmp)
         moved: list[Path] = []
         installed: list[Path] = []
         try:
-            for relative in targets:
+            for relative in (*targets, *retired):
                 destination = root / relative
                 if destination.exists():
                     backup_path = backup / relative
@@ -384,6 +414,9 @@ def _replace_generated(root: Path, stage: Path, project_id: str) -> None:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 os.replace(backup / relative, destination)
             raise
+    legacy_root = root / REJECTED_PACKAGE_DIRECTORY
+    if retired and legacy_root.is_dir() and not any(legacy_root.iterdir()):
+        legacy_root.rmdir()
 
 
 def generate(

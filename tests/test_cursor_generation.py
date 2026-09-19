@@ -295,6 +295,57 @@ class CursorGenerationTests(unittest.TestCase):
                             ["fixture-example"],
                         )
 
+    def test_legacy_plugins_package_is_retired_or_refused(self) -> None:
+        """A tree that still carries `plugins/<project>` must not keep it."""
+
+        for case in ("identical", "user-owned"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as tmp:
+                source, marketplace, _, _ = _prepare(Path(tmp))
+                command = (
+                    sys.executable,
+                    str(GENERATE),
+                    "fixture-agent",
+                    "--source",
+                    str(source),
+                    "--marketplace-root",
+                    str(marketplace),
+                )
+                _run(*command, cwd=ROOT)
+                generated = _tree_hashes(marketplace / "cursor" / "fixture-agent")
+
+                legacy = marketplace / "plugins" / "fixture-agent"
+                shutil.copytree(marketplace / "cursor" / "fixture-agent", legacy)
+                shutil.rmtree(marketplace / "cursor")
+                index = marketplace / ".cursor-plugin" / "marketplace.json"
+                manifest = _json(index)
+                manifest["plugins"][0]["source"] = "./plugins/fixture-agent"
+                index.write_text(
+                    json.dumps(manifest, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+
+                if case == "identical":
+                    _run(*command, cwd=ROOT)
+                    self.assertFalse((marketplace / "plugins").exists())
+                    self.assertEqual(
+                        _tree_hashes(marketplace / "cursor" / "fixture-agent"),
+                        generated,
+                    )
+                    self.assertEqual(
+                        _json(index)["plugins"][0]["source"],
+                        "./cursor/fixture-agent",
+                    )
+                else:
+                    (legacy / "NOTES.md").write_text("user owned\n", encoding="utf-8")
+                    before = _tree_hashes(marketplace)
+                    result = _run(*command, cwd=ROOT, check=False)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn(
+                        "does not match the generated package",
+                        result.stderr,
+                    )
+                    self.assertEqual(_tree_hashes(marketplace), before)
+
     def test_rejected_candidate_preserves_generated_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             source, marketplace, _, _ = _prepare(Path(tmp))
