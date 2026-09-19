@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v11.0.0",
-  "commit": "bceb00a6d4a95f612cac4d6c7477beb45136f5b9",
+  "release": "v11.1.0",
+  "commit": "f6780ad2f3e74bd62206e3782c0b89469857fce0",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "7bd6bcbe3813e0cd55e0998053d182b7bc8c97dcfd0b85028e9f7f55af4ad61b",
+      "sha256": "cd1c6f8954599978e16a05c72be16dc4c2056e5f2bce9ecda206ab66f3d1e0eb",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "858041b2ff64bb48cdf5092afd6549696ffb3ae7221494cae390b4bae68127db",
+      "sha256": "3858adf36e6fd35f87b7829c2d826994e4045108e415a5820a850f4a3b8d8e05",
       "mode": "100644"
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "skills/delivery-profile/SKILL.md",
       "source": "skills/delivery-profile/SKILL.md",
-      "sha256": "2d1c56fd290b5ee697cab4cd053a3fcf9ef61b70aa664fdb01b01305f2ecb53a",
+      "sha256": "71d92cc27379780cdcf378faf6d840687b700b39b6c15f6e60363253bf378c82",
       "mode": "100644"
     },
     {
@@ -137,7 +137,7 @@
     {
       "path": "skills/domain-modeling/ADR-FORMAT.md",
       "source": "skills/domain-modeling/ADR-FORMAT.md",
-      "sha256": "944c92aa790e8fbdc9199640b170979abb8a34ba8d0fe18c2a01a63bce140ca0",
+      "sha256": "c056f4b19160d3309c2f9b1fe94a6e5a3fb019b482bad48857c9301041ef6bdc",
       "mode": "100644"
     },
     {
@@ -149,7 +149,7 @@
     {
       "path": "skills/domain-modeling/SKILL.md",
       "source": "skills/domain-modeling/SKILL.md",
-      "sha256": "1dccc959b736e2fa7e49fdebcdc18e3a36817a59262d40e9488bcfd1f990b663",
+      "sha256": "fa11d30888fc3e8e62ef941ff94212030f83323275be94b75a0a62bf0e003077",
       "mode": "100644"
     },
     {
@@ -161,7 +161,7 @@
     {
       "path": "skills/elon-method/SKILL.md",
       "source": "skills/elon-method/SKILL.md",
-      "sha256": "9e4481861e024d31f67ccc2fa0e99a692090aac8ae532d1cf936f517fb06d723",
+      "sha256": "ca23392962b967eacdf245715ddfa356999b842646e7eb8c858fdaff3522ec26",
       "mode": "100644"
     },
     {
@@ -185,7 +185,7 @@
     {
       "path": "skills/elon-method/references/current-constraint.md",
       "source": "skills/elon-method/references/current-constraint.md",
-      "sha256": "6bd664d90759ecbfc3e89e3d4b5f1e28d57ff4036800de97dee6468a470f00af",
+      "sha256": "6cc5e14875a68bf768f5554c4e63d8ca04289ab512ae2d618197f25a74b40deb",
       "mode": "100644"
     },
     {
@@ -221,7 +221,7 @@
     {
       "path": "skills/grilling/SKILL.md",
       "source": "skills/grilling/SKILL.md",
-      "sha256": "12c61d3a3eb51bd93d863961e473418ea1d55d70c19a1864ac645b251cbe2c05",
+      "sha256": "6b6fc48960dd1fc9feb3cd52b9abed97187b4851dce1400aeb69ca7c9d3ca15f",
       "mode": "100644"
     },
     {
@@ -251,19 +251,19 @@
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "cefd4395ebe6a87121933bafb338fa05ca25aa53e0d7968d16bdadd962ae603d",
+      "sha256": "bc15f77ba4e1a0b3be0e22aeb89c582ed43f3f87e8e74022d331960afffc6a3f",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "01fe36342d02cc32a7e96cfa0c9e2e82934c0065b54b5de94f4fe9a0029f62f6",
+      "sha256": "cfc2a6a7b870a883eb932e3bb9373a58ec2d505e78fcba6542046fa24d52b24e",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "dfdbe4583775dcb42fcab18d7cbdf709d30d907e81a97e80b2403e3b339b4739",
+      "sha256": "41c154c6dd016e8f998ab112c29f87af64d5d358ece9c27021266c7a366f3f57",
       "mode": "100644"
     },
     {
@@ -281,13 +281,13 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "5764ed91596724e11c350513c7aec60cad5efeeb7b1c5e6593746e24ad600fd4",
+      "sha256": "c8b48829a2ca783afa832013deeb3d4261a8cde814045ba6b36a63fdcd0d16d0",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/SKILL.md",
       "source": "skills/project-direction/SKILL.md",
-      "sha256": "ed7bea1e1e30c1bdc1b1d68e9c457fe67317b2888fb373cbd54266b6ea977325",
+      "sha256": "a47a619381880f6e9d1d537cd9427844cc4ac2981c067af501f8438943ed1e01",
       "mode": "100644"
     },
     {
@@ -311,13 +311,13 @@
     {
       "path": "skills/project-direction/references/context.md",
       "source": "skills/project-direction/references/context.md",
-      "sha256": "4e46b1359e677b18989f2012fd52be505c9c13b2a9ac4ce725e4c503f6e18541",
+      "sha256": "519e7d68d5f66d731812198ccf228aab260eb255f795c1921b6ee81ba4ee16b0",
       "mode": "100644"
     },
     {
       "path": "skills/project-direction/references/file-contracts.md",
       "source": "skills/project-direction/references/file-contracts.md",
-      "sha256": "6f99beb57efeb3e132801c2383cae619156d806a4749901c27eb17d55f003a3d",
+      "sha256": "b76baf6fc92048a0cf149430f5c010a95efd3a045a553db078bfab06f8da00ea",
       "mode": "100644"
     },
     {
@@ -341,19 +341,19 @@
     {
       "path": "skills/prototype/LOGIC.md",
       "source": "skills/prototype/LOGIC.md",
-      "sha256": "f61c7d249e786a79ef289018901c348271e1798dd0b0bc5607b5c6f4d4a01ab9",
+      "sha256": "51d34465b9e6956d4764aa5455b51153dee55807f817c838f416678cea411fa3",
       "mode": "100644"
     },
     {
       "path": "skills/prototype/SKILL.md",
       "source": "skills/prototype/SKILL.md",
-      "sha256": "8c8d469fe65b0f83f0509bb4498f120c78781f23bda7c078e562893ef6efbfd7",
+      "sha256": "765ba6e83ab201d170b1e1f8b5fa9cfb6c62ea9bbc0969cdaee8fc52dbfc36da",
       "mode": "100644"
     },
     {
       "path": "skills/prototype/UI.md",
       "source": "skills/prototype/UI.md",
-      "sha256": "723211e878acbc7b6ff09755263f3295cde724ba902ff0064da41eed51d45ad3",
+      "sha256": "e0436b5568201610dc5e3c913ce563d6052e75ef68b9a6e6c4aa34d3c7588086",
       "mode": "100644"
     },
     {
@@ -377,7 +377,7 @@
     {
       "path": "skills/to-spec/SKILL.md",
       "source": "skills/to-spec/SKILL.md",
-      "sha256": "b2b066e166e082554e3dd110e6e7a68c30758a096fbe9ba4a8f9ae397d72add5",
+      "sha256": "69505b34d6dbf813f0aac9899f515d9806c9a4a3405ae0c1b9c8c79903a623aa",
       "mode": "100644"
     },
     {
@@ -389,13 +389,19 @@
     {
       "path": "skills/to-tickets/SKILL.md",
       "source": "skills/to-tickets/SKILL.md",
-      "sha256": "32d7adb13948c5d03156bd35bc77ac1c300f0d50c48d193ce18d462e12b8fcea",
+      "sha256": "99bde98cf68ecfdc9b083459bc6c47d1a751b7e6bb5f2afce8cf4c208004151c",
       "mode": "100644"
     },
     {
       "path": "skills/to-tickets/agents/openai.yaml",
       "source": "skills/to-tickets/agents/openai.yaml",
       "sha256": "ad1cf89ef5571bc5218f223f927c79f4bc091988d41fb4a73feec45712dfbe29",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/to-tickets/references/ticket-decomposition.md",
+      "source": "skills/to-tickets/references/ticket-decomposition.md",
+      "sha256": "ebf781169b06f89023e9d8109daf20a9deefcc866b2b5a1197a460a1d2e867b4",
       "mode": "100644"
     },
     {
@@ -455,7 +461,7 @@
     {
       "path": "skills/wayfinder/SKILL.md",
       "source": "skills/wayfinder/SKILL.md",
-      "sha256": "a94ff84cb1663545b3d4a096537e8519674f9ea3a0c2c100e1f22dd75e0e1d77",
+      "sha256": "40c7d827e8409d425c68b3f45ffd8cdaa753b3ca391d56e972dcc543af917b30",
       "mode": "100644"
     },
     {
@@ -473,7 +479,7 @@
     {
       "path": "skills/writing-for-agents/SKILL.md",
       "source": "skills/writing-for-agents/SKILL.md",
-      "sha256": "354429d07214f2ea601092c65737266f89467788a786b8c20e9da862d33b943c",
+      "sha256": "1d2c6798c5f55f21d2953c5c9a3cf04e6141604d410257068e8d357a2b8207f2",
       "mode": "100644"
     },
     {
