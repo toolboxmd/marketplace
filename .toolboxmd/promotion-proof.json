@@ -59,7 +59,7 @@
         ".claude-plugin/marketplace.json",
         ".cursor-plugin/marketplace.json",
         ".grok-plugin/marketplace.json",
-        "plugins/agentsmd/*",
+        "cursor/agentsmd/*",
         "VERSION",
         "CHANGELOG.md"
       ],

@@ -153,7 +153,7 @@ def check_generated():
                    "generation source identity changed")
     module.validate_candidate_state(base, candidate, source_identity)
     module._regenerate_and_compare(base, candidate, source, source_identity)
-    module._run(str(base / "plugins/agentsmd/tools/versionctl/bin/versionctl"), "release-check", cwd=candidate)
+    module._run(str(base / "cursor/agentsmd/tools/versionctl/bin/versionctl"), "release-check", cwd=candidate)
     print(json.dumps({"generation": "deterministic", "identity": expected, "preserved": "non-AgentsMD records"}))
 
 

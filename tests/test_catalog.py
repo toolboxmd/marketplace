@@ -110,9 +110,9 @@ class PublishedCatalogTests(unittest.TestCase):
             self.assertEqual(source["sha"], by_name[plugin["name"]]["sha"])
 
     def test_agentsmd_project_record_publication(self) -> None:
-        generated_source = _load("plugins/agentsmd/SOURCE.json")
-        project_record = _load("plugins/agentsmd/.toolboxmd/project.json")
-        agentsmd_version = (ROOT / "plugins/agentsmd/VERSION").read_text().strip()
+        generated_source = _load("cursor/agentsmd/SOURCE.json")
+        project_record = _load("cursor/agentsmd/.toolboxmd/project.json")
+        agentsmd_version = (ROOT / "cursor/agentsmd/VERSION").read_text().strip()
         agentsmd_release = f"v{agentsmd_version}"
         agentsmd_sha = generated_source["commit"]
         agentsmd_description = project_record["outcome"]
@@ -131,7 +131,7 @@ class PublishedCatalogTests(unittest.TestCase):
         )
         self.assertEqual(
             hashlib.sha256(
-                (ROOT / "plugins/agentsmd/.toolboxmd/project.json").read_bytes()
+                (ROOT / "cursor/agentsmd/.toolboxmd/project.json").read_bytes()
             ).hexdigest(),
             generated_source["projectRecord"]["sha256"],
         )
@@ -140,7 +140,7 @@ class PublishedCatalogTests(unittest.TestCase):
             ".toolboxmd/project.json",
         )
         for published in generated_source["files"]:
-            path = ROOT / "plugins/agentsmd" / published["path"]
+            path = ROOT / "cursor/agentsmd" / published["path"]
             with self.subTest(published_path=published["path"]):
                 self.assertTrue(path.is_file())
                 self.assertEqual(

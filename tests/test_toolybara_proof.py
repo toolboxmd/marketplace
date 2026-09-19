@@ -102,7 +102,7 @@ class ProofTests(unittest.TestCase):
         git("tag", "-a", "v1.3.1", "-m", "Released prior")
         base = commit_version("1.4.0")
         commit_version("1.4.1")
-        command = [str(ROOT / "plugins/agentsmd/tools/versionctl/bin/versionctl"), "release-check"]
+        command = [str(ROOT / "cursor/agentsmd/tools/versionctl/bin/versionctl"), "release-check"]
         before = subprocess.run(command, cwd=root, capture_output=True, text=True)
         self.assertNotEqual(before.returncode, 0)
         self.assertIn("skips the next valid transition", before.stderr)
@@ -198,7 +198,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(policy["checks"]["suite"]["argv"], ["bash", "tests/run-all.sh"])
         self.assertEqual(set(policy["rules"][0]["paths"]), {
             "catalog.json", ".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json",
-            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "plugins/agentsmd/*", "VERSION", "CHANGELOG.md",
+            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "cursor/agentsmd/*", "VERSION", "CHANGELOG.md",
         })
 
     def test_same_run_transport_has_no_candidate_selected_run_or_permissions(self):

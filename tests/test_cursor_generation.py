@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parents[1]
 GENERATE = ROOT / "scripts" / "render_cursor.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "project-record-v1"
 
+sys.path.insert(0, str(ROOT / "scripts"))
+import render_cursor  # noqa: E402
+
 
 def _run(
     *args: str,
@@ -140,7 +143,7 @@ class CursorGenerationTests(unittest.TestCase):
             first_hashes = _tree_hashes(marketplace)
             repeat = _run(*command, cwd=ROOT)
 
-            plugin = marketplace / "plugins" / "fixture-agent"
+            plugin = marketplace / "cursor" / "fixture-agent"
             manifest = _json(plugin / ".cursor-plugin" / "plugin.json")
             marketplace_manifest = _json(
                 marketplace / ".cursor-plugin" / "marketplace.json"
@@ -201,7 +204,7 @@ class CursorGenerationTests(unittest.TestCase):
                     "plugins": [
                         {
                             "name": "fixture-agent",
-                            "source": "./plugins/fixture-agent",
+                            "source": "./cursor/fixture-agent",
                             "description": "Coordinate fixture work through one trusted agent workflow.",
                             "version": "1.2.3",
                         }
@@ -229,6 +232,119 @@ class CursorGenerationTests(unittest.TestCase):
                 },
             }
             self.assertEqual(actual, expected)
+
+    def test_package_is_staged_outside_plugins_and_plugins_is_rejected(self) -> None:
+        """Grok Build loads `plugins/*` from Claude Code marketplace clones.
+
+        A package staged there would shadow the native AgentsMD install and its
+        hooks, so generation must both write `cursor/<project>` and refuse any
+        output under `plugins/`.
+        """
+
+        with tempfile.TemporaryDirectory() as tmp:
+            source, marketplace, _, _ = _prepare(Path(tmp))
+            _run(
+                sys.executable,
+                str(GENERATE),
+                "fixture-agent",
+                "--source",
+                str(source),
+                "--marketplace-root",
+                str(marketplace),
+                cwd=ROOT,
+            )
+            self.assertTrue((marketplace / "cursor" / "fixture-agent").is_dir())
+            self.assertFalse((marketplace / "plugins").exists())
+
+            def _stage(name: str) -> Path:
+                stage = Path(tmp) / name
+                shutil.copytree(
+                    marketplace / ".cursor-plugin", stage / ".cursor-plugin"
+                )
+                shutil.copytree(
+                    marketplace / "cursor" / "fixture-agent",
+                    stage / "cursor" / "fixture-agent",
+                )
+                return stage
+
+            valid = _stage("valid")
+            render_cursor._validate_staged(valid, "fixture-agent", ["fixture-example"])
+
+            relocated = _stage("relocated")
+            shutil.move(
+                str(relocated / "cursor"),
+                str(relocated / "plugins"),
+            )
+            index = relocated / ".cursor-plugin" / "marketplace.json"
+            manifest = _json(index)
+            manifest["plugins"][0]["source"] = "./plugins/fixture-agent"
+            index.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+            leftover = _stage("leftover")
+            shutil.copytree(
+                leftover / "cursor" / "fixture-agent",
+                leftover / "plugins" / "fixture-agent",
+            )
+
+            for stage in (relocated, leftover):
+                with self.subTest(stage=stage.name):
+                    with self.assertRaises(render_cursor.CursorGenerationError):
+                        render_cursor._validate_staged(
+                            stage,
+                            "fixture-agent",
+                            ["fixture-example"],
+                        )
+
+    def test_legacy_plugins_package_is_retired_or_refused(self) -> None:
+        """A tree that still carries `plugins/<project>` must not keep it."""
+
+        for case in ("identical", "user-owned"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as tmp:
+                source, marketplace, _, _ = _prepare(Path(tmp))
+                command = (
+                    sys.executable,
+                    str(GENERATE),
+                    "fixture-agent",
+                    "--source",
+                    str(source),
+                    "--marketplace-root",
+                    str(marketplace),
+                )
+                _run(*command, cwd=ROOT)
+                generated = _tree_hashes(marketplace / "cursor" / "fixture-agent")
+
+                legacy = marketplace / "plugins" / "fixture-agent"
+                shutil.copytree(marketplace / "cursor" / "fixture-agent", legacy)
+                shutil.rmtree(marketplace / "cursor")
+                index = marketplace / ".cursor-plugin" / "marketplace.json"
+                manifest = _json(index)
+                manifest["plugins"][0]["source"] = "./plugins/fixture-agent"
+                index.write_text(
+                    json.dumps(manifest, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+
+                if case == "identical":
+                    _run(*command, cwd=ROOT)
+                    self.assertFalse((marketplace / "plugins").exists())
+                    self.assertEqual(
+                        _tree_hashes(marketplace / "cursor" / "fixture-agent"),
+                        generated,
+                    )
+                    self.assertEqual(
+                        _json(index)["plugins"][0]["source"],
+                        "./cursor/fixture-agent",
+                    )
+                else:
+                    (legacy / "NOTES.md").write_text("user owned\n", encoding="utf-8")
+                    before = _tree_hashes(marketplace)
+                    result = _run(*command, cwd=ROOT, check=False)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertIn(
+                        "does not match the generated package",
+                        result.stderr,
+                    )
+                    self.assertEqual(_tree_hashes(marketplace), before)
 
     def test_rejected_candidate_preserves_generated_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

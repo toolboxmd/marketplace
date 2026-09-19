@@ -182,7 +182,7 @@ class AcceptedDuplicateTests(unittest.TestCase):
             ),
             encoding="utf-8",
         )
-        provenance = root / "plugins" / "agentsmd" / "SOURCE.json"
+        provenance = root / "cursor" / "agentsmd" / "SOURCE.json"
         provenance.parent.mkdir(parents=True)
         provenance.write_text(
             json.dumps(
@@ -426,7 +426,7 @@ class GeneratedScopeTests(unittest.TestCase):
             ".claude-plugin/marketplace.json",
             ".grok-plugin/marketplace.json",
             ".cursor-plugin/marketplace.json",
-            "plugins/agentsmd/VERSION",
+            "cursor/agentsmd/VERSION",
             "VERSION",
             "CHANGELOG.md",
         }

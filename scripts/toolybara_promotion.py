@@ -32,7 +32,7 @@ GENERATED_FILES = {
     "VERSION",
     "catalog.json",
 }
-GENERATED_PREFIXES = ("plugins/agentsmd/",)
+GENERATED_PREFIXES = ("cursor/agentsmd/",)
 EXPECTED_ACTOR = "toolybara[bot]"
 EXPECTED_BRANCH = "toolybara/promote-agentsmd"
 MARKETPLACE_REPOSITORY = "toolboxmd/marketplace"
@@ -191,7 +191,7 @@ def build_generated_candidate(
     for field in ("project", "release", "commit", "recordSha256"):
         if cursor.get(field) != source.get(field):
             raise PromotionError(f"Cursor generation disagrees on {field}")
-    versionctl = base_root / "plugins" / "agentsmd" / "tools" / "versionctl" / "bin" / "versionctl"
+    versionctl = base_root / "cursor" / "agentsmd" / "tools" / "versionctl" / "bin" / "versionctl"
     _run(
         str(versionctl),
         "prepare",
@@ -559,7 +559,7 @@ def accepted_duplicate_evidence(
     catalog = _catalog_by_name(root)["agentsmd"]
     catalog_record = catalog.get("projectRecord")
     provenance = json.loads(
-        (root / "plugins" / "agentsmd" / "SOURCE.json").read_text(
+        (root / "cursor" / "agentsmd" / "SOURCE.json").read_text(
             encoding="utf-8"
         )
     )
@@ -1025,7 +1025,7 @@ def _validate_candidate_checkout(
         _run(
             str(
                 base_root
-                / "plugins"
+                / "cursor"
                 / "agentsmd"
                 / "tools"
                 / "versionctl"

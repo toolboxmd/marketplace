@@ -43,6 +43,12 @@ AGENTSMD_RUNTIME_PATHS = (
     "tools/versionctl/bin/versionctl",
     "tools/versionctl/src",
 )
+# The generated Cursor package is staged here, never under `plugins/`. Grok
+# Build scans `plugins/*` inside Claude Code marketplace clones, so a package
+# named that way is loaded in place of the native AgentsMD install and its
+# hooks.
+PACKAGE_DIRECTORY = "cursor"
+REJECTED_PACKAGE_DIRECTORY = "plugins"
 
 
 class CursorGenerationError(RuntimeError):
@@ -311,13 +317,24 @@ def _validate_staged(stage: Path, project_id: str, skill_names: list[str]) -> No
         (stage / ".cursor-plugin" / "marketplace.json").read_text(encoding="utf-8")
     )
     plugin_entry = marketplace["plugins"][0]
-    expected_source = f"./plugins/{project_id}"
+    expected_source = f"./{PACKAGE_DIRECTORY}/{project_id}"
     if plugin_entry.get("source") != expected_source:
         raise CursorGenerationError("generated Cursor marketplace source is invalid")
     if ".." in PurePosixPath(expected_source).parts:
         raise CursorGenerationError("generated Cursor marketplace source escapes the repository")
+    if PurePosixPath(expected_source).parts[0] == REJECTED_PACKAGE_DIRECTORY:
+        raise CursorGenerationError(
+            "generated Cursor package must not be staged under "
+            f"{REJECTED_PACKAGE_DIRECTORY}/; Grok Build loads that location from "
+            "Claude Code marketplace clones"
+        )
+    if (stage / REJECTED_PACKAGE_DIRECTORY).exists():
+        raise CursorGenerationError(
+            "generated Cursor output must not contain a "
+            f"{REJECTED_PACKAGE_DIRECTORY}/ directory"
+        )
 
-    plugin = stage / "plugins" / project_id
+    plugin = stage / PACKAGE_DIRECTORY / project_id
     manifest = json.loads(
         (plugin / ".cursor-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
@@ -333,17 +350,47 @@ def _validate_staged(stage: Path, project_id: str, skill_names: list[str]) -> No
         raise CursorGenerationError("generated package contains an unproved instruction or hook")
 
 
+def _file_digests(root: Path) -> dict[str, str]:
+    return {
+        path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
+def _retired_legacy(root: Path, stage: Path, project_id: str) -> tuple[Path, ...]:
+    """Retire a legacy package only when it is exactly the generated output.
+
+    An earlier generator staged the package under `plugins/<project>`. Grok
+    Build loads that location from Claude Code marketplace clones, so a tree
+    that still carries it must not keep it beside the new package. Anything
+    that is not byte-identical to the generated package may be user-owned, so
+    generation fails closed instead of deleting it.
+    """
+
+    legacy = Path(REJECTED_PACKAGE_DIRECTORY) / project_id
+    if not (root / legacy).is_dir():
+        return ()
+    if _file_digests(root / legacy) != _file_digests(stage / PACKAGE_DIRECTORY / project_id):
+        raise CursorGenerationError(
+            f"legacy {legacy.as_posix()} does not match the generated package; "
+            "review and remove it before regenerating"
+        )
+    return (legacy,)
+
+
 def _replace_generated(root: Path, stage: Path, project_id: str) -> None:
     targets = (
         Path(".cursor-plugin/marketplace.json"),
-        Path("plugins") / project_id,
+        Path(PACKAGE_DIRECTORY) / project_id,
     )
+    retired = _retired_legacy(root, stage, project_id)
     with tempfile.TemporaryDirectory(prefix=".cursor-backup-", dir=root) as tmp:
         backup = Path(tmp)
         moved: list[Path] = []
         installed: list[Path] = []
         try:
-            for relative in targets:
+            for relative in (*targets, *retired):
                 destination = root / relative
                 if destination.exists():
                     backup_path = backup / relative
@@ -367,6 +414,9 @@ def _replace_generated(root: Path, stage: Path, project_id: str) -> None:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 os.replace(backup / relative, destination)
             raise
+    legacy_root = root / REJECTED_PACKAGE_DIRECTORY
+    if retired and legacy_root.is_dir() and not any(legacy_root.iterdir()):
+        legacy_root.rmdir()
 
 
 def generate(
@@ -416,7 +466,7 @@ def generate(
             "plugins": [
                 {
                     "name": project_id,
-                    "source": f"./plugins/{project_id}",
+                    "source": f"./{PACKAGE_DIRECTORY}/{project_id}",
                     "description": record["outcome"].strip(),
                     "version": version,
                 }
@@ -446,7 +496,7 @@ def generate(
         marketplace_root.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix=".cursor-stage-", dir=marketplace_root) as tmp:
             stage = Path(tmp)
-            plugin_root = stage / "plugins" / project_id
+            plugin_root = stage / PACKAGE_DIRECTORY / project_id
             for relative_path, source_file in source_files.items():
                 _write_file(
                     plugin_root / relative_path,
