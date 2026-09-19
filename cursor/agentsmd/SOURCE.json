@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v11.1.0",
-  "commit": "f6780ad2f3e74bd62206e3782c0b89469857fce0",
+  "release": "v11.2.0",
+  "commit": "a7c6c382d9910501732af6b9c635c8d86f5a60b4",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "cd1c6f8954599978e16a05c72be16dc4c2056e5f2bce9ecda206ab66f3d1e0eb",
+      "sha256": "3526d874c7f95a2f3dd35c980afbd2fe166f1a181bf3ec02f101df8a9ec0d8ca",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "3858adf36e6fd35f87b7829c2d826994e4045108e415a5820a850f4a3b8d8e05",
+      "sha256": "550f7f765911f073ed7d8c1511cae0b654796fc22cd0d8e8416c846401b6a3c2",
       "mode": "100644"
     },
     {
@@ -311,7 +311,7 @@
     {
       "path": "skills/project-direction/references/context.md",
       "source": "skills/project-direction/references/context.md",
-      "sha256": "519e7d68d5f66d731812198ccf228aab260eb255f795c1921b6ee81ba4ee16b0",
+      "sha256": "dbb63061da41b27f72fb030c0294992f00ba8b31b50e39e589a8bfc874025283",
       "mode": "100644"
     },
     {
