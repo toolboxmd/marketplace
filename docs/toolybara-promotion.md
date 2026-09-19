@@ -75,7 +75,7 @@ Only these paths may change:
 - `.claude-plugin/marketplace.json`
 - `.grok-plugin/marketplace.json`
 - `.cursor-plugin/marketplace.json`
-- `plugins/agentsmd/**`
+- `cursor/agentsmd/**`
 - `VERSION`
 - `CHANGELOG.md`
 

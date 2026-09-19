@@ -158,7 +158,13 @@ For deterministic offline proof against an existing exact Git source, add
 and Project Record digest before replacing generated output. It copies the
 complete active Skill directories, required `versionctl` runtime, licences,
 and provenance from that release and writes the source hashes to
-`plugins/agentsmd/SOURCE.json`.
+`cursor/agentsmd/SOURCE.json`.
+
+The package is staged at `cursor/agentsmd`, and the generated Cursor index
+points at `./cursor/agentsmd`. The directory must not be named `plugins`:
+Grok Build scans `plugins/*` inside Claude Code marketplace clones, so a
+package there is loaded in place of the native AgentsMD install and its
+hooks. `render_cursor.py` rejects generated output under `plugins/`.
 
 The Cursor package intentionally does not include AgentsMD's global
 `AGENTS.md`, lifecycle hooks, or the Project Direction hook executable. Those
@@ -226,7 +232,9 @@ contract are documented in
 - `.claude-plugin/marketplace.json` is the Claude Code index.
 - `.grok-plugin/marketplace.json` is the Grok Build index.
 - `.cursor-plugin/marketplace.json` is the generated Cursor multi-plugin index.
-- `plugins/agentsmd/` is the generated Cursor-native AgentsMD package.
+- `cursor/agentsmd/` is the generated Cursor-native AgentsMD package. It is
+  not under `plugins/` because Grok Build would load it from a Claude Code
+  marketplace clone instead of the native AgentsMD install.
 - `scripts/render_catalog.py` writes those indexes (and local-dev indexes).
 - `scripts/render_cursor.py` validates provenance and writes Cursor output.
 - `scripts/toolybara_promotion.py` reconciles and validates Toolybara promotion.
