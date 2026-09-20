@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v11.2.0",
-  "commit": "a7c6c382d9910501732af6b9c635c8d86f5a60b4",
+  "release": "v11.3.0",
+  "commit": "a393277fd58e9cb6f6d99805d2b3511e87a6cca8",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "64bd3a216449c294c406dbfa4f76b9e620a180c1fa6ae2e100046528be1b6842",
+      "sha256": "6ad81f507f8fb485dea8d84d1b92e818d230c97bd1f7a589e5c8597c538f9b4f",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "3526d874c7f95a2f3dd35c980afbd2fe166f1a181bf3ec02f101df8a9ec0d8ca",
+      "sha256": "2f0e8f502b77b05758a5626e8a65322b21ade9f8182be2f0c108b4bcd1124f1c",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "550f7f765911f073ed7d8c1511cae0b654796fc22cd0d8e8416c846401b6a3c2",
+      "sha256": "01960766176da5365090f0d9b13054bb8da18190222ebd956951c8d02fb5174c",
       "mode": "100644"
     },
     {
@@ -209,13 +209,13 @@
     {
       "path": "skills/grill-with-docs/SKILL.md",
       "source": "skills/grill-with-docs/SKILL.md",
-      "sha256": "f0391d8b80b6e58d6d3663186b4fc157c51028b78ac433066752952ef524ce2d",
+      "sha256": "8cef2387d227680cd77f4d084ff7b4b2abecbdbf3eaa54eda9d67e7c335d221f",
       "mode": "100644"
     },
     {
       "path": "skills/grill-with-docs/agents/openai.yaml",
       "source": "skills/grill-with-docs/agents/openai.yaml",
-      "sha256": "a4c58505139b2a5cc181c5b4ea6dbea86c7894df2902a293411c5366145a8c5a",
+      "sha256": "bbb5cfdadd0efc59e857f62b5c800d6f973d99cdba00a6d2d23165dfc1a52e23",
       "mode": "100644"
     },
     {
@@ -377,25 +377,25 @@
     {
       "path": "skills/to-spec/SKILL.md",
       "source": "skills/to-spec/SKILL.md",
-      "sha256": "69505b34d6dbf813f0aac9899f515d9806c9a4a3405ae0c1b9c8c79903a623aa",
+      "sha256": "24a7fe1852886183980c791166191a1ee134f07c2118d8803d7aa2d445e1aa79",
       "mode": "100644"
     },
     {
       "path": "skills/to-spec/agents/openai.yaml",
       "source": "skills/to-spec/agents/openai.yaml",
-      "sha256": "d85358aa95821b67fcb9797429a885229934a40a8136a867c500f3e04f9ca047",
+      "sha256": "ab1f4787f0bf16e77f261ea479eb6ddaf2dde20cf9b022556cf5252892469f4b",
       "mode": "100644"
     },
     {
       "path": "skills/to-tickets/SKILL.md",
       "source": "skills/to-tickets/SKILL.md",
-      "sha256": "99bde98cf68ecfdc9b083459bc6c47d1a751b7e6bb5f2afce8cf4c208004151c",
+      "sha256": "a14ad6a07f1178b9d571e68ece1febed458eb29071166c19a1d5e359fd3b66ca",
       "mode": "100644"
     },
     {
       "path": "skills/to-tickets/agents/openai.yaml",
       "source": "skills/to-tickets/agents/openai.yaml",
-      "sha256": "ad1cf89ef5571bc5218f223f927c79f4bc091988d41fb4a73feec45712dfbe29",
+      "sha256": "5ee411e8b1256ead40f5ff3f617e10147e9195f0e1d06b1fc191706c3e31c558",
       "mode": "100644"
     },
     {
@@ -461,19 +461,19 @@
     {
       "path": "skills/wayfinder/SKILL.md",
       "source": "skills/wayfinder/SKILL.md",
-      "sha256": "40c7d827e8409d425c68b3f45ffd8cdaa753b3ca391d56e972dcc543af917b30",
+      "sha256": "c933cbc8ce6799927d4bcc4b37bda15366fd11ac4e0b847471ada58ad1f37abb",
       "mode": "100644"
     },
     {
       "path": "skills/wayfinder/agents/openai.yaml",
       "source": "skills/wayfinder/agents/openai.yaml",
-      "sha256": "23d2535edd821b05ed6d7811e35ba659c964e1f1b2664cf7bdc4507fbe892cfc",
+      "sha256": "908fcbc3aca43d22a13d7807d211ef8148cf430bd0afd8d64c2f31a53029e9a5",
       "mode": "100644"
     },
     {
       "path": "skills/writing-for-agents/SKILL-MECHANICS.md",
       "source": "skills/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "cad90832b7c9b57b24ef5a6addc1961e180e38a324ce64fd2fc5c03e05afe518",
+      "sha256": "92646c631c8dab1e9f3c2f963d048a9ce90ce59e239b80222f923a56bd0b5f68",
       "mode": "100644"
     },
     {
