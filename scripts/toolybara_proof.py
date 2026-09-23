@@ -56,7 +56,7 @@ def observer(base_root, candidate_root, identity):
             "python": platform.python_version(),
             "platform": f"{platform.system()}:{platform.machine()}",
             "git": subprocess.check_output(["git", "--version"], text=True).strip(),
-            "runnerImage": os.environ.get("ImageOS", "local") + ":" + os.environ.get("ImageVersion", "local"),
+            "runnerImage": os.environ.get("ImageOS", "local"),
             "identity": shared.digest(shared.encode(identity)),
             "control": shared.source_inputs(base_root, identity["base"], ["scripts/*", ".github/*", ".toolboxmd/*", "toolybara/*", "tests/*", ".version-policy.json"]),
             "candidateTree": shared.git(candidate_root, "rev-parse", identity["head"] + "^{tree}").decode().strip(),

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.6] - 2026-09-23
+
+### Changed
+
+- Toolybara proof binds the runner OS, not its rolling image version, so a promotion survives an image rollover between reconcile and validate
+
 ## [1.5.5] - 2026-09-23
 
 ### Changed
