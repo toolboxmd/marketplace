@@ -101,6 +101,27 @@ branch is updated only when exactly one open Toolybara-authored pull request bin
 same generated tree reuses the existing exact head. The branch is never
 deleted.
 
+When `main` moves after Toolybara opens its promotion pull request, the open
+PR keeps the base SHA pinned at creation, so pushing a new head and retitling
+that PR can never expose the current base again. Reconciliation closes that
+exact stale PR and supersedes it with a fresh one only when every other
+identity field still proves exact Toolybara ownership: open state, non-draft,
+`toolybara[bot]` actor, exact reserved head ref, exact previous head SHA,
+Marketplace head repository, and `main` base ref. The rebuilt candidate is
+proved against the current base before any mutation, the exact PR is
+re-fetched to confirm it is unchanged, it is closed through the authenticated
+request path and verified closed and unmerged with the same head and stale
+base, and only then is the reserved branch force-pushed with the existing
+exact lease. After preparation, reconciliation re-queries open promotion PRs
+rather than using the original list, requires the stale PR to be gone, and
+POSTs a fresh PR whose base is current `main` and whose head is the candidate;
+the existing strict validation then binds the fresh PR before promotion can
+proceed. The stale PR is never PATCHed or reused, and any other identity
+change fails closed and leaves the PR open. Closing a stale promotion PR
+without merging is not an operator recovery path on its own: the retained
+branch is authorized for reuse only after its prior exact Toolybara merge,
+and an unrecovered stale base still fails strict validation.
+
 Only these paths may change:
 
 - `catalog.json`

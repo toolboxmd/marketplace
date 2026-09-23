@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.7] - 2026-09-23
+
+### Changed
+
+- Close base-stale Toolybara promotion PR and supersede it with a fresh PR from current main
+
 ## [1.5.6] - 2026-09-23
 
 ### Changed

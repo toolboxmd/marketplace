@@ -283,6 +283,99 @@ def validate_pull_request(
         raise PromotionError("live pull request is not mergeable")
 
 
+def validate_rebuildable_stale_base(snapshot: dict, expected: dict) -> None:
+    """Permit only a stale base SHA on an otherwise exactly-owned open PR.
+
+    When main moves after Toolybara opens its promotion pull request, the
+    open PR keeps the pinned previous base SHA. Reconciliation may close
+    that exact stale PR and supersede it with a fresh PR only when every
+    other identity field still proves exact Toolybara ownership. Any other
+    change still fails closed. The caller must verify the close, push the
+    rebuilt candidate, then create and strictly validate a fresh pull
+    request, so promotion can proceed only with the exact current base SHA
+    and candidate head.
+    """
+
+    head = snapshot.get("head", {})
+    base = snapshot.get("base", {})
+    actual = {
+        "number": snapshot.get("number"),
+        "state": snapshot.get("state"),
+        "draft": snapshot.get("draft"),
+        "actor": snapshot.get("user", {}).get("login"),
+        "headRef": head.get("ref"),
+        "headSha": head.get("sha"),
+        "headRepository": head.get("repo", {}).get("full_name"),
+        "baseRef": base.get("ref"),
+    }
+    required = {
+        "number": expected["number"],
+        "state": "open",
+        "draft": False,
+        "actor": EXPECTED_ACTOR,
+        "headRef": branch(expected.get("project", "agentsmd")),
+        "headSha": expected["head"],
+        "headRepository": MARKETPLACE_REPOSITORY,
+        "baseRef": "main",
+    }
+    if actual != required:
+        raise PromotionError(f"live pull request identity changed: {actual}")
+    base_sha = base.get("sha")
+    if not isinstance(base_sha, str) or not re.fullmatch(r"[0-9a-f]{40}", base_sha):
+        raise PromotionError(f"live pull request identity changed: {actual}")
+    if base_sha == expected["base"]:
+        raise PromotionError("reusable pull request base is not stale")
+
+
+def validate_stale_close(
+    snapshot: dict,
+    *,
+    number: int,
+    previous: str,
+    stale_base: str,
+    project: str,
+) -> None:
+    """Verify a stale PR close response is the exact validated unmerged PR.
+
+    The close must leave the same Toolybara-owned head on the same stale
+    base without merging. A raced merge or a swapped head fails closed and
+    never authorizes the branch update.
+    """
+
+    if not isinstance(snapshot, dict):
+        raise PromotionError("stale promotion pull request close returned no document")
+    head = snapshot.get("head", {})
+    base = snapshot.get("base", {})
+    actual = {
+        "number": snapshot.get("number"),
+        "state": snapshot.get("state"),
+        "merged": snapshot.get("merged"),
+        "draft": snapshot.get("draft"),
+        "actor": snapshot.get("user", {}).get("login"),
+        "headRef": head.get("ref"),
+        "headSha": head.get("sha"),
+        "headRepository": head.get("repo", {}).get("full_name"),
+        "baseRef": base.get("ref"),
+        "baseSha": base.get("sha"),
+    }
+    required = {
+        "number": number,
+        "state": "closed",
+        "merged": False,
+        "draft": False,
+        "actor": EXPECTED_ACTOR,
+        "headRef": branch(project),
+        "headSha": previous,
+        "headRepository": MARKETPLACE_REPOSITORY,
+        "baseRef": "main",
+        "baseSha": stale_base,
+    }
+    if actual != required:
+        raise PromotionError(
+            f"stale promotion pull request did not close as the exact unmerged PR: {actual}"
+        )
+
+
 def validate_previous_promotion(snapshot: dict, expected_head: str, project: str = "agentsmd") -> None:
     """Authorize reuse of the retained branch after its prior exact merge."""
 
@@ -511,23 +604,77 @@ def prepare_existing_branch(
     push: Callable[..., None] = _push,
     before_update: Callable[[str], None] = lambda _head: None,
     project: str = "agentsmd",
-) -> str:
-    """Bind or recover the retained promotion branch without trusting its owner."""
+) -> tuple[str, bool]:
+    """Bind or recover the retained promotion branch without trusting its owner.
+
+    Returns the head to promote and whether a base-stale owned PR was
+    closed and superseded. A superseded PR must never be PATCHed or reused;
+    the caller re-queries open PRs and creates a fresh successor instead.
+    """
 
     if len(open_pull_requests) > 1:
         raise PromotionError("expected promotion branch has competing open pull requests")
     matching_closed: list[dict] = []
     if open_pull_requests:
-        validate_pull_request(
-            open_pull_requests[0],
-            {
-                "number": open_pull_requests[0]["number"],
+        try:
+            validate_pull_request(
+                open_pull_requests[0],
+                {
+                    "number": open_pull_requests[0]["number"],
+                    "project": project,
+                    "head": previous,
+                    "base": base_sha,
+                },
+                require_mergeable=False,
+            )
+        except PromotionError:
+            # Main moved after the owned promotion PR was opened, so its
+            # pinned base SHA is stale and the PR can never expose the
+            # current base again. Close that exact PR and supersede it with
+            # a fresh one only when every other identity field still proves
+            # exact Toolybara ownership. Any other change fails closed and
+            # leaves the PR open. No push happens unless the close verifies.
+            stale = open_pull_requests[0]
+            expected = {
+                "number": stale["number"],
                 "project": project,
                 "head": previous,
                 "base": base_sha,
-            },
-            require_mergeable=False,
-        )
+            }
+            validate_rebuildable_stale_base(stale, expected)
+            observed_stale_base = stale.get("base", {}).get("sha")
+            # Prove the rebuilt candidate before any mutation; the proof
+            # itself rechecks live main, the source, and the open PR.
+            before_update(candidate_head)
+            # Re-fetch the exact PR: it must still be the same open,
+            # Toolybara-owned PR on the exact initially observed stale base
+            # before it is closed. A different stale base fails closed.
+            live = request(
+                "GET",
+                f"/repos/{MARKETPLACE_REPOSITORY}/pulls/{stale['number']}",
+            )
+            if not isinstance(live, dict):
+                raise PromotionError("stale promotion pull request was not found")
+            validate_rebuildable_stale_base(live, expected)
+            live_base = live.get("base", {}).get("sha")
+            if live_base != observed_stale_base:
+                raise PromotionError(
+                    f"stale promotion pull request base changed: {live_base}"
+                )
+            closed = request(
+                "PATCH",
+                f"/repos/{MARKETPLACE_REPOSITORY}/pulls/{stale['number']}",
+                {"state": "closed"},
+            )
+            validate_stale_close(
+                closed,
+                number=stale["number"],
+                previous=previous,
+                stale_base=observed_stale_base,
+                project=project,
+            )
+            push(root, branch(project), previous=previous)
+            return candidate_head, True
     else:
         matching_closed = [
             pull_request
@@ -548,7 +695,7 @@ def prepare_existing_branch(
         # Toolybara token, then let the caller create and validate the PR.
         before_update(candidate_head)
         push(root, branch(project), previous=previous)
-        return candidate_head
+        return candidate_head, False
 
     remote_commit = request(
         "GET", f"/repos/{MARKETPLACE_REPOSITORY}/git/commits/{previous}"
@@ -560,10 +707,10 @@ def prepare_existing_branch(
     )
     if remote_tree == candidate_tree:
         before_update(previous)
-        return previous
+        return previous, False
     before_update(candidate_head)
     push(root, branch(project), previous=previous)
-    return candidate_head
+    return candidate_head, False
 
 
 def _current_release(root: Path, project: str = "agentsmd") -> str | None:
@@ -887,9 +1034,22 @@ def reconcile(args: argparse.Namespace) -> dict:
             if len(current_prs) != len(pull_requests):
                 raise PromotionError("expected promotion pull request changed during proof")
             for current, prior in zip(current_prs, pull_requests):
-                validate_pull_request(current, {
-                    "number": prior["number"], "head": previous, "base": base_sha, "project": project,
-                }, require_mergeable=False)
+                try:
+                    validate_pull_request(current, {
+                        "number": prior["number"], "head": previous, "base": base_sha, "project": project,
+                    }, require_mergeable=False)
+                except PromotionError:
+                    # The owned PR predates the current base, so its pinned
+                    # base SHA stays stale until it is closed and superseded.
+                    # Prove exact ownership otherwise and that the PR did not
+                    # change during proof; preparation re-fetches and closes
+                    # that exact PR before any push, and a fresh successor PR
+                    # is strictly validated against the current base after it.
+                    validate_rebuildable_stale_base(current, {
+                        "number": prior["number"], "head": previous, "base": base_sha, "project": project,
+                    })
+                    if current.get("base", {}).get("sha") != prior.get("base", {}).get("sha"):
+                        raise PromotionError("expected promotion pull request changed during proof")
 
         branch_ref = _gh_request(
             "GET",
@@ -899,7 +1059,7 @@ def reconcile(args: argparse.Namespace) -> dict:
         previous = branch_ref.get("object", {}).get("sha") if isinstance(branch_ref, dict) else None
         pull_requests = _expected_pull_requests("open", project)
         if previous:
-            candidate_head = prepare_existing_branch(
+            candidate_head, stale_superseded = prepare_existing_branch(
                 candidate_root,
                 previous=previous,
                 candidate_head=candidate_head,
@@ -909,9 +1069,20 @@ def reconcile(args: argparse.Namespace) -> dict:
                 closed_pull_requests=(
                     [] if pull_requests else _expected_pull_requests("closed", project)
                 ),
+                request=_gh_request,
+                push=_push,
                 before_update=prove_before_update,
                 project=project,
             )
+            if stale_superseded:
+                # The base-pinned PR was closed and verified; it must never
+                # be PATCHed or reused. Re-query live open PRs and require
+                # it to be gone before creating its fresh successor.
+                if _main_sha() != base_sha:
+                    raise PromotionError("Marketplace main moved before pull request update")
+                pull_requests = _expected_pull_requests("open", project)
+                if pull_requests:
+                    raise PromotionError("stale promotion pull request was not closed")
         else:
             if pull_requests:
                 raise PromotionError("expected pull request exists without its promotion branch")
