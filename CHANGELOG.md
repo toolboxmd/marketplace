@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0] - 2026-09-23
+
+### Added
+
+- Promote approved modules through shared Toolybara automation with fair reconciliation priority
+
 ## [1.4.16] - 2026-09-20
 
 ### Changed

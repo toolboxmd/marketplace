@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reconcile released AgentsMD versions through Toolybara's trusted PR path."""
+"""Reconcile approved Agent Module releases through Toolybara's trusted PR path."""
 
 from __future__ import annotations
 
@@ -18,6 +18,9 @@ from collections import namedtuple
 from collections.abc import Callable
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from toolybara_modules import branch, enrolled, modules, project_id
+
 
 VERSION_TAG_RE = re.compile(r"^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$")
 ReconciliationDecision = namedtuple(
@@ -32,25 +35,28 @@ GENERATED_FILES = {
     "VERSION",
     "catalog.json",
 }
-GENERATED_PREFIXES = ("cursor/agentsmd/",)
 EXPECTED_ACTOR = "toolybara[bot]"
-EXPECTED_BRANCH = "toolybara/promote-agentsmd"
 MARKETPLACE_REPOSITORY = "toolboxmd/marketplace"
-SOURCE_REPOSITORY = "toolboxmd/agentsmd"
 
 
 class PromotionError(RuntimeError):
     """A release cannot safely pass the Toolybara promotion contract."""
 
 
-def validate_generated_paths(paths: set[str]) -> None:
-    """Reject every change not produced by AgentsMD promotion and versioning."""
+def _label(project: str) -> str:
+    return "AgentsMD" if project == "agentsmd" else project
+
+
+def validate_generated_paths(paths: set[str], project: str = "agentsmd") -> None:
+    """Reject changes outside the selected module and shared generated indexes."""
+
+    prefix = f"cursor/{project_id(project)}/"
 
     unexpected = sorted(
         path
         for path in paths
         if path not in GENERATED_FILES
-        and not any(path.startswith(prefix) for prefix in GENERATED_PREFIXES)
+        and not path.startswith(prefix)
     )
     if unexpected:
         raise PromotionError(f"changes outside generated allowlist: {unexpected}")
@@ -99,8 +105,8 @@ def _catalog_by_name(root: Path) -> dict[str, dict]:
     if not isinstance(entries, list):
         raise PromotionError("catalog plugins must be an array")
     by_name = {entry.get("name"): entry for entry in entries if isinstance(entry, dict)}
-    if len(by_name) != len(entries) or "agentsmd" not in by_name:
-        raise PromotionError("catalog Project identities must be unique and include agentsmd")
+    if len(by_name) != len(entries):
+        raise PromotionError("catalog Project identities must be unique")
     return by_name
 
 
@@ -111,23 +117,26 @@ def validate_candidate_state(
 ) -> str:
     """Validate promotion identity, preserved records, and one patch transition."""
 
+    project = source.get("project", "agentsmd")
     base_catalog = _catalog_by_name(base_root)
     candidate_catalog = _catalog_by_name(candidate_root)
-    base_other = {name: entry for name, entry in base_catalog.items() if name != "agentsmd"}
+    base_other = {name: entry for name, entry in base_catalog.items() if name != project}
     candidate_other = {
-        name: entry for name, entry in candidate_catalog.items() if name != "agentsmd"
+        name: entry for name, entry in candidate_catalog.items() if name != project
     }
     if candidate_other != base_other:
-        raise PromotionError("non-AgentsMD catalog records changed")
-    agentsmd = candidate_catalog["agentsmd"]
+        raise PromotionError(f"non-{_label(project)} catalog records changed")
+    selected = candidate_catalog[project]
+    if selected.get("github") != enrolled(base_root, project)["github"]:
+        raise PromotionError("candidate repository disagrees with enrolled source")
     expected_record = {
         "path": ".toolboxmd/project.json",
         "sha256": source["recordSha256"],
     }
     if (
-        agentsmd.get("release") != source["release"]
-        or agentsmd.get("sha") != source["commit"]
-        or agentsmd.get("projectRecord") != expected_record
+        selected.get("release") != source["release"]
+        or selected.get("sha") != source["commit"]
+        or selected.get("projectRecord") != expected_record
     ):
         raise PromotionError("candidate identity disagrees with the peeled source release")
 
@@ -162,13 +171,25 @@ def build_generated_candidate(
     candidate_root: Path,
     source_root: Path,
     release: str,
+    project: str = "agentsmd",
 ) -> dict:
     """Generate one promotion inside an ephemeral candidate checkout."""
 
+    module = enrolled(base_root, project)
+    catalog = json.loads((candidate_root / "catalog.json").read_text())
+    existing = _catalog_by_name(candidate_root).get(project)
+    if existing is None:
+        # Enrollment is reviewed control. Incomplete seed state exists only in
+        # this disposable clone until ingestion validates the complete release.
+        catalog["plugins"].append({"name": project, "github": module["github"],
+                                   "category": module["category"]})
+        (candidate_root / "catalog.json").write_text(json.dumps(catalog, indent=2) + "\n")
+    elif existing.get("github") != module["github"]:
+        raise PromotionError("enrolled repository disagrees with accepted catalog")
     ingest_output = _run(
         sys.executable,
         str(base_root / "scripts" / "ingest_project.py"),
-        "agentsmd",
+        project,
         release,
         "--source",
         str(source_root),
@@ -177,31 +198,33 @@ def build_generated_candidate(
         cwd=base_root,
     )
     source = json.loads(ingest_output)
-    cursor_output = _run(
-        sys.executable,
-        str(base_root / "scripts" / "render_cursor.py"),
-        "agentsmd",
-        "--source",
-        str(source_root),
-        "--marketplace-root",
-        str(candidate_root),
-        cwd=base_root,
-    )
-    cursor = json.loads(cursor_output)
-    for field in ("project", "release", "commit", "recordSha256"):
-        if cursor.get(field) != source.get(field):
-            raise PromotionError(f"Cursor generation disagrees on {field}")
+    if module["cursor"]:
+        cursor_output = _run(
+            sys.executable,
+            str(base_root / "scripts" / "render_cursor.py"),
+            project,
+            "--source",
+            str(source_root),
+            "--marketplace-root",
+            str(candidate_root),
+            *[arg for path in module["cursorRuntime"] for arg in ("--runtime-path", path)],
+            cwd=base_root,
+        )
+        cursor = json.loads(cursor_output)
+        for field in ("project", "release", "commit", "recordSha256"):
+            if cursor.get(field) != source.get(field):
+                raise PromotionError(f"Cursor generation disagrees on {field}")
     versionctl = base_root / "cursor" / "agentsmd" / "tools" / "versionctl" / "bin" / "versionctl"
     _run(
         str(versionctl),
         "prepare",
         "patch",
         "--reason",
-        f"Promote AgentsMD {release} through Toolybara",
+        f"Promote {_label(project)} {release} through Toolybara",
         cwd=candidate_root,
     )
     paths = _changed_paths(candidate_root)
-    validate_generated_paths(paths)
+    validate_generated_paths(paths, project)
     marketplace_version = validate_candidate_state(base_root, candidate_root, source)
     return {
         **source,
@@ -242,7 +265,7 @@ def validate_pull_request(
         "state": "closed" if merged_mode else "open",
         "draft": False,
         "actor": EXPECTED_ACTOR,
-        "headRef": EXPECTED_BRANCH,
+        "headRef": branch(expected.get("project", "agentsmd")),
         "headSha": expected["head"],
         "headRepository": MARKETPLACE_REPOSITORY,
         "baseRef": "main",
@@ -260,7 +283,7 @@ def validate_pull_request(
         raise PromotionError("live pull request is not mergeable")
 
 
-def validate_previous_promotion(snapshot: dict, expected_head: str) -> None:
+def validate_previous_promotion(snapshot: dict, expected_head: str, project: str = "agentsmd") -> None:
     """Authorize reuse of the retained branch after its prior exact merge."""
 
     actual = {
@@ -278,7 +301,7 @@ def validate_previous_promotion(snapshot: dict, expected_head: str) -> None:
         "merged": True,
         "mergedBy": EXPECTED_ACTOR,
         "actor": EXPECTED_ACTOR,
-        "headRef": EXPECTED_BRANCH,
+        "headRef": branch(project),
         "headSha": expected_head,
         "headRepository": MARKETPLACE_REPOSITORY,
         "baseRef": "main",
@@ -316,13 +339,13 @@ def _version(tag: str) -> tuple[int, int, int]:
 def select_candidate(
     releases: list[dict],
     *,
-    current_tag: str,
+    current_tag: str | None,
     wake_tag: str | None,
     inspect: Callable[[str], dict],
 ) -> ReconciliationDecision:
     """Select the newest published stable release newer than accepted state."""
 
-    current = _version(current_tag)
+    current = _version(current_tag) if current_tag is not None else None
     published = {
         item.get("tag_name")
         for item in releases
@@ -335,7 +358,7 @@ def select_candidate(
     )
     rejected: list[dict[str, str]] = []
     for tag in stable:
-        if _version(tag) <= current:
+        if current is not None and _version(tag) <= current:
             continue
         try:
             candidate = inspect(tag)
@@ -347,7 +370,7 @@ def select_candidate(
     return ReconciliationDecision(state, None, rejected, wake_tag)
 
 
-def require_published_release(releases: list[dict], release: str) -> None:
+def require_published_release(releases: list[dict], release: str, project: str = "agentsmd") -> None:
     """Fail closed when the accepted release is no longer published stable."""
 
     if not any(
@@ -357,7 +380,7 @@ def require_published_release(releases: list[dict], release: str) -> None:
         for item in releases
     ):
         raise PromotionError(
-            f"accepted AgentsMD release is not published stable: {release}"
+            f"accepted {_label(project)} release is not published stable: {release}"
         )
 
 
@@ -407,7 +430,7 @@ def _gh_request(
     return value
 
 
-def _inspect_release(control_root: Path, source_root: Path, release: str) -> dict:
+def _inspect_release(control_root: Path, source_root: Path, release: str, project: str = "agentsmd") -> dict:
     module_path = control_root / "scripts" / "ingest_project.py"
     spec = importlib.util.spec_from_file_location("toolybara_ingest", module_path)
     if spec is None or spec.loader is None:
@@ -419,7 +442,7 @@ def _inspect_release(control_root: Path, source_root: Path, release: str) -> dic
         sys.path.insert(0, scripts)
     try:
         spec.loader.exec_module(module)
-        record, commit, digest = module._load_candidate(source_root, "agentsmd", release)
+        record, commit, digest = module._load_candidate(source_root, project, release)
     except Exception as error:
         if isinstance(error, (KeyboardInterrupt, SystemExit)):
             raise
@@ -428,7 +451,8 @@ def _inspect_release(control_root: Path, source_root: Path, release: str) -> dic
         if inserted:
             sys.path.remove(scripts)
     return {
-        "project": "agentsmd",
+        "project": project,
+        "repository": enrolled(control_root, project)["github"],
         "release": release,
         "commit": commit,
         "recordSha256": digest,
@@ -486,6 +510,7 @@ def prepare_existing_branch(
     request: Callable[..., dict | list | None] = _gh_request,
     push: Callable[..., None] = _push,
     before_update: Callable[[str], None] = lambda _head: None,
+    project: str = "agentsmd",
 ) -> str:
     """Bind or recover the retained promotion branch without trusting its owner."""
 
@@ -497,6 +522,7 @@ def prepare_existing_branch(
             open_pull_requests[0],
             {
                 "number": open_pull_requests[0]["number"],
+                "project": project,
                 "head": previous,
                 "base": base_sha,
             },
@@ -515,13 +541,13 @@ def prepare_existing_branch(
         )
         if not isinstance(prior, dict):
             raise PromotionError("prior promotion pull request was not found")
-        validate_previous_promotion(prior, previous)
+        validate_previous_promotion(prior, previous, project)
     elif not open_pull_requests:
         # A prior run may have pushed successfully and failed before PR creation.
         # Rewrite only the reserved branch with an exact lease and the current
         # Toolybara token, then let the caller create and validate the PR.
         before_update(candidate_head)
-        push(root, EXPECTED_BRANCH, previous=previous)
+        push(root, branch(project), previous=previous)
         return candidate_head
 
     remote_commit = request(
@@ -536,14 +562,17 @@ def prepare_existing_branch(
         before_update(previous)
         return previous
     before_update(candidate_head)
-    push(root, EXPECTED_BRANCH, previous=previous)
+    push(root, branch(project), previous=previous)
     return candidate_head
 
 
-def _current_release(root: Path) -> str:
-    release = _catalog_by_name(root)["agentsmd"].get("release")
+def _current_release(root: Path, project: str = "agentsmd") -> str | None:
+    catalog = _catalog_by_name(root)
+    if project not in catalog:
+        return None
+    release = catalog[project].get("release")
     if not isinstance(release, str):
-        raise PromotionError("accepted AgentsMD catalog record has no release")
+        raise PromotionError(f"accepted {_label(project)} catalog record has no release")
     _version(release)
     return release
 
@@ -556,21 +585,11 @@ def accepted_duplicate_evidence(
 ) -> dict[str, str]:
     """Bind a duplicate result to its revalidated immutable source identity."""
 
-    catalog = _catalog_by_name(root)["agentsmd"]
+    project = source.get("project", "agentsmd")
+    catalog = _catalog_by_name(root)[project]
     catalog_record = catalog.get("projectRecord")
-    provenance = json.loads(
-        (root / "cursor" / "agentsmd" / "SOURCE.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    provenance_record = provenance.get("projectRecord")
-    if (
-        not isinstance(catalog_record, dict)
-        or catalog_record.get("path") != ".toolboxmd/project.json"
-        or not isinstance(provenance_record, dict)
-        or provenance_record.get("path") != ".toolboxmd/project.json"
-    ):
-        raise PromotionError("accepted AgentsMD Project Record path is invalid")
+    if not isinstance(catalog_record, dict) or catalog_record.get("path") != ".toolboxmd/project.json":
+        raise PromotionError(f"accepted {_label(project)} Project Record path is invalid")
 
     inspected = {
         "release": source.get("release"),
@@ -582,15 +601,16 @@ def accepted_duplicate_evidence(
         "commit": catalog.get("sha"),
         "recordSha256": catalog_record.get("sha256"),
     }
-    provenance_identity = {
-        "release": provenance.get("release"),
-        "commit": provenance.get("commit"),
-        "recordSha256": provenance_record.get("sha256"),
-    }
-    if inspected != catalog_identity or inspected != provenance_identity:
-        raise PromotionError(
-            "accepted AgentsMD identity disagrees with the immutable source release"
-        )
+    identities = [catalog_identity]
+    if enrolled(root, project)["cursor"]:
+        provenance = json.loads((root / "cursor" / project / "SOURCE.json").read_text())
+        provenance_record = provenance.get("projectRecord")
+        if not isinstance(provenance_record, dict) or provenance_record.get("path") != ".toolboxmd/project.json":
+            raise PromotionError(f"accepted {_label(project)} Project Record path is invalid")
+        identities.append({"release": provenance.get("release"), "commit": provenance.get("commit"),
+                           "recordSha256": provenance_record.get("sha256")})
+    if any(inspected != identity for identity in identities):
+        raise PromotionError(f"accepted {_label(project)} identity disagrees with the immutable source release")
 
     return {
         "state": "duplicate",
@@ -601,17 +621,17 @@ def accepted_duplicate_evidence(
     }
 
 
-def _published_releases() -> list[dict]:
+def _published_releases(repository: str = "toolboxmd/agentsmd") -> list[dict]:
     releases: list[dict] = []
     page = 1
     while True:
         value = _gh_request(
             "GET",
-            f"/repos/{SOURCE_REPOSITORY}/releases?per_page=100&page={page}",
+            f"/repos/{repository}/releases?per_page=100&page={page}",
             token=os.environ.get("READ_TOKEN"),
         )
         if not isinstance(value, list):
-            raise PromotionError("AgentsMD releases endpoint did not return an array")
+            raise PromotionError("module releases endpoint did not return an array")
         releases.extend(value)
         if len(value) < 100:
             return releases
@@ -648,21 +668,20 @@ def _append_summary(path: Path | None, lines: list[str]) -> None:
 def _promotion_body(source: dict, marketplace_version: str) -> str:
     return "\n".join(
         (
-            f"## Outcome\n\nPromote the newest eligible AgentsMD release, {source['release']}, through Toolybara.",
+            f"## Outcome\n\nPromote the newest eligible {_label(source['project'])} release, {source['release']}, through Toolybara.",
             "\n## Exact identity",
-            f"\n- AgentsMD release: `{source['release']}`",
+            f"\n- Project: `{source['project']}`\n- Release: `{source['release']}`",
             f"- Peeled source commit: `{source['commit']}`",
             f"- Project Record SHA-256: `{source['recordSha256']}`",
             f"- Marketplace version: `{marketplace_version}`",
             "\n## Generation boundary",
             "\nThis pull request was authored by Toolybara from the trusted Marketplace control plane. Only the generated promotion allowlist and one patch SemVer transition may differ from main. Deterministic validation, not model review, owns this generated diff.",
-            "\nCloses #17",
         )
     )
 
 
-def _expected_pull_requests(state: str) -> list[dict]:
-    head = EXPECTED_BRANCH.replace("/", "%2F")
+def _expected_pull_requests(state: str, project: str = "agentsmd") -> list[dict]:
+    head = branch(project).replace("/", "%2F")
     value = _gh_request(
         "GET",
         f"/repos/{MARKETPLACE_REPOSITORY}/pulls?state={state}&base=main&head=toolboxmd:{head}&sort=updated&direction=desc",
@@ -682,11 +701,13 @@ def _proof_adapter():
 
 
 def _fresh_source(base_root: Path, source_root: Path, expected: dict) -> None:
+    project = expected.get("project", "agentsmd")
+    module = enrolled(base_root, project)
     # The pre-proof clone is immutable evidence, not a fresh remote tag read.
     _run("git", "fetch", "--force", "--tags", "origin", cwd=source_root)
     decision = select_candidate(
-        _published_releases(), current_tag=_current_release(base_root), wake_tag=None,
-        inspect=lambda tag: _inspect_release(base_root, source_root, tag),
+        _published_releases(module["github"]), current_tag=_current_release(base_root, project), wake_tag=None,
+        inspect=lambda tag: _inspect_release(base_root, source_root, tag, project),
     )
     source = require_same_candidate(decision, expected["release"])
     if source["commit"] != expected["commit"] or source["recordSha256"] != expected["recordSha256"]:
@@ -724,6 +745,64 @@ def base_release_ready(root: Path, base_sha: str, *, request=None) -> bool:
     return True
 
 
+def discover_modules(root: Path, temp: Path, args: argparse.Namespace, base_sha: str):
+    """Find one candidate without mutating Marketplace or trusting a wake hint.
+
+    Invalid or unreleased modules do not prevent another module progressing.
+    The shared workflow lock serializes the selected promotion through release.
+    """
+    approved = modules(root)
+    requested = getattr(args, "project", None)
+    if requested is not None:
+        approved = {requested: enrolled(root, requested)}
+    # Rotate between workflow runs so one module's later generation, proof, or
+    # merge failure cannot starve the others. Retries keep the same run number.
+    ordered = list(approved.items())
+    run_number = int(os.environ.get("GITHUB_RUN_NUMBER", "1"))
+    if run_number < 1:
+        raise PromotionError("GITHUB_RUN_NUMBER must be positive")
+    offset = (run_number - 1) % len(ordered)
+    ordered = ordered[offset:] + ordered[:offset]
+    observations = []
+    failures = []
+    for project, module in ordered:
+        try:
+            accepted = _catalog_by_name(root).get(project)
+            if accepted is not None and accepted.get("github") != module["github"]:
+                raise PromotionError("enrolled repository disagrees with accepted catalog")
+            current = _current_release(root, project)
+            releases = _published_releases(module["github"])
+            source_root = temp / project
+            _clone(f"https://github.com/{module['github']}.git", source_root)
+            decision = select_candidate(
+                releases, current_tag=current, wake_tag=args.wake_tag or None,
+                inspect=lambda tag: _inspect_release(root, source_root, tag, project),
+            )
+            if decision.state == "invalid":
+                raise PromotionError(f"no valid unreconciled release: {decision.rejected}")
+            if decision.state == "candidate":
+                return (module, source_root, decision), observations
+            if current is None:
+                values = {"state": "pending", "project": project}
+            else:
+                require_published_release(releases, current, project)
+                values = {**accepted_duplicate_evidence(
+                    root, _inspect_release(root, source_root, current, project), base_sha=base_sha,
+                ), "project": project}
+            observations.append(values)
+            _append_summary(args.summary, [
+                "### Toolybara reconciliation", "",
+                *(f"- {key}: `{value}`" for key, value in values.items()),
+                f"- Wake hint: `{args.wake_tag or 'none'}`",
+            ])
+        except (PromotionError, OSError, ValueError) as error:
+            failures.append({"project": project, "error": str(error)})
+            _append_summary(args.summary, [f"- Rejected {project}: {error}"])
+    if failures:
+        raise PromotionError(f"modules require attention: {failures}")
+    return None, observations
+
+
 def reconcile(args: argparse.Namespace) -> dict:
     root = Path(__file__).resolve().parents[1]
     base_sha = _main_sha()
@@ -743,46 +822,18 @@ def reconcile(args: argparse.Namespace) -> dict:
 
     with tempfile.TemporaryDirectory(prefix="toolybara-reconcile-") as tmp:
         temp = Path(tmp)
-        source_root = temp / "agentsmd"
-        candidate_root = temp / "marketplace"
-        _clone(f"https://github.com/{SOURCE_REPOSITORY}.git", source_root)
-        current_release = _current_release(root)
-        published_releases = _published_releases()
-        decision = select_candidate(
-            published_releases,
-            current_tag=current_release,
-            wake_tag=args.wake_tag or None,
-            inspect=lambda tag: _inspect_release(root, source_root, tag),
-        )
-        if decision.state == "invalid":
-            _append_summary(
-                args.summary,
-                ["### Toolybara reconciliation", "", "- State: invalid", f"- Rejections: `{json.dumps(decision.rejected, sort_keys=True)}`"],
-            )
-            raise PromotionError(f"no valid unreconciled release: {decision.rejected}")
-        if decision.state == "duplicate":
-            require_published_release(published_releases, current_release)
-            values = accepted_duplicate_evidence(
-                root,
-                _inspect_release(root, source_root, current_release),
-                base_sha=base_sha,
-            )
+        selected, observations = discover_modules(root, temp, args, base_sha)
+        if selected is None:
+            values = {"state": "pending" if any(item["state"] == "pending" for item in observations) else "duplicate",
+                      "base_sha": base_sha}
+            if len(observations) == 1:
+                values.update(observations[0])
             _write_outputs(args.output, values)
-            _append_summary(
-                args.summary,
-                [
-                    "### Toolybara reconciliation",
-                    "",
-                    "- State: duplicate/no-op",
-                    f"- Accepted AgentsMD release: `{values['release']}`",
-                    f"- Peeled source commit: `{values['source_sha']}`",
-                    f"- Project Record SHA-256: `{values['record_sha256']}`",
-                    f"- Wake hint: `{args.wake_tag or 'none'}`",
-                ],
-            )
             return values
-
+        module, source_root, decision = selected
+        project = module["id"]
         source = decision.candidate
+        candidate_root = temp / "marketplace"
         token = os.environ.get("GH_TOKEN")
         if not token:
             raise PromotionError("GH_TOKEN is required for Toolybara reconciliation")
@@ -793,6 +844,7 @@ def reconcile(args: argparse.Namespace) -> dict:
             candidate_root=candidate_root,
             source_root=source_root,
             release=source["release"],
+            project=source.get("project", "agentsmd"),
         )
         _run("git", "config", "user.name", "Toolybara", cwd=candidate_root)
         _run(
@@ -807,7 +859,7 @@ def reconcile(args: argparse.Namespace) -> dict:
             "git",
             "commit",
             "-m",
-            f"chore: promote AgentsMD {source['release']}",
+            f"chore: promote {_label(project)} {source['release']}",
             cwd=candidate_root,
         )
         candidate_head = _run("git", "rev-parse", "HEAD", cwd=candidate_root)
@@ -831,21 +883,21 @@ def reconcile(args: argparse.Namespace) -> dict:
             if _main_sha() != base_sha:
                 raise PromotionError("Marketplace main moved during proof")
             _fresh_source(root, source_root, source)
-            current_prs = _expected_pull_requests("open")
+            current_prs = _expected_pull_requests("open", project)
             if len(current_prs) != len(pull_requests):
                 raise PromotionError("expected promotion pull request changed during proof")
             for current, prior in zip(current_prs, pull_requests):
                 validate_pull_request(current, {
-                    "number": prior["number"], "head": previous, "base": base_sha,
+                    "number": prior["number"], "head": previous, "base": base_sha, "project": project,
                 }, require_mergeable=False)
 
         branch_ref = _gh_request(
             "GET",
-            f"/repos/{MARKETPLACE_REPOSITORY}/git/ref/heads/{EXPECTED_BRANCH.replace('/', '%2F')}",
+            f"/repos/{MARKETPLACE_REPOSITORY}/git/ref/heads/{branch(project).replace('/', '%2F')}",
             allow_not_found=True,
         )
         previous = branch_ref.get("object", {}).get("sha") if isinstance(branch_ref, dict) else None
-        pull_requests = _expected_pull_requests("open")
+        pull_requests = _expected_pull_requests("open", project)
         if previous:
             candidate_head = prepare_existing_branch(
                 candidate_root,
@@ -855,15 +907,16 @@ def reconcile(args: argparse.Namespace) -> dict:
                 base_sha=base_sha,
                 open_pull_requests=pull_requests,
                 closed_pull_requests=(
-                    [] if pull_requests else _expected_pull_requests("closed")
+                    [] if pull_requests else _expected_pull_requests("closed", project)
                 ),
                 before_update=prove_before_update,
+                project=project,
             )
         else:
             if pull_requests:
                 raise PromotionError("expected pull request exists without its promotion branch")
             prove_before_update(candidate_head)
-            _push(candidate_root, EXPECTED_BRANCH, previous=None)
+            _push(candidate_root, branch(project), previous=None)
 
         if _main_sha() != base_sha:
             raise PromotionError("Marketplace main moved before pull request update")
@@ -873,15 +926,15 @@ def reconcile(args: argparse.Namespace) -> dict:
             pull_request = _gh_request(
                 "PATCH",
                 f"/repos/{MARKETPLACE_REPOSITORY}/pulls/{pull_requests[0]['number']}",
-                {"title": f"Promote AgentsMD {source['release']} through Toolybara", "body": body},
+                {"title": f"Promote {_label(project)} {source['release']} through Toolybara", "body": body},
             )
         else:
             pull_request = _gh_request(
                 "POST",
                 f"/repos/{MARKETPLACE_REPOSITORY}/pulls",
                 {
-                    "title": f"Promote AgentsMD {source['release']} through Toolybara",
-                    "head": EXPECTED_BRANCH,
+                    "title": f"Promote {_label(project)} {source['release']} through Toolybara",
+                    "head": branch(project),
                     "base": "main",
                     "body": body,
                     "maintainer_can_modify": False,
@@ -895,11 +948,12 @@ def reconcile(args: argparse.Namespace) -> dict:
             raise PromotionError("created pull request does not expose the pushed exact head")
         validate_pull_request(
             pull_request,
-            {"number": number, "head": candidate_head, "base": base_sha},
+            {"number": number, "head": candidate_head, "base": base_sha, "project": project},
             require_mergeable=False,
         )
         values = {
             "state": "candidate",
+            "project": project,
             "pr_number": number,
             "base_sha": base_sha,
             "head_sha": candidate_head,
@@ -919,7 +973,7 @@ def reconcile(args: argparse.Namespace) -> dict:
                 "- State: candidate",
                 f"- Pull request: `#{number}`",
                 f"- Exact head: `{candidate_head}`",
-                f"- AgentsMD release: `{source['release']}`",
+                f"- {_label(project)} release: `{source['release']}`",
                 f"- Peeled source commit: `{source['commit']}`",
                 f"- Project Record SHA-256: `{source['recordSha256']}`",
                 f"- Rejected newer candidates: `{json.dumps(decision.rejected, sort_keys=True)}`",
@@ -950,12 +1004,14 @@ def _regenerate_and_compare(
             candidate_root=regenerated,
             source_root=source_root,
             release=source["release"],
+            project=source.get("project", "agentsmd"),
         )
         second = build_generated_candidate(
             base_root=base_root,
             candidate_root=regenerated,
             source_root=source_root,
             release=source["release"],
+            project=source.get("project", "agentsmd"),
         )
         if first != second or working_tree_id(regenerated) != working_tree_id(candidate_root):
             raise PromotionError("candidate differs from deterministic regeneration")
@@ -969,6 +1025,8 @@ def _validate_candidate_checkout(
     proof_mode: str = "reuse",
 ) -> dict:
     base_root = args.base_root.resolve()
+    project = getattr(args, "project", "agentsmd")
+    module = enrolled(base_root, project)
     candidate_root = args.candidate_root.resolve()
     if _run("git", "rev-parse", "HEAD", cwd=base_root) != args.base_sha:
         raise PromotionError("trusted base checkout is not the reconciled base")
@@ -983,21 +1041,21 @@ def _validate_candidate_checkout(
             cwd=candidate_root,
         ).splitlines()
     )
-    validate_generated_paths(paths)
+    validate_generated_paths(paths, project)
 
     with tempfile.TemporaryDirectory(prefix="toolybara-source-") as tmp:
-        source_root = Path(tmp) / "agentsmd"
-        _clone(f"https://github.com/{SOURCE_REPOSITORY}.git", source_root)
+        source_root = Path(tmp) / project
+        _clone(f"https://github.com/{module['github']}.git", source_root)
         if require_newest:
             decision = select_candidate(
-                _published_releases(),
-                current_tag=_current_release(base_root),
+                _published_releases(module["github"]),
+                current_tag=_current_release(base_root, project),
                 wake_tag=None,
-                inspect=lambda tag: _inspect_release(base_root, source_root, tag),
+                inspect=lambda tag: _inspect_release(base_root, source_root, tag, project),
             )
             source = require_same_candidate(decision, args.release)
         else:
-            source = _inspect_release(base_root, source_root, args.release)
+            source = _inspect_release(base_root, source_root, args.release, project)
         if source["commit"] != args.source_sha or source["recordSha256"] != args.record_sha256:
             raise PromotionError("source identity changed after reconciliation")
         version = validate_candidate_state(base_root, candidate_root, source)
@@ -1036,6 +1094,7 @@ def _validate_candidate_checkout(
             cwd=candidate_root,
         )
     evidence = {
+        "project": project,
         "pr": args.pr_number,
         "base": args.base_sha,
         "head": args.head_sha,
@@ -1060,7 +1119,8 @@ def validate_live(args: argparse.Namespace) -> dict:
         raise PromotionError("live pull request was not found")
     validate_pull_request(
         snapshot,
-        {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha},
+        {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha,
+         "project": getattr(args, "project", "agentsmd")},
         require_mergeable=args.require_mergeable,
     )
     if _main_sha() != args.base_sha:
@@ -1401,7 +1461,8 @@ def finalize(args: argparse.Namespace) -> dict:
     if already_merged:
         validate_pull_request(
             snapshot,
-            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha},
+            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha,
+             "project": getattr(args, "project", "agentsmd")},
             require_mergeable=False,
             allow_merged=True,
         )
@@ -1417,7 +1478,8 @@ def finalize(args: argparse.Namespace) -> dict:
         )
         validate_pull_request(
             snapshot,
-            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha},
+            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha,
+             "project": getattr(args, "project", "agentsmd")},
             require_mergeable=True,
         )
         if _main_sha() != args.base_sha:
@@ -1455,7 +1517,8 @@ def finalize(args: argparse.Namespace) -> dict:
             raise PromotionError("merged pull request was not found")
         validate_pull_request(
             snapshot,
-            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha},
+            {"number": args.pr_number, "head": args.head_sha, "base": args.base_sha,
+             "project": getattr(args, "project", "agentsmd")},
             require_mergeable=False,
             allow_merged=True,
         )
@@ -1485,7 +1548,8 @@ def finalize(args: argparse.Namespace) -> dict:
     release_url = release.get("html_url")
     if not isinstance(release_url, str):
         raise PromotionError("Marketplace GitHub Release URL is missing")
-    _supersede_manual_pr(args.pr_number, merge_sha, release_url, request=write_request)
+    if getattr(args, "project", "agentsmd") == "agentsmd":
+        _supersede_manual_pr(args.pr_number, merge_sha, release_url, request=write_request)
     result = {**evidence, "merge": merge_sha, "releaseUrl": release_url}
     _append_summary(
         args.summary,
@@ -1496,13 +1560,14 @@ def finalize(args: argparse.Namespace) -> dict:
             f"- Merge commit: `{merge_sha}`",
             f"- Marketplace tag: `v{args.marketplace_version}`",
             f"- GitHub Release: {release_url}",
-            "- Manual PR #15: closed as a superseded manual proposal",
+            f"- Promoted Project: `{getattr(args, 'project', 'agentsmd')}`",
         ],
     )
     return result
 
 
 def _common_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--project", required=True)
     parser.add_argument("--base-root", type=Path, required=True)
     parser.add_argument("--candidate-root", type=Path, required=True)
     parser.add_argument("--pr-number", type=int, required=True)
@@ -1521,6 +1586,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     reconcile_parser = commands.add_parser("reconcile")
+    reconcile_parser.add_argument("--project", help="Reconcile only this enrolled module; default: all")
     reconcile_parser.add_argument("--wake-tag", default="")
     reconcile_parser.add_argument("--output", type=Path)
     reconcile_parser.add_argument("--summary", type=Path)

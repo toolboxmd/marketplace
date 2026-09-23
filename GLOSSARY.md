@@ -87,33 +87,33 @@ and loading are separate states.
 ## Toolybara
 
 The private ToolboxMD GitHub App that carries validated immutable Agent Module
-releases into Marketplace through one expected promotion branch and pull
-request. It is installed only on `toolboxmd/marketplace` and uses a trusted
-final workflow job to merge an exact revalidated head.
+releases into Marketplace through a reserved promotion branch and pull
+request for each explicitly enrolled module. It is installed only on
+`toolboxmd/marketplace` and uses a trusted final workflow job to merge an exact revalidated head.
 
 Do not use `Toolybara` for GitHub Actions generally, a human account, or an
 agent with authority outside Marketplace promotion.
 
 ## Eligible Release
 
-The newest published stable AgentsMD release whose peeled tag commit, Project
-Record, record digest, referenced facts, and required proof all pass the
-Marketplace acceptance contract.
+The newest published stable release of an enrolled Agent Module whose peeled
+tag commit, Project Record, record digest, referenced facts, and required proof
+all pass the Marketplace acceptance contract.
 
 A release named in an event is not eligible until Marketplace resolves and
 validates it independently.
 
 ## Wake Hint
 
-An untrusted release tag sent by an AgentsMD event only to start Marketplace
+An untrusted release tag sent by a source release event only to start Marketplace
 reconciliation. It never selects or proves the release that Marketplace
 promotes.
 
 ## Generated Promotion Pull Request
 
-The Toolybara-authored pull request from `toolybara/promote-agentsmd` that
-contains only deterministic AgentsMD distribution output and one Marketplace
-patch transition.
+The Toolybara-authored pull request from `toolybara/promote-<module>` that
+contains only deterministic distribution output for one enrolled Agent Module
+and one Marketplace patch transition.
 
 Do not use this term for a human-authored publication proposal such as pull
 request #15.

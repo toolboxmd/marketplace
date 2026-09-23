@@ -46,6 +46,8 @@ class ProofTests(unittest.TestCase):
         (self.candidate / ".toolboxmd").mkdir()
         (self.candidate / adapter.POLICY_PATH).write_text(json.dumps(self.policy))
         (self.candidate / "catalog.json").write_text('{"version":1}')
+        (self.candidate / "toolybara").mkdir()
+        (self.candidate / "toolybara/modules.json").write_bytes((ROOT / "toolybara/modules.json").read_bytes())
         self.base_sha = self.commit()
         self.base = self.root / "base"
         subprocess.run(["git", "clone", "-q", str(self.candidate), str(self.base)], check=True)
@@ -137,7 +139,7 @@ class ProofTests(unittest.TestCase):
 
     def test_source_release_digest_base_head_and_environment_invalidate(self):
         self.receipt = self.record()
-        for key, value in {"source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
+        for key, value in {"project": "model-router", "repository": "toolboxmd/other", "source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
             with self.subTest(key=key), self.assertRaises(shared.ProofError):
                 self.reuse({**self.expected, key: value})
         with patch.dict(os.environ, {"ImageVersion": "changed"}):
@@ -170,7 +172,7 @@ class ProofTests(unittest.TestCase):
         (self.candidate / "catalog.json").write_text('{"version":3}')
         moved = self.commit()
         self.git("tag", "-f", "v9.0.0", moved)
-        def inspect(_control, source, tag):
+        def inspect(_control, source, tag, project):
             commit = subprocess.check_output(["git", "rev-parse", tag], cwd=source).decode().strip()
             return {"release": tag, "commit": commit, "recordSha256": "b" * 64}
         with patch.object(promotion, "_published_releases", return_value=[{"tag_name": "v9.0.0", "draft": False, "prerelease": False}]), patch.object(promotion, "_current_release", return_value="v8.0.0"), patch.object(promotion, "_inspect_release", side_effect=inspect):
@@ -179,7 +181,7 @@ class ProofTests(unittest.TestCase):
         self.assertEqual(subprocess.check_output(["git", "rev-parse", "v9.0.0"], cwd=self.base).decode().strip(), moved)
 
     def test_policy_control_tests_and_unknown_paths_never_expand_generated_scope(self):
-        for path in ("scripts/forged.py", "tests/forged.py", ".github/workflows/forged.yml", "unrelated.txt", adapter.POLICY_PATH):
+        for path in ("scripts/forged.py", "tests/forged.py", ".github/workflows/forged.yml", "unrelated.txt", "toolybara/modules.json", adapter.POLICY_PATH):
             with self.subTest(path=path):
                 self.git("reset", "--hard", self.head)
                 target = self.candidate / path
@@ -198,7 +200,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(policy["checks"]["suite"]["argv"], ["bash", "tests/run-all.sh"])
         self.assertEqual(set(policy["rules"][0]["paths"]), {
             "catalog.json", ".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json",
-            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "cursor/agentsmd/*", "VERSION", "CHANGELOG.md",
+            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "cursor/agentsmd/*", "cursor/model-router/*", "VERSION", "CHANGELOG.md",
         })
 
     def test_same_run_transport_has_no_candidate_selected_run_or_permissions(self):

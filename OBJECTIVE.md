@@ -1,33 +1,14 @@
 # Objective
 
-Make ToolboxMD Marketplace the reliable distribution path for immutable
-ToolboxMD Agent Module releases, beginning with automatic, least-authority
-promotion of the newest eligible AgentsMD release.
+Make ToolboxMD Marketplace the reliable automatic distribution path for immutable releases of explicitly approved ToolboxMD Agent Modules.
 
 The Objective is complete when:
 
-- Toolybara has one narrowly authorized GitHub App identity installed only on
-  `toolboxmd/marketplace`, with only the minimum metadata, contents, and
-  pull-request permissions proven necessary.
-- GitHub-hosted event and scheduled reconciliation independently resolve the
-  newest eligible immutable AgentsMD release and create or update only
-  Toolybara's expected promotion branch and pull request.
-- Marketplace validation proves App identity, expected branch and pull request,
-  exact head SHA, newest eligible release, generated-file allowlist, catalog
-  validity, version transition, and valid, duplicate, missed, invalid, stale,
-  competing, serialized, and idempotent cases.
-- A trusted final workflow job rechecks the exact validated head and merges it
-  with a Toolybara installation token. Failure leaves the pull request open and
-  preserves the last-known-good Marketplace state.
-- The resulting Marketplace state has exactly one SemVer transition and is
-  published through its exact tag and GitHub Release.
-- The promoted AgentsMD Project Record and generated Codex, Claude Code, Grok
-  Build, and Cursor distributions agree on exact source identity while the
-  approved `use-grok` and `karpathy-wiki` releases remain unchanged.
-- Distribution, provider publication, installation, loading, behavioral Live
-  Verification, and website parity remain separately reported.
+- Toolybara promotes approved modules through one shared, serialized workflow using a GitHub App installed only on `toolboxmd/marketplace`, with the minimum required permissions.
+- Event and scheduled reconciliation independently resolve eligible releases. Each release supplies a valid Project Record and complete plugin package. Modules without an eligible release remain unpublished.
+- Validation binds the selected module, repository, release, source commit, Project Record digest, generated paths, pull request, and exact head. Every other module remains unchanged.
+- Trusted finalization rechecks the validated candidate, merges only generated promotion changes, and publishes exactly one Marketplace SemVer transition through its exact tag and GitHub Release.
+- AgentsMD and Model Router both complete the shared path, and duplicate, missed, invalid, stale, competing, and interrupted promotions preserve the last valid distribution.
+- Supported host distributions agree on source identity. Distribution, provider publication, installation, loading, behavioral Live Verification, and website parity are reported separately.
 
-Toolybara authority over arbitrary pull requests, Marketplace control-plane
-policy, product websites, runtime deployment, provider-owned publication
-decisions, unrelated repositories, or broader credentials is outside this
-Objective.
+Automatic enrollment, source-repository releases, arbitrary pull requests, Marketplace control-plane changes, product websites, runtime deployment, broader credentials, and installation without granted authority remain outside this Objective.

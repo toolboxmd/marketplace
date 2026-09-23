@@ -20,11 +20,16 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMOTION = ROOT / "scripts" / "toolybara_promotion.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-reconciliation.yml"
 SCHEDULE_WORKFLOW = ROOT / ".github" / "workflows" / "toolybara-schedule.yml"
-TRUSTED_WORKFLOW_SHA256 = "66ec8a71c391f6ae758329ecebc56364d786e26487e8d0dcfb6db82fb660b51f"
+TRUSTED_WORKFLOW_SHA256 = "9e0040e6403ebf276e003e3c130108261bc519a608909c8610d6dabed403de45"
 SPEC = importlib.util.spec_from_file_location("toolybara_promotion", PROMOTION)
 assert SPEC and SPEC.loader
 promotion = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(promotion)
+
+
+def copy_enrollment(root):
+    (root / "toolybara").mkdir(exist_ok=True)
+    (root / "toolybara/modules.json").write_bytes((ROOT / "toolybara/modules.json").read_bytes())
 
 
 class BaseReleaseTests(unittest.TestCase):
@@ -164,12 +169,14 @@ class AcceptedDuplicateTests(unittest.TestCase):
         source_sha: str,
         record_sha256: str,
     ) -> None:
+        copy_enrollment(root)
         (root / "catalog.json").write_text(
             json.dumps(
                 {
                     "plugins": [
                         {
                             "name": "agentsmd",
+                            "github": "toolboxmd/agentsmd",
                             "release": "v8.6.1",
                             "sha": source_sha,
                             "projectRecord": {
@@ -312,13 +319,14 @@ class AcceptedDuplicateTests(unittest.TestCase):
             ):
                 with patch.object(promotion, "base_release_ready", return_value=True):
                     result = promotion.reconcile(
-                    Namespace(wake_tag="", output=output, summary=summary)
+                    Namespace(project="agentsmd", wake_tag="", output=output, summary=summary)
                 )
 
             self.assertEqual(
                 result,
                 {
                     "state": "duplicate",
+                    "project": "agentsmd",
                     "base_sha": base_sha,
                     "release": "v8.6.1",
                     "source_sha": source_sha,
@@ -342,25 +350,15 @@ class AcceptedDuplicateTests(unittest.TestCase):
                         "release=v8.6.1",
                         f"source_sha={source_sha}",
                         f"record_sha256={record_sha256}",
+                        "project=agentsmd",
                         "",
                     )
                 ),
             )
-            self.assertEqual(
-                summary.read_text(encoding="utf-8"),
-                "\n".join(
-                    (
-                        "### Toolybara reconciliation",
-                        "",
-                        "- State: duplicate/no-op",
-                        "- Accepted AgentsMD release: `v8.6.1`",
-                        f"- Peeled source commit: `{source_sha}`",
-                        f"- Project Record SHA-256: `{record_sha256}`",
-                        "- Wake hint: `none`",
-                        "",
-                    )
-                ),
-            )
+            self.assertIn("- state: `duplicate`", summary.read_text())
+            self.assertIn("- project: `agentsmd`", summary.read_text())
+            self.assertIn(f"- source_sha: `{source_sha}`", summary.read_text())
+            self.assertIn(f"- record_sha256: `{record_sha256}`", summary.read_text())
 
     def test_reconcile_duplicate_fails_closed_before_reporting_drift(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -410,12 +408,12 @@ class AcceptedDuplicateTests(unittest.TestCase):
                 ):
                     with patch.object(promotion, "base_release_ready", return_value=True):
                         promotion.reconcile(
-                        Namespace(wake_tag="", output=output, summary=summary)
+                        Namespace(project="agentsmd", wake_tag="", output=output, summary=summary)
                     )
 
             self.assertEqual(inspect.call_count, 1)
             self.assertFalse(output.exists())
-            self.assertFalse(summary.exists())
+            self.assertIn("Rejected agentsmd", summary.read_text())
 
 
 class GeneratedScopeTests(unittest.TestCase):
@@ -451,6 +449,7 @@ class GeneratedScopeTests(unittest.TestCase):
             base = root / "base"
             candidate = root / "candidate"
             base.mkdir()
+            copy_enrollment(base)
             candidate.mkdir()
             base_catalog = {
                 "plugins": [
@@ -462,6 +461,7 @@ class GeneratedScopeTests(unittest.TestCase):
             candidate_catalog = json.loads(json.dumps(base_catalog))
             candidate_catalog["plugins"][2] = {
                 "name": "agentsmd",
+                "github": "toolboxmd/agentsmd",
                 "release": "v8.6.0",
                 "sha": "b" * 40,
                 "projectRecord": {
@@ -1315,7 +1315,7 @@ class WorkflowContractTests(unittest.TestCase):
         schedule_workflow = SCHEDULE_WORKFLOW.read_text(encoding="utf-8")
         self.assertEqual(
             schedule_workflow,
-            """name: Schedule AgentsMD reconciliation
+            """name: Schedule approved module reconciliation
 
 on:
   schedule:
@@ -1333,12 +1333,13 @@ jobs:
         )
         self.assertTrue(
             workflow.startswith(
-                """name: Promote AgentsMD through Toolybara
+                """name: Promote approved modules through Toolybara
 
 on:
   repository_dispatch:
     types:
       - agentsmd_release_published
+      - module_release_published
   workflow_call:
     inputs:
       wake_tag:

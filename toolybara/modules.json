@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "modules": [
+    {
+      "id": "agentsmd",
+      "github": "toolboxmd/agentsmd",
+      "category": "Developer Tools",
+      "cursorRuntime": [],
+      "cursor": true
+    },
+    {
+      "id": "model-router",
+      "github": "toolboxmd/model-router",
+      "category": "Developer Tools",
+      "cursorRuntime": [
+        "bin",
+        "runner"
+      ],
+      "cursor": true
+    }
+  ]
+}

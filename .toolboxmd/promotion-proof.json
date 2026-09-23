@@ -8,7 +8,8 @@
     "tests/*",
     ".github/*",
     ".toolboxmd/*",
-    ".version-policy.json"
+    ".version-policy.json",
+    "toolybara/*"
   ],
   "checks": {
     "suite": {
@@ -61,13 +62,14 @@
         ".grok-plugin/marketplace.json",
         "cursor/agentsmd/*",
         "VERSION",
-        "CHANGELOG.md"
+        "CHANGELOG.md",
+        "cursor/model-router/*"
       ],
       "checks": [
         "suite",
         "generated"
       ],
-      "reason": "Only deterministic AgentsMD distribution and one Marketplace patch; all candidate tests and deterministic regeneration run once."
+      "reason": "Only deterministic enrolled module distribution and one Marketplace patch; selected-module scope is enforced by the trusted adapter."
     }
   ]
 }
