@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.26.2",
-  "commit": "94929cf9425a408b2844ebe8f518419a9fd1ea76",
+  "release": "v0.27.0",
+  "commit": "924d10c78286cf16d681f3eff66ddab47dac4da6",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
@@ -41,7 +41,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "571a0345e4957939455a4c4518d264d47cae46917a626c2852416fdb2fa417db",
+      "sha256": "8056838d30429d7dff5aab40c0cbae02afaa75c7016b6cc9cd586563d31bea17",
       "mode": "100644"
     },
     {
@@ -77,13 +77,13 @@
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "e4908e12f8e95ab4e26ba85192d4cd9a41e59cad3897c32f6f0ed8f944ef638c",
+      "sha256": "69bfdf02bcfac688221da9481f5751711c86b3135803733e26e79ace947c2511",
       "mode": "100644"
     },
     {
       "path": "runner/core.py",
       "source": "runner/core.py",
-      "sha256": "17044a2868270e1ab02effda1bbb992b03a12573541b7fe2675c0285e349b0d2",
+      "sha256": "63723c37a2d402950a8ba37fb12b040083b017ce7ca3749938b4f93febe0f2f6",
       "mode": "100644"
     },
     {
@@ -95,13 +95,13 @@
     {
       "path": "runner/harnesses.py",
       "source": "runner/harnesses.py",
-      "sha256": "99f42c90ad1c3f92397139bc98c5a7307da03d631300b638a79f3bfcd5690e1e",
+      "sha256": "71a0187161a41792024f14d8b70a1e2d1a3047b459d7060fbe3a3a92209e56ee",
       "mode": "100644"
     },
     {
       "path": "runner/kits.py",
       "source": "runner/kits.py",
-      "sha256": "2507ac581553120ec4f982a52f4bc07a0ede5079b9688ed6235e5e45ff3a8212",
+      "sha256": "31c340c043cbb7688b46a5373ca63e364638e43f0b9730c10d5c456ece8fd8f4",
       "mode": "100644"
     },
     {

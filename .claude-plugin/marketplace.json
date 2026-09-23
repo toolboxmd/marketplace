@@ -42,8 +42,8 @@
       "source": {
         "source": "github",
         "repo": "toolboxmd/model-router",
-        "sha": "94929cf9425a408b2844ebe8f518419a9fd1ea76",
-        "ref": "v0.26.2"
+        "sha": "924d10c78286cf16d681f3eff66ddab47dac4da6",
+        "ref": "v0.27.0"
       }
     }
   ]
