@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.0.1",
-  "commit": "8d7d521760ae07d80163ea2f3c756597504b783c",
+  "release": "v12.1.0",
+  "commit": "06689223edb1ab5c9d2d3625143b5b555d769724",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "3ff126c75050b6f2b69c7ca88bd8a0e76d36646db66f52245e32be93d09273aa",
+      "sha256": "a712c758275b460d18fa77a26ed3589689bb3f69dcc1ea99b913e32db92a5cd2",
       "mode": "100644"
     },
     {
@@ -191,13 +191,13 @@
     {
       "path": "skills/operations/references/test-design.md",
       "source": "skills/operations/references/test-design.md",
-      "sha256": "5d66296de3b8559c4d3a83d94c844cae2e12b0ab57e0fb46fba09ac1f6b59e8e",
+      "sha256": "ab72553fafbb4f626479c754e085325e73d139c9ff849e067fc9ffc8c655455b",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "d3395ed94617cec49ef23bb0553875fcd83fd68be80257afc51560c57026cea9",
+      "sha256": "9a1cd4fb37d6a92480a959861da3617025a8fdb4a713dd3d87b2385085674c8a",
       "mode": "100644"
     },
     {
