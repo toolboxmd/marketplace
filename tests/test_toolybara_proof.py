@@ -138,13 +138,20 @@ class ProofTests(unittest.TestCase):
                 self.reuse()
 
     def test_source_release_digest_base_head_and_environment_invalidate(self):
-        self.receipt = self.record()
-        for key, value in {"project": "model-router", "repository": "toolboxmd/other", "source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
-            with self.subTest(key=key), self.assertRaises(shared.ProofError):
-                self.reuse({**self.expected, key: value})
-        with patch.dict(os.environ, {"ImageVersion": "changed"}):
-            with self.assertRaisesRegex(shared.ProofError, "environment"):
-                self.reuse()
+        with patch.dict(os.environ, {"ImageOS": "TestOS", "ImageVersion": "20260907.300.1"}):
+            self.receipt = self.record()
+            for key, value in {"project": "model-router", "repository": "toolboxmd/other", "source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
+                with self.subTest(key=key), self.assertRaises(shared.ProofError):
+                    self.reuse({**self.expected, key: value})
+            # A rolling runner image version alone must not invalidate exact proof
+            # reuse across jobs; only the runner OS identity binds the environment.
+            with patch.dict(os.environ, {"ImageVersion": "20260920.314.1"}):
+                result = self.reuse()
+                self.assertEqual(result["executedHere"], [])
+                self.assertEqual(sorted(result["reusedHere"]), ["generated", "suite"])
+            with patch.dict(os.environ, {"ImageOS": "OtherOS"}):
+                with self.assertRaisesRegex(shared.ProofError, "environment"):
+                    self.reuse()
 
     def test_authentic_failed_incomplete_or_stale_records_cannot_pass(self):
         self.receipt = self.record()
