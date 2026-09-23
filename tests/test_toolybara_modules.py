@@ -18,7 +18,7 @@ from toolybara_modules import enrolled, modules
 
 
 def git(root, *args):
-    return subprocess.check_output(["git", *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+    return subprocess.check_output(["git", *args], cwd=root, stderr=None).decode().strip()
 
 
 def initialize(root):
@@ -64,6 +64,14 @@ def source_fixture(root, project, version):
 
 class ModulePromotionTests(unittest.TestCase):
     def setUp(self):
+        # Fixture repositories are deleted immediately. Background maintenance
+        # can race their local clones or recreate pack files during cleanup.
+        count = int(os.environ.get("GIT_CONFIG_COUNT", "0"))
+        git_config = {"GIT_CONFIG_COUNT": str(count + 2)}
+        for offset, (key, value) in enumerate((("maintenance.auto", "false"), ("gc.auto", "0"))):
+            git_config[f"GIT_CONFIG_KEY_{count + offset}"] = key
+            git_config[f"GIT_CONFIG_VALUE_{count + offset}"] = value
+        self.enterContext(patch.dict(os.environ, git_config))
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
@@ -99,6 +107,7 @@ class ModulePromotionTests(unittest.TestCase):
     def test_first_release_bundles_runtime_then_agentsmd_update_preserves_it(self):
         initial = promotion._catalog_by_name(self.base)
         candidate, receipt = self.promote(self.base, "model-router", self.router, "v0.1.0", "first")
+        subprocess.run([sys.executable, str(candidate / "tests/test_catalog.py")], check=True)
         catalog = promotion._catalog_by_name(candidate)
         self.assertEqual({k: v for k, v in catalog.items() if k != "model-router"}, initial)
         self.assertEqual(catalog["model-router"]["github"], "toolboxmd/model-router")

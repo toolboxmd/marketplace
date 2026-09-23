@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1] - 2026-09-23
+
+### Changed
+
+- Keep promotion proof valid for newly enrolled modules and isolate temporary Git fixtures
+
 ## [1.5.0] - 2026-09-23
 
 ### Added
