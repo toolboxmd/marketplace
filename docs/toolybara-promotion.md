@@ -1,30 +1,54 @@
 # Toolybara promotion
 
-Toolybara reconciles the newest Eligible Release from AgentsMD into Marketplace
-without trusting an event payload or a pull request merely because it is green.
+Toolybara reconciles the newest Eligible Release of each explicitly enrolled
+Agent Module into Marketplace without trusting an event payload or a pull request merely because it is green.
 `.github/workflows/toolybara-schedule.yml` owns the hourly trigger and calls the
 trusted implementation in `.github/workflows/toolybara-reconciliation.yml` and
 `scripts/toolybara_promotion.py`.
 
 ## Trigger contract
 
-The AgentsMD release workflow sends this event to
+A source release workflow can send this event to
 `toolboxmd/marketplace` with a Toolybara installation token restricted to that
 repository and `contents: write`:
 
 ```json
 {
-  "event_type": "agentsmd_release_published",
+  "event_type": "module_release_published",
   "client_payload": {
     "release_tag": "v8.6.0"
   }
 }
 ```
 
-`client_payload.release_tag` is only a Wake Hint. Marketplace also reconciles
-hourly at minute 37 and can be dispatched manually. Every trigger runs in one
+`client_payload.release_tag` is only a Wake Hint. The existing
+`agentsmd_release_published` event remains supported. Both events reconcile all
+enrolled modules; event payloads cannot enroll or select a repository.
+Marketplace also reconciles hourly at minute 37 and can be dispatched manually. Every trigger runs in one
 non-cancelling concurrency group, so two releases cannot race through separate
-merge jobs.
+merge jobs. The existing `toolybara-agentsmd-promotion` lock key is retained
+across upgrades and covers every module, despite its historical name.
+
+## Enrollment
+
+`toolybara/modules.json` is reviewed control-plane policy. Each entry fixes a
+module id, exact ToolboxMD source repository, catalog category, whether Cursor
+delivery is supported, and any extra released paths needed by that Cursor
+package. Native Codex, Claude Code, and Grok Build packages use the complete
+source tree pinned by ingestion. Cursor packages include Skills plus approved
+runtime paths. AgentsMD retains its existing runtime adapter; Model Router
+includes `bin/` and `runner/`.
+
+Enrollment does not publish an unreleased module. The first valid release
+creates its catalog entry from this approved identity, then the same ingestion
+path owns later updates. Model Router is enrolled but waits for its first valid
+release. Modules without Cursor support can set `cursor: false` and an empty
+`cursorRuntime`; their native host indexes follow the released Project Record.
+
+Adding a module requires a reviewed policy change and, for Cursor delivery,
+its exact `cursor/<module>/*` path in `.toolboxmd/promotion-proof.json`. It does
+not require new promotion code, App access, or a host service. Private source
+repositories require separately granted read access and are not covered here.
 
 ## Reconciliation
 
@@ -38,15 +62,17 @@ next patch for skipping an unpublished version anchor.
 
 The reconciliation job starts from the live `main` commit and independently:
 
-1. Lists published non-draft, non-prerelease AgentsMD releases.
+1. Visits enrolled modules in policy order and lists each repository's published
+   non-draft, non-prerelease releases.
 2. Orders stable release tags by SemVer and inspects unreconciled candidates.
 3. Peels each tag to its commit and validates the Project Record, record
    digest, version, delivery manifests, referenced documentation, requirements,
    and proof from that same Git tree.
 4. Selects the newest valid candidate. An older or stale Wake Hint cannot
    override it.
-5. Generates the catalog, Codex, Claude Code, Grok Build, Cursor index, and
-   Cursor package in an ephemeral Marketplace clone.
+5. Generates the selected module's catalog and native host indexes, plus its
+   Cursor package when enabled, in an ephemeral Marketplace clone. Other
+   module records, Cursor entries, and packages remain unchanged.
 6. Applies exactly one Marketplace patch transition with `versionctl`.
 7. Freezes the final generated commit, including its version transition, before
    proof. A retained equivalent branch is checked out at its exact existing SHA
@@ -56,15 +82,22 @@ The reconciliation job starts from the live `main` commit and independently:
    before any push. The generated-file allowlist and unrelated records remain
    protected.
 
-Invalid candidates never mutate `main`. If no unreconciled candidate is valid,
-the run fails with the rejection evidence. If the accepted release is already
-newest, the run exits as a duplicate no-op.
+Invalid candidates never mutate `main`. Discovery reports an invalid module
+and continues to the next enrolled module. One run promotes at most one module;
+later scheduled or event runs pick up remaining releases. If no candidate is
+available, invalid modules fail with evidence, unpublished modules report
+`pending`, and accepted newest releases report `duplicate` with freshly checked
+source identity. A failure after candidate generation stops that run. Module
+priority rotates with `GITHUB_RUN_NUMBER`, so a module stuck in generation,
+proof, or merge cannot keep later modules waiting across workflow runs.
+Retries of the same run retain their order. An explicitly selected module
+remains the only candidate for that run.
 
 ## Expected branch and pull request
 
 Toolybara may create or update only
-`toolybara/promote-agentsmd`. An existing branch is updated only when exactly
-one open Toolybara-authored pull request binds it to `main`. A retry with the
+`toolybara/promote-<module>` for the selected enrolled module. An existing
+branch is updated only when exactly one open Toolybara-authored pull request binds it to `main`. A retry with the
 same generated tree reuses the existing exact head. The branch is never
 deleted.
 
@@ -75,12 +108,12 @@ Only these paths may change:
 - `.claude-plugin/marketplace.json`
 - `.grok-plugin/marketplace.json`
 - `.cursor-plugin/marketplace.json`
-- `cursor/agentsmd/**`
+- `cursor/<selected-module>/**`, only when admitted by the trusted proof policy
 - `VERSION`
 - `CHANGELOG.md`
 
-Scripts, workflows, tests, and other Project records are outside the generated
-allowlist.
+Scripts, workflows, tests, enrollment policy, and other Project records remain
+outside the generated allowlist.
 
 ## Validation and trusted finalization
 
@@ -88,8 +121,8 @@ The validation job checks out the trusted base and exact candidate head into
 separate directories. It reads the live pull request and proves the Toolybara
 actor, expected repository and branch, open state, base, exact head SHA,
 generated-file allowlist, current newest Eligible Release, peeled source
-commit, record digest, catalog identity, preserved `use-grok` and
-`karpathy-wiki` records, one patch transition, and `versionctl release-check`. It authenticates and reuses
+commit, record digest, module/repository identity, catalog identity, all other
+module records and packages, one patch transition, and `versionctl release-check`. It authenticates and reuses
 the exact reconciliation execution record for deterministic regeneration and
 complete tests. No tests execute again in validation or ordinary finalization.
 
@@ -109,8 +142,8 @@ creation fails after a successful merge, rerunning the failed job recognizes
 only the same Toolybara-authored and Toolybara-merged head, revalidates any
 moved-base result, and resumes exact tag and release creation idempotently.
 
-After the Toolybara promotion is released, the job comments on and closes pull
-request #15 as a superseded manual proposal. It states explicitly that #15 was
+For AgentsMD only, after the Toolybara promotion is released, the job comments
+on and closes pull request #15 as a superseded manual proposal. It states explicitly that #15 was
 not merged and was not automatic delivery, then rereads #15 to prove it is
 closed and unmerged.
 
@@ -149,8 +182,8 @@ the original producing attempt; full workflow reruns create new evidence.
 No additional GitHub token or App permissions are required.
 
 Records bind the exact candidate, base, policy, generator/control inputs,
-immutable AgentsMD release/commit/record digest, runtime, Git, runner image,
-complete tracked input tree, selected argv, exit status, output digests and
+selected module, source repository, immutable release/commit/record digest,
+runtime, Git, runner image, complete tracked input tree, selected argv, exit status, output digests and
 execution times. A changed input, failed/incomplete result, dirty checkout,
 changed policy or proof older than 24 hours fails closed. Missing artifacts
 require a new reconciliation run. Cross-run caching is intentionally unsupported.
@@ -182,7 +215,8 @@ The workflow does not call repository-settings APIs. It does not enable native
 auto-merge, branch protection, rulesets, required checks, blocked pushes,
 automatic branch deletion, or bypass actors. Toolybara retains only Metadata
 read, Contents write, and Pull requests write on Marketplace. It remains
-uninstalled on AgentsMD.
+uninstalled on source repositories. Public source reads use existing read-only
+access; promotion writes remain confined to Marketplace.
 
 Marketplace release, distribution, installation, loading, behavioral Live
 Verification, and website parity remain separate delivery states.

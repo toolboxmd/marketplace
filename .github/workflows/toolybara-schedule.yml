@@ -1,4 +1,4 @@
-name: Schedule AgentsMD reconciliation
+name: Schedule approved module reconciliation
 
 on:
   schedule:

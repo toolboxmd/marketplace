@@ -182,6 +182,7 @@ def _source_files(
     commit: str,
     project_id: str,
     record: dict,
+    runtime_paths: tuple[str, ...] = (),
 ) -> tuple[dict[str, SourceFile], list[str]]:
     sources = record["factSources"]
     files: dict[str, SourceFile] = {}
@@ -208,6 +209,8 @@ def _source_files(
     if project_id == "agentsmd":
         for runtime_path in AGENTSMD_RUNTIME_PATHS:
             _add_path(files, source, commit, runtime_path)
+    for runtime_path in runtime_paths:
+        _add_path(files, source, commit, runtime_path)
 
     if not skill_names:
         raise CursorGenerationError("released Project declares no Cursor Skills")
@@ -316,7 +319,10 @@ def _validate_staged(stage: Path, project_id: str, skill_names: list[str]) -> No
     marketplace = json.loads(
         (stage / ".cursor-plugin" / "marketplace.json").read_text(encoding="utf-8")
     )
-    plugin_entry = marketplace["plugins"][0]
+    entries = [entry for entry in marketplace["plugins"] if entry.get("name") == project_id]
+    if len(entries) != 1:
+        raise CursorGenerationError("generated Cursor marketplace identity is ambiguous")
+    plugin_entry = entries[0]
     expected_source = f"./{PACKAGE_DIRECTORY}/{project_id}"
     if plugin_entry.get("source") != expected_source:
         raise CursorGenerationError("generated Cursor marketplace source is invalid")
@@ -423,6 +429,7 @@ def generate(
     marketplace_root: Path,
     project_id: str,
     supplied_source: Path | None,
+    runtime_paths: tuple[str, ...] = (),
 ) -> dict:
     catalog = json.loads((marketplace_root / "catalog.json").read_text(encoding="utf-8"))
     entry = _catalog_entry(catalog, project_id)
@@ -454,6 +461,7 @@ def generate(
             commit,
             project_id,
             record,
+            runtime_paths,
         )
 
         repository = manifest.get("repository", f"https://github.com/{entry['github']}")
@@ -472,6 +480,18 @@ def generate(
                 }
             ],
         }
+        existing_index = marketplace_root / ".cursor-plugin" / "marketplace.json"
+        if existing_index.exists():
+            existing = json.loads(existing_index.read_text(encoding="utf-8"))["plugins"]
+            names = [entry["name"] for entry in existing]
+            if len(names) != len(set(names)):
+                raise CursorGenerationError("accepted Cursor marketplace identities are duplicated")
+            selected = marketplace_manifest["plugins"][0]
+            marketplace_manifest["plugins"] = [
+                selected if entry["name"] == project_id else entry for entry in existing
+            ]
+            if project_id not in names:
+                marketplace_manifest["plugins"].append(selected)
         provenance = {
             "schema": 1,
             "project": project_id,
@@ -531,6 +551,8 @@ def generate(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project", help="Accepted Project id from catalog.json")
+    parser.add_argument("--runtime-path", action="append", default=[],
+                        help="Approved released runtime path to include in the Cursor package")
     parser.add_argument(
         "--source",
         type=Path,
@@ -548,6 +570,7 @@ def main() -> int:
             args.marketplace_root.resolve(),
             args.project,
             args.source,
+            tuple(args.runtime_path),
         )
     except (
         CursorGenerationError,

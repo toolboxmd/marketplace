@@ -211,11 +211,13 @@ scripts/bootstrap_toolybara.sh
 The wizard does not configure branch protection, rulesets, native auto-merge,
 automatic branch deletion, bypass actors, or any other repository setting.
 
-## Promote AgentsMD through Toolybara
+## Promote approved modules through Toolybara
 
 The GitHub-hosted promotion workflow reconciles each event and an hourly
-schedule against the newest independently validated AgentsMD release. It
-creates one generated Toolybara pull request, revalidates the exact head in a
+schedule against the newest independently validated release of each module in
+`toolybara/modules.json`. AgentsMD and Model Router are enrolled. Model Router
+remains unpublished until its first valid release. Each run creates or updates
+one generated Toolybara pull request, revalidates the exact head in a
 trusted final job, merges through the SHA-bound pull-request API, and publishes
 the corresponding Marketplace tag and GitHub Release.
 
@@ -225,7 +227,8 @@ contract are documented in
 
 ## Layout
 
-- `catalog.json` is the source of truth for membership and Grok pins.
+- `catalog.json` owns published membership and immutable source pins.
+- `toolybara/modules.json` owns explicit approval for automatic module promotion.
 - `schemas/project-record-v1.schema.json` defines the minimal released record.
 - `scripts/ingest_project.py` validates and accepts one immutable release.
 - `.agents/plugins/marketplace.json` is the Codex index.

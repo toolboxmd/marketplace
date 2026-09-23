@@ -1,9 +1,10 @@
-name: Promote AgentsMD through Toolybara
+name: Promote approved modules through Toolybara
 
 on:
   repository_dispatch:
     types:
       - agentsmd_release_published
+      - module_release_published
   workflow_call:
     inputs:
       wake_tag:
@@ -23,7 +24,7 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: toolybara-agentsmd-promotion
+  group: toolybara-agentsmd-promotion # Shared lock; retain its key across upgrades.
   cancel-in-progress: false
 
 jobs:
@@ -31,6 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       state: ${{ steps.reconcile.outputs.state }}
+      project: ${{ steps.reconcile.outputs.project }}
       pr_number: ${{ steps.reconcile.outputs.pr_number }}
       base_sha: ${{ steps.reconcile.outputs.base_sha }}
       head_sha: ${{ steps.reconcile.outputs.head_sha }}
@@ -63,7 +65,7 @@ jobs:
           APP_SLUG: ${{ steps.toolybara.outputs.app-slug }}
         run: test "$APP_SLUG" = "toolybara"
 
-      - name: Reconcile the newest eligible AgentsMD release
+      - name: Reconcile approved module releases
         id: reconcile
         env:
           GH_TOKEN: ${{ steps.toolybara.outputs.token }}
@@ -120,6 +122,7 @@ jobs:
           TOOLYBARA_PROOF_ATTEMPT: ${{ needs.reconcile.outputs.proof_attempt }}
         run: |
           python3 control/scripts/toolybara_promotion.py validate \
+            --project "${{ needs.reconcile.outputs.project }}" \
             --base-root control \
             --candidate-root candidate \
             --proof-file "$RUNNER_TEMP/toolybara-proof/proof.json" \
@@ -177,7 +180,7 @@ jobs:
           name: toolybara-proof-${{ needs.reconcile.outputs.proof_attempt }}
           path: ${{ runner.temp }}/toolybara-proof
 
-      - name: Recheck, merge, release, and supersede the manual proposal
+      - name: Recheck, merge, and release the selected module
         env:
           GH_TOKEN: ${{ github.token }}
           READ_TOKEN: ${{ github.token }}
@@ -186,6 +189,7 @@ jobs:
           TOOLYBARA_PROOF_ATTEMPT: ${{ needs.reconcile.outputs.proof_attempt }}
         run: |
           python3 control/scripts/toolybara_promotion.py finalize \
+            --project "${{ needs.reconcile.outputs.project }}" \
             --base-root control \
             --candidate-root candidate \
             --proof-file "$RUNNER_TEMP/toolybara-proof/proof.json" \

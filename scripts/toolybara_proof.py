@@ -12,6 +12,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from toolybara_modules import enrolled
 POLICY_PATH = ".toolboxmd/promotion-proof.json"
 SPEC = importlib.util.spec_from_file_location("agentsmd_scoped_proof", ROOT / "scripts/vendor/scoped_proof.py")
 assert SPEC and SPEC.loader
@@ -56,14 +58,16 @@ def observer(base_root, candidate_root, identity):
             "git": subprocess.check_output(["git", "--version"], text=True).strip(),
             "runnerImage": os.environ.get("ImageOS", "local") + ":" + os.environ.get("ImageVersion", "local"),
             "identity": shared.digest(shared.encode(identity)),
-            "control": shared.source_inputs(base_root, identity["base"], ["scripts/*", ".github/*", ".toolboxmd/*", "tests/*", ".version-policy.json"]),
+            "control": shared.source_inputs(base_root, identity["base"], ["scripts/*", ".github/*", ".toolboxmd/*", "toolybara/*", "tests/*", ".version-policy.json"]),
             "candidateTree": shared.git(candidate_root, "rev-parse", identity["head"] + "^{tree}").decode().strip(),
         }
     return observe
 
 
 def identity(base, head, source):
-    return {"base": base, "head": head, "release": source["release"],
+    project = source.get("project", "agentsmd")
+    return {"project": project, "repository": source.get("repository", f"toolboxmd/{project}"),
+            "base": base, "head": head, "release": source["release"],
             "source": source["commit"], "recordSha256": source["recordSha256"]}
 
 
@@ -74,6 +78,11 @@ def admit(base_root, candidate_root, expected):
     shared.clean_candidate(candidate_root, expected["head"])
     shared.require(shared.decode(shared.git(base_root, "show", expected["base"] + ":" + POLICY_PATH)) == p,
                    "control must match the separately trusted base policy")
+    module = enrolled(base_root, expected["project"])
+    shared.require(expected["repository"] == module["github"], "proof source repository is not enrolled")
+    paths = shared.git(candidate_root, "diff", "--name-only", expected["base"] + ".." + expected["head"]).decode().splitlines()
+    shared.require(all(not path.startswith("cursor/") or path.startswith(f"cursor/{expected['project']}/")
+                       for path in paths), "proof changes another module package")
     # This cumulative base-to-head classification blocks policy, control-plane,
     # test, permission and unknown changes even though complete proof anchors HEAD.
     return shared.select(candidate_root, expected["base"], expected["head"], p)
@@ -148,13 +157,13 @@ def check_generated():
     spec = importlib.util.spec_from_file_location("promotion", ROOT / "scripts/toolybara_promotion.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    source_identity = module._inspect_release(base, source, expected["release"])
+    source_identity = module._inspect_release(base, source, expected["release"], expected["project"])
     shared.require(identity(expected["base"], expected["head"], source_identity) == expected,
                    "generation source identity changed")
     module.validate_candidate_state(base, candidate, source_identity)
     module._regenerate_and_compare(base, candidate, source, source_identity)
     module._run(str(base / "cursor/agentsmd/tools/versionctl/bin/versionctl"), "release-check", cwd=candidate)
-    print(json.dumps({"generation": "deterministic", "identity": expected, "preserved": "non-AgentsMD records"}))
+    print(json.dumps({"generation": "deterministic", "identity": expected, "preserved": "other module records"}))
 
 
 if __name__ == "__main__":
