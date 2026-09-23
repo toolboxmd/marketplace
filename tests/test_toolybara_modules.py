@@ -245,6 +245,92 @@ class ModulePromotionTests(unittest.TestCase):
         self.assertEqual(len(pushed), 1)
         adapter.record.assert_called_once()
 
+    def test_stale_base_open_pr_is_closed_and_superseded_by_fresh_pr(self):
+        base_sha = git(self.base, "rev-parse", "HEAD")
+        previous = "p" * 40
+        stale_base = "a" * 40
+        stale = {"number": 65, "state": "open", "draft": False,
+                 "user": {"login": "toolybara[bot]"},
+                 "head": {"ref": "toolybara/promote-model-router", "sha": previous,
+                          "repo": {"full_name": "toolboxmd/marketplace"}},
+                 "base": {"ref": "main", "sha": stale_base}}
+        closed = {**json.loads(json.dumps(stale)),
+                  "state": "closed", "merged": False}
+        calls = []
+        pushed = []
+
+        def clone(url, destination, **kwargs):
+            source = {"model-router.git": self.router,
+                      "marketplace.git": self.base}[url.rsplit("/", 1)[-1]]
+            git(self.root, "clone", "-q", str(source), str(destination))
+
+        def push(root, branch, **kwargs):
+            head = git(root, "rev-parse", "HEAD")
+            pushed.append((branch, head))
+            calls.append(("push", branch, head))
+
+        def request(method, endpoint, payload=None, **kwargs):
+            calls.append((method, endpoint, payload))
+            if method == "GET" and endpoint.endswith(
+                    "/git/ref/heads/toolybara%2Fpromote-model-router"):
+                return {"object": {"sha": previous}}
+            if method == "GET" and endpoint.endswith("/pulls/65"):
+                return json.loads(json.dumps(stale))
+            if method == "PATCH" and endpoint.endswith("/pulls/65"):
+                if payload == {"state": "closed"}:
+                    return json.loads(json.dumps(closed))
+                # GitHub pins a pull request's base at creation: retitling
+                # the stale PR never moves its base to current main.
+                return json.loads(json.dumps(stale))
+            if method == "POST" and endpoint.endswith("/pulls"):
+                self.assertEqual(payload["head"], "toolybara/promote-model-router")
+                self.assertEqual(payload["base"], "main")
+                return {"number": 71, "state": "open", "draft": False,
+                        "user": {"login": "toolybara[bot]"},
+                        "head": {"ref": pushed[-1][0], "sha": pushed[-1][1],
+                                 "repo": {"full_name": "toolboxmd/marketplace"}},
+                        "base": {"ref": "main", "sha": base_sha}}
+            if method == "GET" and "/git/commits/" in endpoint:
+                return {"tree": {"sha": "r" * 40}}
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        adapter = Mock()
+        adapter.record.return_value = {"sha256": "a" * 64}
+        args = Namespace(project="model-router", wake_tag="", output=None,
+                         summary=None, proof_output=self.root / "proof.json")
+        pulls = [[json.loads(json.dumps(stale))], [json.loads(json.dumps(stale))], []]
+        with (patch.object(promotion, "__file__", str(self.base / "scripts/toolybara_promotion.py")),
+              patch.object(promotion, "_main_sha", return_value=base_sha),
+              patch.object(promotion, "base_release_ready", return_value=True),
+              patch.object(promotion, "_clone", side_effect=clone),
+              patch.object(promotion, "_published_releases", return_value=[
+                  {"tag_name": "v0.1.0", "draft": False, "prerelease": False}]),
+              patch.object(promotion, "_proof_adapter", return_value=adapter),
+              patch.object(promotion, "_fresh_source"),
+              patch.object(promotion, "_expected_pull_requests", side_effect=pulls),
+              patch.object(promotion, "_gh_request", side_effect=request),
+              patch.object(promotion, "_push", side_effect=push),
+              patch.dict(os.environ, GH_TOKEN="fixture", GITHUB_RUN_NUMBER="1", GITHUB_RUN_ATTEMPT="1")):
+            result = promotion.reconcile(args)
+        self.assertEqual((result["state"], result["project"]), ("candidate", "model-router"))
+        self.assertEqual(result["pr_number"], 71)
+        self.assertEqual(result["base_sha"], base_sha)
+        self.assertEqual(result["head_sha"], pushed[-1][1])
+        self.assertEqual(len(pushed), 1)
+        # The stale PR is closed before the branch push, the push precedes
+        # the fresh PR, and the stale PR is never retitled for reuse.
+        close_at = next(index for index, call in enumerate(calls)
+                        if call[0] == "PATCH" and call[1].endswith("/pulls/65"))
+        push_at = next(index for index, call in enumerate(calls)
+                       if call[0] == "push")
+        post_at = next(index for index, call in enumerate(calls)
+                       if call[0] == "POST" and call[1].endswith("/pulls"))
+        self.assertEqual(calls[close_at][2], {"state": "closed"})
+        self.assertTrue(all(call[2] == {"state": "closed"}
+                            for call in calls if call[0] == "PATCH"))
+        self.assertLess(close_at, push_at)
+        self.assertLess(push_at, post_at)
+
 
 class EnrollmentTests(unittest.TestCase):
     def test_enrollment_is_explicit_and_paths_cannot_escape(self):

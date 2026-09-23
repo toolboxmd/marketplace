@@ -604,7 +604,7 @@ class TrustedPullRequestTests(unittest.TestCase):
     def test_orphan_branch_is_rewritten_with_exact_lease_before_pr_retry(self) -> None:
         pushes = []
 
-        candidate_head = promotion.prepare_existing_branch(
+        candidate_head, superseded = promotion.prepare_existing_branch(
             Path("/candidate"),
             previous="p" * 40,
             candidate_head="h" * 40,
@@ -620,11 +620,245 @@ class TrustedPullRequestTests(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(candidate_head, "h" * 40)
+        self.assertEqual((candidate_head, superseded), ("h" * 40, False))
         self.assertEqual(
             pushes,
             [(Path("/candidate"), "toolybara/promote-agentsmd", "p" * 40)],
         )
+
+    def test_stale_base_only_open_pr_is_closed_before_branch_update(self) -> None:
+        stale = {
+            "number": 65,
+            "state": "open",
+            "draft": False,
+            "user": {"login": "toolybara[bot]"},
+            "head": {
+                "ref": "toolybara/promote-model-router",
+                "sha": "p" * 40,
+                "repo": {"full_name": "toolboxmd/marketplace"},
+            },
+            "base": {"ref": "main", "sha": "a" * 40},
+        }
+        closed = {
+            "number": 65,
+            "state": "closed",
+            "merged": False,
+            "draft": False,
+            "user": {"login": "toolybara[bot]"},
+            "head": {
+                "ref": "toolybara/promote-model-router",
+                "sha": "p" * 40,
+                "repo": {"full_name": "toolboxmd/marketplace"},
+            },
+            "base": {"ref": "main", "sha": "a" * 40},
+        }
+        events: list = []
+        pushes: list = []
+        updated: list = []
+
+        def fake_request(method: str, endpoint: str, payload: dict | None = None) -> dict:
+            events.append((method, endpoint, payload))
+            if method == "GET" and endpoint.endswith("/pulls/65"):
+                return json.loads(json.dumps(stale))
+            if method == "PATCH" and endpoint.endswith("/pulls/65"):
+                self.assertEqual(payload, {"state": "closed"})
+                return json.loads(json.dumps(closed))
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        def fake_push(root, ref: str, *, previous: str) -> None:
+            events.append(("push", ref, previous))
+            pushes.append((root, ref, previous))
+
+        head, superseded = promotion.prepare_existing_branch(
+            Path("/candidate"),
+            previous="p" * 40,
+            candidate_head="h" * 40,
+            candidate_tree="t" * 40,
+            base_sha="b" * 40,
+            open_pull_requests=[stale],
+            closed_pull_requests=[],
+            request=fake_request,
+            push=fake_push,
+            before_update=updated.append,
+            project="model-router",
+        )
+
+        self.assertEqual((head, superseded), ("h" * 40, True))
+        self.assertEqual(updated, ["h" * 40])
+        self.assertEqual(
+            pushes,
+            [(Path("/candidate"), "toolybara/promote-model-router", "p" * 40)],
+        )
+        # The exact stale PR is re-fetched, closed, and verified before the
+        # reserved branch is pushed; it is never PATCHed for reuse.
+        self.assertEqual(
+            [event[0] for event in events],
+            ["GET", "PATCH", "push"],
+        )
+        self.assertTrue(events[1][1].endswith("/pulls/65"))
+
+        mutations = {
+            "actor": ("user", {"login": "human-user"}),
+            "head-ref": (
+                "head",
+                {
+                    "ref": "feature/other",
+                    "sha": "p" * 40,
+                    "repo": {"full_name": "toolboxmd/marketplace"},
+                },
+            ),
+            "head-sha": (
+                "head",
+                {
+                    "ref": "toolybara/promote-model-router",
+                    "sha": "x" * 40,
+                    "repo": {"full_name": "toolboxmd/marketplace"},
+                },
+            ),
+            "head-repository": (
+                "head",
+                {
+                    "ref": "toolybara/promote-model-router",
+                    "sha": "p" * 40,
+                    "repo": {"full_name": "attacker/marketplace"},
+                },
+            ),
+            "base-ref": ("base", {"ref": "other-branch", "sha": "a" * 40}),
+            "draft": ("draft", True),
+        }
+        for case, (field, value) in mutations.items():
+            with self.subTest(case=case):
+                changed = json.loads(json.dumps(stale))
+                changed[field] = value
+                with self.assertRaises(promotion.PromotionError):
+                    promotion.prepare_existing_branch(
+                        Path("/candidate"),
+                        previous="p" * 40,
+                        candidate_head="h" * 40,
+                        candidate_tree="t" * 40,
+                        base_sha="b" * 40,
+                        open_pull_requests=[changed],
+                        closed_pull_requests=[],
+                        request=lambda *_args, **_kwargs: self.fail(
+                            "stale-base mutation must not call the API"
+                        ),
+                        push=lambda root, ref, *, previous: self.fail(
+                            "stale-base mutation must not push"
+                        ),
+                        before_update=lambda _head: self.fail(
+                            "stale-base mutation must not prove"
+                        ),
+                        project="model-router",
+                    )
+
+    def test_stale_base_change_on_refetch_fails_closed_without_close_or_push(
+        self,
+    ) -> None:
+        stale = {
+            "number": 65,
+            "state": "open",
+            "draft": False,
+            "user": {"login": "toolybara[bot]"},
+            "head": {
+                "ref": "toolybara/promote-model-router",
+                "sha": "p" * 40,
+                "repo": {"full_name": "toolboxmd/marketplace"},
+            },
+            "base": {"ref": "main", "sha": "a" * 40},
+        }
+        refetched = json.loads(json.dumps(stale))
+        refetched["base"]["sha"] = "c" * 40
+        events: list = []
+        pushes: list = []
+        updated: list = []
+
+        def fake_request(method: str, endpoint: str, payload: dict | None = None) -> dict:
+            events.append((method, endpoint, payload))
+            if method == "GET" and endpoint.endswith("/pulls/65"):
+                return json.loads(json.dumps(refetched))
+            self.fail(f"unexpected request: {method} {endpoint}")
+
+        def fake_push(root, ref: str, *, previous: str) -> None:
+            pushes.append((root, ref, previous))
+
+        with self.assertRaisesRegex(promotion.PromotionError, "base changed"):
+            promotion.prepare_existing_branch(
+                Path("/candidate"),
+                previous="p" * 40,
+                candidate_head="h" * 40,
+                candidate_tree="t" * 40,
+                base_sha="b" * 40,
+                open_pull_requests=[stale],
+                closed_pull_requests=[],
+                request=fake_request,
+                push=fake_push,
+                before_update=updated.append,
+                project="model-router",
+            )
+
+        self.assertEqual(pushes, [])
+        self.assertEqual([event[0] for event in events], ["GET"])
+        self.assertEqual(updated, ["h" * 40])
+
+    def test_stale_close_is_verified_before_branch_update(self) -> None:
+        stale = {
+            "number": 65,
+            "state": "open",
+            "draft": False,
+            "user": {"login": "toolybara[bot]"},
+            "head": {
+                "ref": "toolybara/promote-model-router",
+                "sha": "p" * 40,
+                "repo": {"full_name": "toolboxmd/marketplace"},
+            },
+            "base": {"ref": "main", "sha": "a" * 40},
+        }
+
+        def run_with_close(close: dict) -> tuple[list, list]:
+            pushes: list = []
+            updated: list = []
+
+            def fake_request(method: str, endpoint: str, payload: dict | None = None) -> dict:
+                if method == "GET":
+                    return json.loads(json.dumps(stale))
+                return json.loads(json.dumps(close))
+
+            with self.assertRaisesRegex(
+                promotion.PromotionError, "did not close as the exact unmerged"
+            ):
+                promotion.prepare_existing_branch(
+                    Path("/candidate"),
+                    previous="p" * 40,
+                    candidate_head="h" * 40,
+                    candidate_tree="t" * 40,
+                    base_sha="b" * 40,
+                    open_pull_requests=[stale],
+                    closed_pull_requests=[],
+                    request=fake_request,
+                    push=lambda root, ref, *, previous: pushes.append(
+                        (root, ref, previous)
+                    ),
+                    before_update=updated.append,
+                    project="model-router",
+                )
+            return pushes, updated
+
+        # A raced merge of the stale PR must not be treated as a safe close.
+        raced = json.loads(json.dumps(stale))
+        raced.update(
+            {"state": "closed", "merged": True, "merge_commit_sha": "m" * 40}
+        )
+        pushes, updated = run_with_close(raced)
+        self.assertEqual(pushes, [])
+        self.assertEqual(updated, ["h" * 40])
+
+        # A close response for a different head must not authorize the push.
+        swapped = json.loads(json.dumps(stale))
+        swapped.update({"state": "closed", "merged": False})
+        swapped["head"]["sha"] = "x" * 40
+        pushes, updated = run_with_close(swapped)
+        self.assertEqual(pushes, [])
+        self.assertEqual(updated, ["h" * 40])
 
     def test_manual_pr_supersession_is_unmerged_exact_and_idempotent(self) -> None:
         calls = []
