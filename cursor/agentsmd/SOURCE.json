@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v11.4.0",
-  "commit": "c71b43a5d6b28668ebe1301cce99bc5433c8c704",
+  "release": "v12.0.1",
+  "commit": "8d7d521760ae07d80163ea2f3c756597504b783c",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0"
+    "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "b4ec2dbd14ff4c82261885f64bc079e82302b0a5a80a30be2d509c5f3fd338f0",
+      "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198",
       "mode": "100644"
     },
     {
@@ -39,6 +39,12 @@
       "mode": "100644"
     },
     {
+      "path": "LICENSES/pstack-MIT.txt",
+      "source": "LICENSES/pstack-MIT.txt",
+      "sha256": "bc957ca6bee02792566a1a028d105e02e247c6e77cf057061674273da77b200e",
+      "mode": "100644"
+    },
+    {
       "path": "LICENSES/use-grok-Apache-2.0.txt",
       "source": "LICENSES/use-grok-Apache-2.0.txt",
       "sha256": "815b13facfb5c67fa53f2c1ae8211df2b6fd1c415e39260093e5b257b403a18d",
@@ -47,19 +53,19 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "6ad81f507f8fb485dea8d84d1b92e818d230c97bd1f7a589e5c8597c538f9b4f",
+      "sha256": "e8dab6bcb2f38e73449b8806e7bd2c35872b39590e6f09bcfe55578cf3a233ba",
       "mode": "100644"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
       "source": "THIRD_PARTY_NOTICES.md",
-      "sha256": "1c43d1ad787d275ad839460ae9caa353c76c79ec56632b5934a3d8f3837c505e",
+      "sha256": "2067ba78e63f6f54a0bff9412ca865f539be3001f1183d49d33c28365b865b51",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "b20e1ce95de64f1c1c82cb20370952326892e0ec8abe6a79e15cfd0184b5cec1",
+      "sha256": "3ff126c75050b6f2b69c7ca88bd8a0e76d36646db66f52245e32be93d09273aa",
       "mode": "100644"
     },
     {
@@ -77,13 +83,13 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "01960766176da5365090f0d9b13054bb8da18190222ebd956951c8d02fb5174c",
+      "sha256": "23ab8211ec022665ff9895cba5832c2bf1cbc2ec1cdc7d7a7e5b4d7cf1bf0171",
       "mode": "100644"
     },
     {
-      "path": "docs/scoped-proof.md",
-      "source": "docs/scoped-proof.md",
-      "sha256": "082945f23c1c8b028865f1df618d14da2a48f827277d57f4cf558c4d0882be34",
+      "path": "docs/work/119-pstack-integration/analysis.md",
+      "source": "docs/work/119-pstack-integration/analysis.md",
+      "sha256": "8bb7103743c11256c2bfb2e4f61f7e54fef567dd9eec921fc0832ba70c7041c6",
       "mode": "100644"
     },
     {
@@ -93,147 +99,21 @@
       "mode": "100644"
     },
     {
+      "path": "provenance/pstack.lock.json",
+      "source": "provenance/pstack.lock.json",
+      "sha256": "9e1cd43d4a1bad4105d0102c9149ce833b6fbabb05db3ee678ccf383390339a7",
+      "mode": "100644"
+    },
+    {
       "path": "provenance/use-grok.lock.json",
       "source": "provenance/use-grok.lock.json",
       "sha256": "9b5f9f12617205691beb62c9b7c1d2efce66a81db832cf01b0d397357398653b",
       "mode": "100644"
     },
     {
-      "path": "skills/algorithm/SKILL.md",
-      "source": "skills/algorithm/SKILL.md",
-      "sha256": "8ef98ebb109d49530e2fdecd99adae43d7c32e94e6e6026a6967df684c56e299",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/algorithm/agents/openai.yaml",
-      "source": "skills/algorithm/agents/openai.yaml",
-      "sha256": "5fb3f53ece4a9383310da01cdff3d792a6556ea67a5e9b5b99ba80ec8a3fb174",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/algorithm/evals/trigger-evals.json",
-      "source": "skills/algorithm/evals/trigger-evals.json",
-      "sha256": "5a108918dc68ec0e2cbfae6dc84747fee3e2a42e6400ed625c61c490eb1e1233",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/algorithm/references/marketplace-project-record-regression.md",
-      "source": "skills/algorithm/references/marketplace-project-record-regression.md",
-      "sha256": "e16d58d4967e7cc39b143cdd0c3a63e4c4fbe95a571faedc6311aae087af6c0b",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/delivery-profile/SKILL.md",
-      "source": "skills/delivery-profile/SKILL.md",
-      "sha256": "71d92cc27379780cdcf378faf6d840687b700b39b6c15f6e60363253bf378c82",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/delivery-profile/agents/openai.yaml",
-      "source": "skills/delivery-profile/agents/openai.yaml",
-      "sha256": "5d2b4da29daa620df86e9ca20a45232688df9da9de101ec72f9d8dddcfa5d09e",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/domain-modeling/ADR-FORMAT.md",
-      "source": "skills/domain-modeling/ADR-FORMAT.md",
-      "sha256": "c056f4b19160d3309c2f9b1fe94a6e5a3fb019b482bad48857c9301041ef6bdc",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/domain-modeling/GLOSSARY-FORMAT.md",
-      "source": "skills/domain-modeling/GLOSSARY-FORMAT.md",
-      "sha256": "5c44465f14eaf536ffd7ad6414b3dfb26593610530c733e01996fc1d4304d55a",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/domain-modeling/SKILL.md",
-      "source": "skills/domain-modeling/SKILL.md",
-      "sha256": "fa11d30888fc3e8e62ef941ff94212030f83323275be94b75a0a62bf0e003077",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/domain-modeling/agents/openai.yaml",
-      "source": "skills/domain-modeling/agents/openai.yaml",
-      "sha256": "c34e5c980bf3a31c911262fb4c9ec6ebfe5bb8d1b23750f331c8815bcae8aaf1",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/SKILL.md",
-      "source": "skills/elon-method/SKILL.md",
-      "sha256": "ca23392962b967eacdf245715ddfa356999b842646e7eb8c858fdaff3522ec26",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/agents/openai.yaml",
-      "source": "skills/elon-method/agents/openai.yaml",
-      "sha256": "ccc603430c435734a93d3f9e89c77f10bf7eca1067c30100c6afefcb6df84677",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/evals/trigger-evals.json",
-      "source": "skills/elon-method/evals/trigger-evals.json",
-      "sha256": "6d6f559303d137d01c4856f55052193fd23d782fc4bb54746cf43367e03ea3bc",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/references/algorithm.md",
-      "source": "skills/elon-method/references/algorithm.md",
-      "sha256": "a366d57aa46b8c54aad472bfbaf47434b2804b662dccab50179917e0716f2797",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/references/current-constraint.md",
-      "source": "skills/elon-method/references/current-constraint.md",
-      "sha256": "6cc5e14875a68bf768f5554c4e63d8ca04289ab512ae2d618197f25a74b40deb",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/references/first-principles.md",
-      "source": "skills/elon-method/references/first-principles.md",
-      "sha256": "c3232e82f609af84ab438f40b876fed65026cc3df0678fc48b86b3ea7325d13f",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/references/idiot-index.md",
-      "source": "skills/elon-method/references/idiot-index.md",
-      "sha256": "5efd4777b349c186c21cb316063f8b564a4db6fd547899c22d6d2fcf7db27cc3",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/elon-method/references/marketplace-project-record-regression.md",
-      "source": "skills/elon-method/references/marketplace-project-record-regression.md",
-      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/grill-with-docs/SKILL.md",
-      "source": "skills/grill-with-docs/SKILL.md",
-      "sha256": "8cef2387d227680cd77f4d084ff7b4b2abecbdbf3eaa54eda9d67e7c335d221f",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/grill-with-docs/agents/openai.yaml",
-      "source": "skills/grill-with-docs/agents/openai.yaml",
-      "sha256": "bbb5cfdadd0efc59e857f62b5c800d6f973d99cdba00a6d2d23165dfc1a52e23",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/grilling/SKILL.md",
-      "source": "skills/grilling/SKILL.md",
-      "sha256": "6b6fc48960dd1fc9feb3cd52b9abed97187b4851dce1400aeb69ca7c9d3ca15f",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/grilling/agents/openai.yaml",
-      "source": "skills/grilling/agents/openai.yaml",
-      "sha256": "1411d7df7d99b7e621a1ff8283c8133cc2464be63d064e52d8ce169c6800ee9b",
-      "mode": "100644"
-    },
-    {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "bf8c52aa86074574fdd15a7c3874cb9fc7c4a92b4be44e1281d7529ebb19a7de",
+      "sha256": "44b54e12a3c634a49e383c4c0c80eb8eccb6b9828c8953b2579ca49a7f647715",
       "mode": "100644"
     },
     {
@@ -243,9 +123,33 @@
       "mode": "100644"
     },
     {
+      "path": "skills/operations/references/artifacts.md",
+      "source": "skills/operations/references/artifacts.md",
+      "sha256": "23be6c7dd3a1ee7efaf5d16dc1b130bff780c27b913f5f314989f8ee45c6e687",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/bounded-delegation.md",
+      "source": "skills/operations/references/bounded-delegation.md",
+      "sha256": "38155e22e26db5dd5d8570848861c9ca0f076c4f9b9b713a4ddb93f5754ffc4e",
+      "mode": "100644"
+    },
+    {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "656e954a60dd20b6e0b8ea007f57c7507f2e1fa614778e7cd4f122185b129ac2",
+      "sha256": "2c0b819365d29ad2443e17de16997a52d3266103a47e47a516fefff0ccdc81a0",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/evaluation.md",
+      "source": "skills/operations/references/evaluation.md",
+      "sha256": "59a524fbf4851c37cbb67286b218178ce35e88bb86c852b6aee44bd3061a981d",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/external-handoffs.md",
+      "source": "skills/operations/references/external-handoffs.md",
+      "sha256": "d68b27b0f9af7180b3949a40d28855ab294030ac1fdeb8dfb34c27c54619040c",
       "mode": "100644"
     },
     {
@@ -257,13 +161,13 @@
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "cfc2a6a7b870a883eb932e3bb9373a58ec2d505e78fcba6542046fa24d52b24e",
+      "sha256": "f4b3de518f540a40c778ac75d1ec111ad70da0fd411539be875ed0bbbf54c65e",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "41c154c6dd016e8f998ab112c29f87af64d5d358ece9c27021266c7a366f3f57",
+      "sha256": "d1f2f7174d6d59fdf4d8139f96df98ece2d148301f87305632212b9ec0d997bb",
       "mode": "100644"
     },
     {
@@ -279,213 +183,435 @@
       "mode": "100644"
     },
     {
+      "path": "skills/operations/references/scoped-proof.md",
+      "source": "skills/operations/references/scoped-proof.md",
+      "sha256": "082945f23c1c8b028865f1df618d14da2a48f827277d57f4cf558c4d0882be34",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/references/test-design.md",
+      "source": "skills/operations/references/test-design.md",
+      "sha256": "5d66296de3b8559c4d3a83d94c844cae2e12b0ab57e0fb46fba09ac1f6b59e8e",
+      "mode": "100644"
+    },
+    {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "c8b48829a2ca783afa832013deeb3d4261a8cde814045ba6b36a63fdcd0d16d0",
+      "sha256": "d3395ed94617cec49ef23bb0553875fcd83fd68be80257afc51560c57026cea9",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/SKILL.md",
-      "source": "skills/project-direction/SKILL.md",
-      "sha256": "a47a619381880f6e9d1d537cd9427844cc4ac2981c067af501f8438943ed1e01",
+      "path": "skills/operations/references/visual-parity.md",
+      "source": "skills/operations/references/visual-parity.md",
+      "sha256": "ea0897e640da45a64461aa96e224f3dbc673592c26f870a71601d7fc4277bb8f",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/agents/openai.yaml",
-      "source": "skills/project-direction/agents/openai.yaml",
-      "sha256": "6303e21b5d03c88a16322527e4fa06a7cfb7087917e02fd2a8cffc0f8eb1c48b",
+      "path": "skills/operations/workflows/code-review/index.md",
+      "source": "skills/operations/workflows/code-review/index.md",
+      "sha256": "c012e813a3c49f125d9eb8046d1eda1a3a1a65e037d0137af8cd9ff83ee22ef1",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/evals/evals.json",
-      "source": "skills/project-direction/evals/evals.json",
-      "sha256": "bf54d8859db8709f20492bc057d8f4b87259a02eaeb48ee89d8e0f311f588235",
+      "path": "skills/operations/workflows/code-review/references/impact-analysis.md",
+      "source": "skills/operations/workflows/code-review/references/impact-analysis.md",
+      "sha256": "c7cd00634ba6b4a257d95486d22b82b042133e2231d3c9dae7f64d1c65b6eb27",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/evals/trigger-evals.json",
-      "source": "skills/project-direction/evals/trigger-evals.json",
-      "sha256": "39fec279cb0d3c8924ef73ac513996a8bd5fca778f65fc1043c52aef7af74c27",
+      "path": "skills/operations/workflows/code-review/references/review-method.md",
+      "source": "skills/operations/workflows/code-review/references/review-method.md",
+      "sha256": "f9cd9b5d09e49690c4a7bf9964014190655f973041c569910336378c2d4a3210",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/references/context.md",
-      "source": "skills/project-direction/references/context.md",
-      "sha256": "dbb63061da41b27f72fb030c0294992f00ba8b31b50e39e589a8bfc874025283",
+      "path": "skills/operations/workflows/code-review/references/structure-and-constraints.md",
+      "source": "skills/operations/workflows/code-review/references/structure-and-constraints.md",
+      "sha256": "7db081d783fd97bad2e2a2ed75ca7650c3c04bdf2c01c12d5d561105442c0903",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/references/file-contracts.md",
-      "source": "skills/project-direction/references/file-contracts.md",
+      "path": "skills/operations/workflows/delivery-profile/index.md",
+      "source": "skills/operations/workflows/delivery-profile/index.md",
+      "sha256": "31139b87fe3e4f557109e768fd2dc71d67ab6f87b6cdbf5cbf51bdb84c6b24f9",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/diagnosis/index.md",
+      "source": "skills/operations/workflows/diagnosis/index.md",
+      "sha256": "2b54ee3f739209a0d8b0f52978da79bdc160144cf4f5c53ded40caca3bbc3100",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/diagnosis/references/performance.md",
+      "source": "skills/operations/workflows/diagnosis/references/performance.md",
+      "sha256": "002d47e46434bf41d6c4bff16eadd84f808f1b4a7e4cb6ad3d281029dee73eab",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/diagnosis/references/reproduction-and-cause.md",
+      "source": "skills/operations/workflows/diagnosis/references/reproduction-and-cause.md",
+      "sha256": "db6a68efc4b7228d0869dee85040b4f9c73d3df6e723ff0a0323442727634ebd",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/diagnosis/references/runtime-and-traces.md",
+      "source": "skills/operations/workflows/diagnosis/references/runtime-and-traces.md",
+      "sha256": "7659db835391bb34550ac6107eb7ae47f1ae0038db64281099323f14b4e5473c",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/domain-modeling/ADR-FORMAT.md",
+      "source": "skills/operations/workflows/domain-modeling/ADR-FORMAT.md",
+      "sha256": "7a0bed7b7dc2ff024e86a4a3fd1b9fa61245abc16a4bb75a1e70fb9607149d62",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/domain-modeling/GLOSSARY-FORMAT.md",
+      "source": "skills/operations/workflows/domain-modeling/GLOSSARY-FORMAT.md",
+      "sha256": "5c44465f14eaf536ffd7ad6414b3dfb26593610530c733e01996fc1d4304d55a",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/domain-modeling/index.md",
+      "source": "skills/operations/workflows/domain-modeling/index.md",
+      "sha256": "aeb3774687b0432a7ca619404a4efb4973726c1f76b0c95d023ee9c30b0fab1a",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/evals/procedure-selection.json",
+      "source": "skills/operations/workflows/elon-method/evals/procedure-selection.json",
+      "sha256": "fe02c0ead1e92796db2ac12227f4ac0c24891b9d3ef7bf192abc2dfe6cd747ec",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/index.md",
+      "source": "skills/operations/workflows/elon-method/index.md",
+      "sha256": "ad97afd4eb7d787b675eb9b3bed0050e2d9469bf7216b3f6514fca7671e14045",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/references/algorithm.md",
+      "source": "skills/operations/workflows/elon-method/references/algorithm.md",
+      "sha256": "dbf6a4adadd4d5d0f230d0a446d576acfac6334697d440622c5390afb17fabd5",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/references/current-constraint.md",
+      "source": "skills/operations/workflows/elon-method/references/current-constraint.md",
+      "sha256": "6cc5e14875a68bf768f5554c4e63d8ca04289ab512ae2d618197f25a74b40deb",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/references/first-principles.md",
+      "source": "skills/operations/workflows/elon-method/references/first-principles.md",
+      "sha256": "aab06d66ab72572432ff746a2492b7086bf151bc0c951710088bf076a0179b7e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/references/idiot-index.md",
+      "source": "skills/operations/workflows/elon-method/references/idiot-index.md",
+      "sha256": "5efd4777b349c186c21cb316063f8b564a4db6fd547899c22d6d2fcf7db27cc3",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/elon-method/references/marketplace-project-record-regression.md",
+      "source": "skills/operations/workflows/elon-method/references/marketplace-project-record-regression.md",
+      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/grill-with-docs/index.md",
+      "source": "skills/operations/workflows/grill-with-docs/index.md",
+      "sha256": "a88f7494308a038c7dfdb6f8fba20980f325a8c0ca8f559b89af3e2b5075c115",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/grilling/index.md",
+      "source": "skills/operations/workflows/grilling/index.md",
+      "sha256": "585019587fe0c77c6031fcf1ba6490f1ec034e67f86bc443cd09230809c71325",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/project-direction/evals/evals.json",
+      "source": "skills/operations/workflows/project-direction/evals/evals.json",
+      "sha256": "630bb53b8eabdef87a7b585157acd83b140a28eff95248be4ab286fc09f3b1f9",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/project-direction/evals/procedure-selection.json",
+      "source": "skills/operations/workflows/project-direction/evals/procedure-selection.json",
+      "sha256": "7f03c9cbe26e43a567bcfa198c34c1b96f39359dc21d1475d17a001ca0e97909",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/project-direction/index.md",
+      "source": "skills/operations/workflows/project-direction/index.md",
+      "sha256": "69e96a9a69a94f52154346168c21adf1336be4561829f5fe872d12fd31f67171",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/project-direction/references/context.md",
+      "source": "skills/operations/workflows/project-direction/references/context.md",
+      "sha256": "89ebd80008021d1146f9f669ee4e76b73ab723084ce61c6b1b1a5d9fd2d87e53",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/project-direction/references/file-contracts.md",
+      "source": "skills/operations/workflows/project-direction/references/file-contracts.md",
       "sha256": "b76baf6fc92048a0cf149430f5c010a95efd3a045a553db078bfab06f8da00ea",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/templates/MISSION.md",
-      "source": "skills/project-direction/templates/MISSION.md",
+      "path": "skills/operations/workflows/project-direction/templates/MISSION.md",
+      "source": "skills/operations/workflows/project-direction/templates/MISSION.md",
       "sha256": "00381e925d20d0f8c6584867c000677e104614b856a72c8f35e8ab319c1e8a95",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/templates/OBJECTIVE.md",
-      "source": "skills/project-direction/templates/OBJECTIVE.md",
+      "path": "skills/operations/workflows/project-direction/templates/OBJECTIVE.md",
+      "source": "skills/operations/workflows/project-direction/templates/OBJECTIVE.md",
       "sha256": "eea27d0557025c04b35e46c657d4dd38755da64fa1af351a5e230df82ea80777",
       "mode": "100644"
     },
     {
-      "path": "skills/project-direction/templates/VISION.md",
-      "source": "skills/project-direction/templates/VISION.md",
+      "path": "skills/operations/workflows/project-direction/templates/VISION.md",
+      "source": "skills/operations/workflows/project-direction/templates/VISION.md",
       "sha256": "8081ad2dab69e157f7d6020745a463b6066a4c220d17f54a73e4f4686eff10a4",
       "mode": "100644"
     },
     {
-      "path": "skills/prototype/LOGIC.md",
-      "source": "skills/prototype/LOGIC.md",
-      "sha256": "51d34465b9e6956d4764aa5455b51153dee55807f817c838f416678cea411fa3",
+      "path": "skills/operations/workflows/project-verification/index.md",
+      "source": "skills/operations/workflows/project-verification/index.md",
+      "sha256": "953d2b31b3865b5c67be43ae823b92a4ecf6991ca53bc3f90a5232c63fe650b6",
       "mode": "100644"
     },
     {
-      "path": "skills/prototype/SKILL.md",
-      "source": "skills/prototype/SKILL.md",
-      "sha256": "765ba6e83ab201d170b1e1f8b5fa9cfb6c62ea9bbc0969cdaee8fc52dbfc36da",
+      "path": "skills/operations/workflows/project-verification/references/create-and-maintain.md",
+      "source": "skills/operations/workflows/project-verification/references/create-and-maintain.md",
+      "sha256": "6ada706279b53c99460c568783ce697f80f7d66ad64ba04675cb0bead72bdb54",
       "mode": "100644"
     },
     {
-      "path": "skills/prototype/UI.md",
-      "source": "skills/prototype/UI.md",
-      "sha256": "e0436b5568201610dc5e3c913ce563d6052e75ef68b9a6e6c4aa34d3c7588086",
+      "path": "skills/operations/workflows/project-verification/references/observations.md",
+      "source": "skills/operations/workflows/project-verification/references/observations.md",
+      "sha256": "bdd9de4a5786c94c1e221eb0b86867629bd1cb96de58a0ad826cca7e3f6007d5",
       "mode": "100644"
     },
     {
-      "path": "skills/prototype/agents/openai.yaml",
-      "source": "skills/prototype/agents/openai.yaml",
-      "sha256": "5af65e43ab41a350436697b81e27b7f848d36782043b73c322bb2c9fa9cc55dc",
+      "path": "skills/operations/workflows/project-verification/references/verification-contract.md",
+      "source": "skills/operations/workflows/project-verification/references/verification-contract.md",
+      "sha256": "906c567f897467981e18060afd8639224a1f79d34a05bc1fb548f1908e353238",
       "mode": "100644"
     },
     {
-      "path": "skills/research/SKILL.md",
-      "source": "skills/research/SKILL.md",
-      "sha256": "54cd593b8790c4d55180018d118026aca9965923929d8f93d486861921cc36af",
+      "path": "skills/operations/workflows/prototype/EMPIRICAL.md",
+      "source": "skills/operations/workflows/prototype/EMPIRICAL.md",
+      "sha256": "7bd6d879be3b1163bd8d867836fbd46c43fe7ad8c8d0ab062932582052559634",
       "mode": "100644"
     },
     {
-      "path": "skills/research/agents/openai.yaml",
-      "source": "skills/research/agents/openai.yaml",
-      "sha256": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d",
+      "path": "skills/operations/workflows/prototype/LOGIC.md",
+      "source": "skills/operations/workflows/prototype/LOGIC.md",
+      "sha256": "4b12a744216cd11be4b1a310bd39e87b840e0b90b4d21b4cd2d33b7b4e1d3867",
       "mode": "100644"
     },
     {
-      "path": "skills/to-spec/SKILL.md",
-      "source": "skills/to-spec/SKILL.md",
-      "sha256": "24a7fe1852886183980c791166191a1ee134f07c2118d8803d7aa2d445e1aa79",
+      "path": "skills/operations/workflows/prototype/UI.md",
+      "source": "skills/operations/workflows/prototype/UI.md",
+      "sha256": "d6f7049d84fca314a3ef4d1a298c0a0abbe32648be83753377abcc32c9950869",
       "mode": "100644"
     },
     {
-      "path": "skills/to-spec/agents/openai.yaml",
-      "source": "skills/to-spec/agents/openai.yaml",
-      "sha256": "ab1f4787f0bf16e77f261ea479eb6ddaf2dde20cf9b022556cf5252892469f4b",
+      "path": "skills/operations/workflows/prototype/index.md",
+      "source": "skills/operations/workflows/prototype/index.md",
+      "sha256": "9faadc5cd50fd803b9ff16a576c544ea9ddf0ccc80775999f7771bcc0db45bbd",
       "mode": "100644"
     },
     {
-      "path": "skills/to-tickets/SKILL.md",
-      "source": "skills/to-tickets/SKILL.md",
-      "sha256": "a14ad6a07f1178b9d571e68ece1febed458eb29071166c19a1d5e359fd3b66ca",
+      "path": "skills/operations/workflows/reflection/index.md",
+      "source": "skills/operations/workflows/reflection/index.md",
+      "sha256": "c8f8dfdc2ce58b5c03b6c7f058478d4e7d7e1459205ef9b790e0468d16033f87",
       "mode": "100644"
     },
     {
-      "path": "skills/to-tickets/agents/openai.yaml",
-      "source": "skills/to-tickets/agents/openai.yaml",
-      "sha256": "5ee411e8b1256ead40f5ff3f617e10147e9195f0e1d06b1fc191706c3e31c558",
+      "path": "skills/operations/workflows/reflection/references/learning-and-placement.md",
+      "source": "skills/operations/workflows/reflection/references/learning-and-placement.md",
+      "sha256": "7dbc0050f63520adacd9806e9aaf5a2b83e209070b1d76d261883eb9086a577a",
       "mode": "100644"
     },
     {
-      "path": "skills/to-tickets/references/ticket-decomposition.md",
-      "source": "skills/to-tickets/references/ticket-decomposition.md",
-      "sha256": "ebf781169b06f89023e9d8109daf20a9deefcc866b2b5a1197a460a1d2e867b4",
+      "path": "skills/operations/workflows/research/index.md",
+      "source": "skills/operations/workflows/research/index.md",
+      "sha256": "689fcd203787421d8868e08e536e0aff977fdd975e32ff45f1a518a1bc308d5e",
       "mode": "100644"
     },
     {
-      "path": "skills/use-grok/SKILL.md",
-      "source": "skills/use-grok/SKILL.md",
-      "sha256": "a07708fabb34d92b1c3f5f3efeaa03d383bc0f1cb4aa09f7f838c3c570f41a8c",
+      "path": "skills/operations/workflows/research/references/explanation.md",
+      "source": "skills/operations/workflows/research/references/explanation.md",
+      "sha256": "62455f0673b9b0900f9b26ca348d811a1ef4592ab24c75eed4c3d3d4eeab0a77",
       "mode": "100644"
     },
     {
-      "path": "skills/use-grok/agents/openai.yaml",
-      "source": "skills/use-grok/agents/openai.yaml",
-      "sha256": "4a754f952f42112b48a02a007805e56e1c05a11104d08eba6df3d339469ff0d5",
+      "path": "skills/operations/workflows/research/references/history.md",
+      "source": "skills/operations/workflows/research/references/history.md",
+      "sha256": "08370235d5afbe72db6894c6f60e5a3088c75a89c38874e603f50a43d941e422",
       "mode": "100644"
     },
     {
-      "path": "skills/use-grok/references/grok-cli.md",
-      "source": "skills/use-grok/references/grok-cli.md",
-      "sha256": "9c63d9467c9f1c09caee145f8c927f5e0ae101e4f1cd431286fab7efb6018010",
+      "path": "skills/operations/workflows/research/references/mechanics.md",
+      "source": "skills/operations/workflows/research/references/mechanics.md",
+      "sha256": "8bbf81059b4934c9d821698580eced7a1fa5a74574af66b7d11b56c0cee1d9b5",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/SKILL.md",
-      "source": "skills/version-control/SKILL.md",
-      "sha256": "1a6f2701a7345b2a6a866d7989ae90b7cbe5a4a8d942e52cb33480fa88e77d79",
+      "path": "skills/operations/workflows/research/references/recall.md",
+      "source": "skills/operations/workflows/research/references/recall.md",
+      "sha256": "95e10962430f6f0a51495d21016c6fa83aafa716f5c9c68cbd72a3a68eaff113",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/agents/openai.yaml",
-      "source": "skills/version-control/agents/openai.yaml",
-      "sha256": "acb70f62a5e6f85e27d8a60bca5e28310631c0b8f2dffae3e0d256e59bc82b89",
+      "path": "skills/operations/workflows/research/references/sources/analytics.md",
+      "source": "skills/operations/workflows/research/references/sources/analytics.md",
+      "sha256": "d3c4a8ea492bf86344e7a5e0a3afe8cfe84c09f9c977718e1568330dc6a9e395",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/evals/evals.json",
-      "source": "skills/version-control/evals/evals.json",
-      "sha256": "0146681f55efdb7339ee92eee9112916bddcd12354d8b5b3e0cc6e61c6156426",
+      "path": "skills/operations/workflows/research/references/sources/code-history.md",
+      "source": "skills/operations/workflows/research/references/sources/code-history.md",
+      "sha256": "b2f5fd4c55f23e916cd4d0ac207a766d32d9dd47099a2a9d5b0fe273cc6685b9",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/evals/trigger-evals.json",
-      "source": "skills/version-control/evals/trigger-evals.json",
-      "sha256": "529964ad1feaaa134ea471411cab3421931ad5055cd19325b7835b4b8fa6ca4e",
+      "path": "skills/operations/workflows/research/references/sources/decision-records.md",
+      "source": "skills/operations/workflows/research/references/sources/decision-records.md",
+      "sha256": "dfbd0327218151d1e9182b5a528c2c71eac4222077f563b7c673e75add1016c9",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/references/bump-rules.md",
-      "source": "skills/version-control/references/bump-rules.md",
+      "path": "skills/operations/workflows/research/references/sources/operational-evidence.md",
+      "source": "skills/operations/workflows/research/references/sources/operational-evidence.md",
+      "sha256": "ed3b5de6b5f9ddf8bf5153304a6aca4287534ebd778d6a8def4394ca54b909e4",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/software-design/index.md",
+      "source": "skills/operations/workflows/software-design/index.md",
+      "sha256": "c524ca5af434017842089755988966369479a4a0a039bc1bb56b18735c04cd2d",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/software-design/references/change-existing-systems.md",
+      "source": "skills/operations/workflows/software-design/references/change-existing-systems.md",
+      "sha256": "ba6f86da663d2aca78e9cb09522384043323d0f0376519d10a58319a415e9e5f",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/software-design/references/compare-designs.md",
+      "source": "skills/operations/workflows/software-design/references/compare-designs.md",
+      "sha256": "c4260a61602a2743b23adbb92089390439c75b7f01d779002a3f3c70f5ee13ef",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/software-design/references/state-and-boundaries.md",
+      "source": "skills/operations/workflows/software-design/references/state-and-boundaries.md",
+      "sha256": "38b7310de88b1704b1b59000b3a97042b01bccf433daf5beab0bcc9e059b80d2",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/software-design/references/typescript.md",
+      "source": "skills/operations/workflows/software-design/references/typescript.md",
+      "sha256": "92b6948979d2f9d20fc0d098274e3756eb1a85ecb1f5db5f7e1d3f2fbba26f68",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/technical-writing/index.md",
+      "source": "skills/operations/workflows/technical-writing/index.md",
+      "sha256": "78bf18ea786ab2b5eed5f0f608b878c6a32672abb2839f198cea4d167d25c49f",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/technical-writing/references/prose.md",
+      "source": "skills/operations/workflows/technical-writing/references/prose.md",
+      "sha256": "673b56293ecb503018321f345a1fb5075e677bdc2b6ad38ace4b176e2ed5e5c1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/to-spec/index.md",
+      "source": "skills/operations/workflows/to-spec/index.md",
+      "sha256": "d9b9b98e618551c7a02d22a48fdcadfad1c9c0f63542eb2b12e33b87ba73eb7c",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/to-tickets/index.md",
+      "source": "skills/operations/workflows/to-tickets/index.md",
+      "sha256": "fde3d5eda6c7b6079a6afdd0483e660b19e08cc79922f264e0579f42812b978e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
+      "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
+      "sha256": "2ff80337d2e3fcdee4dcdbe1444e81087154d63cda820cc3815967d36debd260",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/use-grok/index.md",
+      "source": "skills/operations/workflows/use-grok/index.md",
+      "sha256": "3e866575b126ee14e850f5b2059a2b2c3e5cb7ab42ae6196da89c773885001d1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/use-grok/references/grok-cli.md",
+      "source": "skills/operations/workflows/use-grok/references/grok-cli.md",
+      "sha256": "020ffc068c8ef9e948699272a214787ffbf2fdb3a2bf069decdb3293d27d86d6",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/version-control/evals/evals.json",
+      "source": "skills/operations/workflows/version-control/evals/evals.json",
+      "sha256": "8ae53740b2597748462e5ca1402d6f51f5f1afb280ae1a8283a40da7aceded4e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/version-control/evals/procedure-selection.json",
+      "source": "skills/operations/workflows/version-control/evals/procedure-selection.json",
+      "sha256": "4d08e1bd4c5efa0ba5b1bcc7419e3ada911794bdd6fe6bf6cafb826fed5ac546",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/version-control/index.md",
+      "source": "skills/operations/workflows/version-control/index.md",
+      "sha256": "79edb91c8e60b165ad91969312baa7a102c5e88faa12a37f41f130ef23e9c9c1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/version-control/references/bump-rules.md",
+      "source": "skills/operations/workflows/version-control/references/bump-rules.md",
       "sha256": "961b2ef3d9ca984bb5e62a0c07811011cc7bca943e64591d82a344cc18cfcd1b",
       "mode": "100644"
     },
     {
-      "path": "skills/version-control/references/project-policy.md",
-      "source": "skills/version-control/references/project-policy.md",
+      "path": "skills/operations/workflows/version-control/references/project-policy.md",
+      "source": "skills/operations/workflows/version-control/references/project-policy.md",
       "sha256": "4ea31df00ed4ff9b78f4ace09373098b2f464db0eebe60c5d019bfb68ba2354d",
       "mode": "100644"
     },
     {
-      "path": "skills/wayfinder/SKILL.md",
-      "source": "skills/wayfinder/SKILL.md",
-      "sha256": "c933cbc8ce6799927d4bcc4b37bda15366fd11ac4e0b847471ada58ad1f37abb",
+      "path": "skills/operations/workflows/wayfinder/index.md",
+      "source": "skills/operations/workflows/wayfinder/index.md",
+      "sha256": "cbcb5d73cf66ee8f89b2b6a0c7b0ea69e792dc340c507a521688ee12fefb0064",
       "mode": "100644"
     },
     {
-      "path": "skills/wayfinder/agents/openai.yaml",
-      "source": "skills/wayfinder/agents/openai.yaml",
-      "sha256": "908fcbc3aca43d22a13d7807d211ef8148cf430bd0afd8d64c2f31a53029e9a5",
+      "path": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
+      "source": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
+      "sha256": "e351dec599ef3fed1e797c1094f6e3c4802adea56df9f8d0d511d9b283b571a9",
       "mode": "100644"
     },
     {
-      "path": "skills/writing-for-agents/SKILL-MECHANICS.md",
-      "source": "skills/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "92646c631c8dab1e9f3c2f963d048a9ce90ce59e239b80222f923a56bd0b5f68",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/writing-for-agents/SKILL.md",
-      "source": "skills/writing-for-agents/SKILL.md",
-      "sha256": "1d2c6798c5f55f21d2953c5c9a3cf04e6141604d410257068e8d357a2b8207f2",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/writing-for-agents/agents/openai.yaml",
-      "source": "skills/writing-for-agents/agents/openai.yaml",
-      "sha256": "eacb24b2a618cfb81dacb0416f4fdd75ddf3a8060f8ddb99aae1b1e301907e4b",
+      "path": "skills/operations/workflows/writing-for-agents/index.md",
+      "source": "skills/operations/workflows/writing-for-agents/index.md",
+      "sha256": "d2657cf862ad9c76724b11ac9c1384de645fdf5aa91ea3ccc211fd01d616629f",
       "mode": "100644"
     },
     {
