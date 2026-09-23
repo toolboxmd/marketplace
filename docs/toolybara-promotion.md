@@ -41,8 +41,15 @@ includes `bin/` and `runner/`.
 
 Enrollment does not publish an unreleased module. The first valid release
 creates its catalog entry from this approved identity, then the same ingestion
-path owns later updates. Model Router is enrolled but waits for its first valid
-release. Modules without Cursor support can set `cursor: false` and an empty
+path owns later updates. Model Router is published; Agent Observer is enrolled
+but waits for its first valid release. Agent Observer is native-host-only
+(`cursor: false`, empty `cursorRuntime`) because its source package at
+`task/1-codex-timeline` afe9d64 ships `.claude-plugin/plugin.json`,
+`.codex-plugin/plugin.json`, `.grok-plugin/plugin.json`,
+`.toolboxmd/project.json`, `bin/agent-observer`, `agent_observer/`, and
+`skills/agent-observer/SKILL.md` with no Cursor manifest; its native host
+indexes follow the released Project Record and Cursor distribution stays
+unchanged. Modules without Cursor support can set `cursor: false` and an empty
 `cursorRuntime`; their native host indexes follow the released Project Record.
 
 Adding a module requires a reviewed policy change and, for Cursor delivery,

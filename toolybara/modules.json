@@ -17,6 +17,13 @@
         "runner"
       ],
       "cursor": true
+    },
+    {
+      "id": "agent-observer",
+      "github": "toolboxmd/agent-observer",
+      "category": "Developer Tools",
+      "cursorRuntime": [],
+      "cursor": false
     }
   ]
 }

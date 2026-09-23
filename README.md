@@ -215,8 +215,12 @@ automatic branch deletion, bypass actors, or any other repository setting.
 
 The GitHub-hosted promotion workflow reconciles each event and an hourly
 schedule against the newest independently validated release of each module in
-`toolybara/modules.json`. AgentsMD and Model Router are enrolled. Model Router
-remains unpublished until its first valid release. Each run creates or updates
+`toolybara/modules.json`. AgentsMD, Model Router, and Agent Observer are
+enrolled. Model Router is published; Agent Observer remains unpublished until
+its first valid release. Agent Observer is native-host-only: its source package
+ships Codex, Claude Code, and Grok Build manifests but no Cursor manifest, so
+its enrollment sets `cursor: false` with an empty `cursorRuntime` and promotion
+renders only its native host indexes. Each run creates or updates
 one generated Toolybara pull request, revalidates the exact head in a
 trusted final job, merges through the SHA-bound pull-request API, and publishes
 the corresponding Marketplace tag and GitHub Release.
