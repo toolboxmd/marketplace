@@ -35,6 +35,16 @@
         "sha": "8d7d521760ae07d80163ea2f3c756597504b783c",
         "ref": "v12.0.1"
       }
+    },
+    {
+      "name": "model-router",
+      "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
+      "source": {
+        "source": "github",
+        "repo": "toolboxmd/model-router",
+        "sha": "ce936626a59422ab91ba2835fa0b7d90009883bf",
+        "ref": "v0.25.1"
+      }
     }
   ]
 }

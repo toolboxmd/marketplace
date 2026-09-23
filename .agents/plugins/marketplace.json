@@ -62,6 +62,21 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Developer Tools"
+    },
+    {
+      "name": "model-router",
+      "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/toolboxmd/model-router.git",
+        "sha": "ce936626a59422ab91ba2835fa0b7d90009883bf",
+        "ref": "v0.25.1"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
     }
   ]
 }
