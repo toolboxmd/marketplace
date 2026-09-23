@@ -24,11 +24,18 @@ refresh_pins = importlib.util.module_from_spec(REFRESH_SPEC)
 REFRESH_SPEC.loader.exec_module(refresh_pins)
 sys.path.insert(0, str(ROOT / "scripts"))
 import render_catalog
+from toolybara_modules import modules
 
 CATALOG = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd", "codex-thinking-knob")
-SHARED_PLUGIN_NAMES = PLUGIN_NAMES[:-1]
+REQUIRED_PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd", "codex-thinking-knob")
+
+
+def _expected_names(host: str) -> tuple[str, ...]:
+    # The catalog is the declared inventory; verify each index independently of
+    # the renderer's host filtering, including modules added by promotion.
+    return tuple(p["name"] for p in CATALOG["plugins"]
+                 if host in p.get("hosts", ["codex", "claude-code", "grok-build"]))
 
 
 def _load(rel: str) -> dict:
@@ -47,13 +54,23 @@ class PublishedCatalogTests(unittest.TestCase):
     def test_catalog_membership(self) -> None:
         self.assertEqual(CATALOG["name"], "toolboxmd")
         self.assertEqual(CATALOG["displayName"], "toolbox.md")
-        self.assertEqual(tuple(p["name"] for p in CATALOG["plugins"]), PLUGIN_NAMES)
+        names = [p["name"] for p in CATALOG["plugins"]]
+        self.assertEqual(len(names), len(set(names)), "duplicate catalog entries")
+        self.assertEqual(tuple(n for n in names if n in REQUIRED_PLUGIN_NAMES), REQUIRED_PLUGIN_NAMES)
+        enrolled = modules(ROOT)
+        for plugin in CATALOG["plugins"]:
+            if plugin["name"] not in REQUIRED_PLUGIN_NAMES:
+                self.assertIn(plugin["name"], enrolled)
+                self.assertEqual(plugin["github"], enrolled[plugin["name"]]["github"])
+                self.assertEqual(plugin["kind"], "agent-module")
+                self.assertRegex(plugin["release"], r"^v[0-9]+\.[0-9]+\.[0-9]+$")
+                self.assertRegex(plugin["sha"], SHA_RE)
 
     def test_host_indexes_agree(self) -> None:
         codex = _load(".agents/plugins/marketplace.json")
         claude = _load(".claude-plugin/marketplace.json")
         grok = _load(".grok-plugin/marketplace.json")
-        for index, names in ((codex, PLUGIN_NAMES), (claude, SHARED_PLUGIN_NAMES), (grok, SHARED_PLUGIN_NAMES)):
+        for index, names in ((codex, _expected_names("codex")), (claude, _expected_names("claude-code")), (grok, _expected_names("grok-build"))):
             self.assertEqual(index["name"], "toolboxmd")
             self.assertEqual(tuple(_plugin_names(index)), names)
         self.assertEqual(codex.get("interface", {}).get("displayName"), "toolbox.md")
@@ -194,7 +211,7 @@ class LocalCatalogTests(unittest.TestCase):
             grok = json.loads(
                 (root / ".grok-plugin/marketplace.json").read_text(encoding="utf-8")
             )
-            for index, names in ((codex, PLUGIN_NAMES), (claude, SHARED_PLUGIN_NAMES), (grok, SHARED_PLUGIN_NAMES)):
+            for index, names in ((codex, _expected_names("codex")), (claude, _expected_names("claude-code")), (grok, _expected_names("grok-build"))):
                 self.assertEqual(index["name"], "toolboxmd")
                 self.assertEqual(tuple(_plugin_names(index)), names)
                 for plugin in index["plugins"]:
