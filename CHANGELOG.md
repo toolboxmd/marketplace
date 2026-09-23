@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.9] - 2026-09-23
+
+### Changed
+
+- Enroll Agent Observer as approved Toolybara module (native-host-only)
+
 ## [1.5.8] - 2026-09-23
 
 ### Changed

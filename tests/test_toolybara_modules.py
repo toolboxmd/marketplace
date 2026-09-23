@@ -334,15 +334,27 @@ class ModulePromotionTests(unittest.TestCase):
 
 class EnrollmentTests(unittest.TestCase):
     def test_enrollment_is_explicit_and_paths_cannot_escape(self):
-        self.assertEqual(set(modules(ROOT)), {"agentsmd", "model-router"})
+        enrolled_modules = modules(ROOT)
+        # Required pre-existing enrollments survive; new approved modules must
+        # not force this test to change.
+        for required in ("agentsmd", "model-router"):
+            self.assertIn(required, enrolled_modules)
+        observer = enrolled(ROOT, "agent-observer")
+        self.assertEqual(observer["github"], "toolboxmd/agent-observer")
+        self.assertEqual(observer["category"], "Developer Tools")
+        # Agent Observer ships no Cursor manifest, so enrollment explicitly
+        # opts out of Cursor delivery with no runtime paths.
+        self.assertIs(observer["cursor"], False)
+        self.assertEqual(observer["cursorRuntime"], [])
         with self.assertRaisesRegex(ValueError, "not enrolled"):
             enrolled(ROOT, "../unapproved")
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "toolybara").mkdir()
             policy = json.loads((ROOT / "toolybara/modules.json").read_text())
+            router = next(entry for entry in policy["modules"] if entry["id"] == "model-router")
             for path in ("../credentials", "/tmp", "SOURCE.json", ".github"):
-                policy["modules"][1]["cursorRuntime"] = [path]
+                router["cursorRuntime"] = [path]
                 (root / "toolybara/modules.json").write_text(json.dumps(policy))
                 with self.subTest(path=path), self.assertRaises(ValueError):
                     modules(root)
