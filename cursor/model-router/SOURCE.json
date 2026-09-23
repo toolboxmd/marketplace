@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "project": "model-router",
+  "release": "v0.25.1",
+  "commit": "ce936626a59422ab91ba2835fa0b7d90009883bf",
+  "projectRecord": {
+    "path": ".toolboxmd/project.json",
+    "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
+  },
+  "manifestFieldSources": {
+    "name": ".toolboxmd/project.json",
+    "displayName": ".codex-plugin/plugin.json",
+    "version": "VERSION",
+    "description": ".toolboxmd/project.json",
+    "author": ".codex-plugin/plugin.json",
+    "homepage": ".codex-plugin/plugin.json",
+    "repository": ".codex-plugin/plugin.json",
+    "license": ".codex-plugin/plugin.json",
+    "keywords": ".codex-plugin/plugin.json",
+    "skills": ".toolboxmd/project.json"
+  },
+  "files": [
+    {
+      "path": ".toolboxmd/project.json",
+      "source": ".toolboxmd/project.json",
+      "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1",
+      "mode": "100644"
+    },
+    {
+      "path": "LICENSE",
+      "source": "LICENSE",
+      "sha256": "764fc4eae0351d4adb0ac0d2f94e089e992a9b073d93f3de856882f5f4d03baa",
+      "mode": "100644"
+    },
+    {
+      "path": "RUNNER.md",
+      "source": "RUNNER.md",
+      "sha256": "313010d4917e5fedfb4885f555e775f833cf59b67a8348c22de6fc386b080a50",
+      "mode": "100644"
+    },
+    {
+      "path": "VERSION",
+      "source": "VERSION",
+      "sha256": "5c16bbb207e00d0464f132505997bc8db3e6a3943b5e2b03c8e05d5f4518009b",
+      "mode": "100644"
+    },
+    {
+      "path": "bin/model-router",
+      "source": "bin/model-router",
+      "sha256": "95f938937bc96453271792a9d877c3b9860105efb7ce747286798aaed1953542",
+      "mode": "100755"
+    },
+    {
+      "path": "runner/__init__.py",
+      "source": "runner/__init__.py",
+      "sha256": "256ceca66a5df8768b8b89f1e9e09e1fa0a957629583689292b4985daea9a9ec",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/__main__.py",
+      "source": "runner/__main__.py",
+      "sha256": "307299fda7b77d22c64cb51430ec75e5f59d78e9c948786afb3b2544fe45e4b7",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/adapters.py",
+      "source": "runner/adapters.py",
+      "sha256": "1ec62d71ee23a4f451aa7674bf0e93365e0f688920813ed32067b4675b818d08",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/cli.py",
+      "source": "runner/cli.py",
+      "sha256": "6c645e3ddd4099cdcf9d6053d43a45d16b49d12c3163ebdb9ab06c5c49dbd12e",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/controller.py",
+      "source": "runner/controller.py",
+      "sha256": "e6ef42fc04b4f22fd5d52c58a549b56feccea4d7b855dd513b3c0d0c41f8c6b6",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/core.py",
+      "source": "runner/core.py",
+      "sha256": "0f99289151874c86f32f7bce3edfe6acec0ae2dee9062f7fafb991d1a4d24b3d",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/direction.py",
+      "source": "runner/direction.py",
+      "sha256": "9ea098d61e6a9866835c46c53339daf38c5e4d0e37cc7d8184a5f4dba2019c68",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/harnesses.py",
+      "source": "runner/harnesses.py",
+      "sha256": "93b5afa56aaf10a8c62b21d7ef5afe282f4b951847554b39961c67c314b71fc0",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/kits.py",
+      "source": "runner/kits.py",
+      "sha256": "6a31e0cabc345ae36d0dd9eaf906d1a15cd33196c89571f1d331eace6f392289",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/policy.py",
+      "source": "runner/policy.py",
+      "sha256": "c7ae27e77f9d98356fef5fdc271af10f04bd7dea71ae8c7c675b584c8bd2ae71",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/store.py",
+      "source": "runner/store.py",
+      "sha256": "9913c84477b5aade7c00c1d981d7cc054ff5196dc60cc758352adb2194dea54a",
+      "mode": "100644"
+    },
+    {
+      "path": "runner/supervisor.py",
+      "source": "runner/supervisor.py",
+      "sha256": "64da3a9eb34df421c540cc154f54eab44b631dbdca717e14d5c30fde3e93689f",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/model-routing/SKILL.md",
+      "source": "skills/model-routing/SKILL.md",
+      "sha256": "e7012ef0516076ca9dfdc0f3151335ec6c42ce675387a63cf52a8ca8adc8c0ea",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/model-routing/references/codex-host.md",
+      "source": "skills/model-routing/references/codex-host.md",
+      "sha256": "aca8678ef4da51781ef6e60ac0d5fd7f26cd370fb314fd7f45f65ebb79716072",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/model-routing/references/codex.md",
+      "source": "skills/model-routing/references/codex.md",
+      "sha256": "4313b5108f8193bf6a46858588bb1d9860e01392943f651e5f142d4e691fef1f",
+      "mode": "100644"
+    }
+  ]
+}

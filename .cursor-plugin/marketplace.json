@@ -12,6 +12,12 @@
       "source": "./cursor/agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "version": "12.0.1"
+    },
+    {
+      "name": "model-router",
+      "source": "./cursor/model-router",
+      "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
+      "version": "0.25.1"
     }
   ]
 }

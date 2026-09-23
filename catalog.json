@@ -49,6 +49,19 @@
         "path": ".toolboxmd/project.json",
         "sha256": "a4ef3ada3ef0514b2afb4540b82a135e97ace8fd0894c5889a9caf1e0f5a47d1"
       }
+    },
+    {
+      "name": "model-router",
+      "github": "toolboxmd/model-router",
+      "category": "Developer Tools",
+      "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
+      "kind": "agent-module",
+      "release": "v0.25.1",
+      "sha": "ce936626a59422ab91ba2835fa0b7d90009883bf",
+      "projectRecord": {
+        "path": ".toolboxmd/project.json",
+        "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
+      }
     }
   ]
 }
