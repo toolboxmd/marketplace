@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.13] - 2026-09-24
+
+### Changed
+
+- Use HTTPS URL sources for every Claude Code catalog entry
+
 ## [1.5.12] - 2026-09-24
 
 ### Changed

@@ -11,8 +11,8 @@
       "name": "karpathy-wiki",
       "description": "Auto-maintained LLM wiki based on Andrej Karpathy's pattern.",
       "source": {
-        "source": "github",
-        "repo": "toolboxmd/karpathy-wiki",
+        "source": "url",
+        "url": "https://github.com/toolboxmd/karpathy-wiki.git",
         "sha": "d8107e727f4b585a9927cad813f90fda6b559ef3"
       }
     },
@@ -20,8 +20,8 @@
       "name": "use-grok",
       "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
       "source": {
-        "source": "github",
-        "repo": "toolboxmd/use-grok",
+        "source": "url",
+        "url": "https://github.com/toolboxmd/use-grok.git",
         "sha": "02cfb3c9d990c77bbcc7775049e174e4306854a9",
         "ref": "v0.3.0"
       }
@@ -40,8 +40,8 @@
       "name": "model-router",
       "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
       "source": {
-        "source": "github",
-        "repo": "toolboxmd/model-router",
+        "source": "url",
+        "url": "https://github.com/toolboxmd/model-router.git",
         "sha": "924d10c78286cf16d681f3eff66ddab47dac4da6",
         "ref": "v0.27.0"
       }
@@ -50,8 +50,8 @@
       "name": "agent-observer",
       "description": "Make routine agent work on this Mac measurable across Codex, Claude Code, OpenCode and Grok Build, so routing and workflow decisions use reproducible evidence from real tasks.",
       "source": {
-        "source": "github",
-        "repo": "toolboxmd/agent-observer",
+        "source": "url",
+        "url": "https://github.com/toolboxmd/agent-observer.git",
         "sha": "40198628a7a13735680c6b7c9ec5a92da1074408",
         "ref": "v0.2.0"
       }

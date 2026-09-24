@@ -36,18 +36,11 @@ def codex_git_source(plugin: dict) -> dict:
 
 
 def claude_git_source(plugin: dict) -> dict:
-    if plugin["name"] == "agentsmd":
-        source = {
-            "source": "url",
-            "url": git_url(plugin),
-            "sha": plugin["sha"],
-        }
-    else:
-        source = {
-            "source": "github",
-            "repo": plugin["github"],
-            "sha": plugin["sha"],
-        }
+    source = {
+        "source": "url",
+        "url": git_url(plugin),
+        "sha": plugin["sha"],
+    }
     if release := plugin.get("release"):
         source["ref"] = release
     return source

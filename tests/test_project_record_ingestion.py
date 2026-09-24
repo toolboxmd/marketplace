@@ -216,8 +216,9 @@ class ProjectRecordIngestionTests(unittest.TestCase):
                     "name": "fixture-agent",
                     "description": "Coordinate fixture work through one trusted agent workflow.",
                     "source": {
-                        "source": "github",
-                        "repo": "toolboxmd/fixture-agent",
+                        # Claude Code entries must install over public HTTPS without SSH keys.
+                        "source": "url",
+                        "url": "https://github.com/toolboxmd/fixture-agent.git",
                         "sha": release_commit,
                         "ref": "v1.2.3",
                     },
