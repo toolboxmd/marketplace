@@ -17,7 +17,7 @@
       "name": "model-router",
       "source": "./cursor/model-router",
       "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
-      "version": "0.27.0"
+      "version": "0.28.0"
     }
   ]
 }

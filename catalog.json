@@ -56,8 +56,8 @@
       "category": "Developer Tools",
       "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
       "kind": "agent-module",
-      "release": "v0.27.0",
-      "sha": "924d10c78286cf16d681f3eff66ddab47dac4da6",
+      "release": "v0.28.0",
+      "sha": "0236564174c668123baca71d77e369d0756efcac",
       "projectRecord": {
         "path": ".toolboxmd/project.json",
         "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
