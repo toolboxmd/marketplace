@@ -99,17 +99,13 @@ class PublishedCatalogTests(unittest.TestCase):
         for plugin in claude["plugins"]:
             source = plugin["source"]
             catalog_plugin = by_name[plugin["name"]]
-            if plugin["name"] == "agentsmd":
-                self.assertEqual(source["source"], "url")
-                self.assertEqual(
-                    source["url"],
-                    f"https://github.com/{catalog_plugin['github']}.git",
-                )
-                self.assertNotIn("repo", source)
-            else:
-                self.assertEqual(source["source"], "github")
-                self.assertEqual(source["repo"], catalog_plugin["github"])
-                self.assertNotIn("url", source)
+            # Every Claude Code entry must install over public HTTPS without SSH keys.
+            self.assertEqual(source["source"], "url")
+            self.assertEqual(
+                source["url"],
+                f"https://github.com/{catalog_plugin['github']}.git",
+            )
+            self.assertNotIn("repo", source)
             self.assertEqual(source["sha"], catalog_plugin["sha"])
             if release := catalog_plugin.get("release"):
                 self.assertEqual(source["ref"], release)
