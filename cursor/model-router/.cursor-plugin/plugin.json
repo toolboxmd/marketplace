@@ -1,7 +1,7 @@
 {
   "name": "model-router",
   "displayName": "Model Router",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
   "author": {
     "name": "toolboxmd"
