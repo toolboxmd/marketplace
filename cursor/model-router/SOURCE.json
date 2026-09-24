@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.29.0",
-  "commit": "d1e0c149d9acb10d8a05aa65ee76afb08d5dc6be",
+  "release": "v0.29.1",
+  "commit": "7e64edfe56aae9290b01bdbb4a69ad0dddaecd51",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "5fd8390deded44d1aa5b910790db78dfb2c7847fc58c0c4c2234bb358db36afc",
+      "sha256": "1402066691d5d9d590c89c85468a43a29f15ad8aa95498e5e2a7325d902f8b8e",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a68641c6aacd345c4931a6217331d2bf43398c7bc134666a2f756953eab407aa",
+      "sha256": "876f57e3f898964859b7c7b09f7826e8e93852fff279af93930ff017bbcc4eb0",
       "mode": "100644"
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "skills/model-routing/SKILL.md",
       "source": "skills/model-routing/SKILL.md",
-      "sha256": "bc2b4d09ef32e6cc3d6cadc6617db05a6b66b31a4d59bf597c803a8888849e5c",
+      "sha256": "c5c910826049c8725e54886d4049bbe2ff90135ed208224e3554ec28764f0ec4",
       "mode": "100644"
     },
     {
