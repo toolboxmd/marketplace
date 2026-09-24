@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.1.0",
-  "commit": "06689223edb1ab5c9d2d3625143b5b555d769724",
+  "release": "v12.2.1",
+  "commit": "56fdd26536a23560cd164539557ee805740ed63f",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a712c758275b460d18fa77a26ed3589689bb3f69dcc1ea99b913e32db92a5cd2",
+      "sha256": "93c2fd80da7cdb77acd039b274dafd5c1af0d86c9e66db478a35a2f256df29f7",
       "mode": "100644"
     },
     {
@@ -155,7 +155,7 @@
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "bc15f77ba4e1a0b3be0e22aeb89c582ed43f3f87e8e74022d331960afffc6a3f",
+      "sha256": "fb00d46c4e0c11a0f00b1c567c4d4ff4e7c56746aed8e377a8cae544642d2f04",
       "mode": "100644"
     },
     {
@@ -179,7 +179,7 @@
     {
       "path": "skills/operations/references/repository-setup.md",
       "source": "skills/operations/references/repository-setup.md",
-      "sha256": "266fd1b7a849b544487313b8d33ee31c0deed2759cc9dc05e10321851c43b227",
+      "sha256": "af1aca189b7210fb6f43b92d129bd46cdc9476de833ab0dae1145b2a5e4592cc",
       "mode": "100644"
     },
     {
