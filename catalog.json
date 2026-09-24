@@ -62,6 +62,19 @@
         "path": ".toolboxmd/project.json",
         "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
       }
+    },
+    {
+      "name": "agent-observer",
+      "github": "toolboxmd/agent-observer",
+      "category": "Developer Tools",
+      "description": "Make routine agent work on this Mac measurable across Codex, Claude Code, OpenCode and Grok Build, so routing and workflow decisions use reproducible evidence from real tasks.",
+      "kind": "agent-module",
+      "release": "v0.2.0",
+      "sha": "40198628a7a13735680c6b7c9ec5a92da1074408",
+      "projectRecord": {
+        "path": ".toolboxmd/project.json",
+        "sha256": "18c1e18d548cbf75f83210bdacc5bf7da8acc280a8ca9c7961664b29216aa773"
+      }
     }
   ]
 }
