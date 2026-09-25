@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.2.1",
-  "commit": "56fdd26536a23560cd164539557ee805740ed63f",
+  "release": "v12.3.0",
+  "commit": "de853ac4a09553c87dab1d7831f3d84f2f3af545",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "93c2fd80da7cdb77acd039b274dafd5c1af0d86c9e66db478a35a2f256df29f7",
+      "sha256": "50eff4ee7cb79f54c670986bccba01e645b6b950bce116d26c9136ec5eb04366",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "44b54e12a3c634a49e383c4c0c80eb8eccb6b9828c8953b2579ca49a7f647715",
+      "sha256": "2a194e098952c44aa60e5f7c0fbbcb8a5eb9c3724c10cb416463ddc3c9e3ad94",
       "mode": "100644"
     },
     {
@@ -131,7 +131,7 @@
     {
       "path": "skills/operations/references/bounded-delegation.md",
       "source": "skills/operations/references/bounded-delegation.md",
-      "sha256": "38155e22e26db5dd5d8570848861c9ca0f076c4f9b9b713a4ddb93f5754ffc4e",
+      "sha256": "eefea54ede676843bc8f8a23a1b74dbb5719782a92ec6a58114acbbd2969a4a3",
       "mode": "100644"
     },
     {
@@ -167,7 +167,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "d1f2f7174d6d59fdf4d8139f96df98ece2d148301f87305632212b9ec0d997bb",
+      "sha256": "e31c3828653a41d9b40a3c083c24d52ee30620ec3094e04b5b061d62b566286f",
       "mode": "100644"
     },
     {
@@ -197,7 +197,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "9a1cd4fb37d6a92480a959861da3617025a8fdb4a713dd3d87b2385085674c8a",
+      "sha256": "8ee1f66a156e89a3c22143b9ac18c1ddcf3a83fe6d7e59d2955bf5a16408d404",
       "mode": "100644"
     },
     {
