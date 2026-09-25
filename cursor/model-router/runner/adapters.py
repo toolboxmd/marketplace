@@ -771,13 +771,19 @@ def wait_planner_quiet(planner_session_id: str, quiet: float = 5.0,
         _time.sleep(min(quiet - age + 0.1, 1.0))
 
 
-def planner_session_in_use(planner_session_id: str, exclude_pids=()) -> list[int]:
-    """PIDs of running ``claude`` processes naming this session in argv.
+def planner_process_in_use(binary: str, session_id: str,
+                           exclude_pids=()) -> list[int]:
+    """PIDs of running processes for ``binary`` naming this session in argv.
 
-    Detects a planner started with ``--session-id``/``--resume``. An
-    interactive session opened without the ID in argv is not visible.
+    Detects a planner holding its session in any supported harness: the
+    session id as a separate argv token (``--resume SID``,
+    ``--session SID``, or a positional ``resume THREAD``), or joined as
+    one token (``--session-id=<SID>``, ``--resume=<SID>``,
+    ``--session=<SID>``). A live T3 thread passes ``--session-id=<SID>``
+    as one token, which the old separate-token-only check never matched.
+    An interactive session opened without the ID in argv is not visible.
     """
-    if not planner_session_id:
+    if not binary or not session_id:
         return []
     try:
         out = subprocess.run(["ps", "-axo", "pid=,command="], capture_output=True,
@@ -785,6 +791,8 @@ def planner_session_in_use(planner_session_id: str, exclude_pids=()) -> list[int
     except Exception:
         return []
     found = []
+    joined = (f"--session-id={session_id}", f"--resume={session_id}",
+              f"--session={session_id}")
     for line in out.splitlines():
         line = line.strip()
         pid_s, _, command = line.partition(" ")
@@ -796,11 +804,23 @@ def planner_session_in_use(planner_session_id: str, exclude_pids=()) -> list[int
             continue
         argv = command.split()
         # Native binary, or an interpreter/shell wrapper running it.
-        if not any(os.path.basename(a) == CLAUDE_BIN for a in argv[:3]):
+        if not any(os.path.basename(a) == binary for a in argv[:3]):
             continue
-        if planner_session_id in argv:
+        if session_id in argv or any(t in joined for t in argv):
             found.append(pid)
     return found
+
+
+def planner_session_in_use(planner_session_id: str, exclude_pids=()) -> list[int]:
+    """PIDs of running ``claude`` processes naming this session in argv.
+
+    Detects a planner started with ``--session-id``/``--resume``. A live
+    T3 thread passes ``--session-id=<SID>`` as one token, so both the
+    separate-token form (``--resume SID``) and the joined form
+    (``--session-id=<SID>``, ``--resume=<SID>``) match. An
+    interactive session opened without the ID in argv is not visible.
+    """
+    return planner_process_in_use(CLAUDE_BIN, planner_session_id, exclude_pids)
 
 
 def opencode_model_for_route(route: str | None) -> str:
@@ -843,6 +863,11 @@ def build_grok_cmd(prompt: str, workspace: str, model: str = GROK_MODEL,
     ``grok_kit_env``); empty when no kit directory is given. The live
     turn's kit arrives via the harness ``spawn_spec``; this ``env`` is the
     manual-run equivalent.
+
+    Planner callbacks never use this builder: they resume the saved
+    planner session read-only in the user's own Grok home through
+    :func:`build_grok_planner_cmd` (or the explicit recorded fallback
+    :func:`build_grok_planner_fallback_cmd`), without ``--always-approve``.
     """
     if not workspace:
         raise ValueError("missing workspace for grok worker turn")
@@ -932,6 +957,57 @@ def parse_grok_result(stdout: str) -> dict:
 
 
 
+
+
+# Read-only posture for Grok planner callbacks (Grok Build 1.0.41),
+# matching the Claude callback's no-tools stance as closely as Grok
+# allows: no tools, plan permission mode, no subagents, no web access.
+# The worker command's ``--always-approve`` never appears here, so a
+# planner turn answers from the saved session and takes no actions.
+GROK_PLANNER_PERMISSION_MODE = "plan"
+
+
+def _grok_planner_base_cmd(prompt: str, workspace: str) -> list[str]:
+    """Shared read-only planner argv (no ``--resume`` yet)."""
+    if not prompt:
+        raise ValueError("missing prompt for grok planner callback")
+    if not workspace:
+        raise ValueError("missing workspace for grok planner callback")
+    return [GROK_BIN, "-p", prompt, "--verbatim", "--cwd", workspace,
+            "--tools", "", "--permission-mode", GROK_PLANNER_PERMISSION_MODE,
+            "--no-subagents", "--disable-web-search",
+            "--output-format", "json"]
+
+
+def build_grok_planner_cmd(planner_session_id: str, prompt: str,
+                           workspace: str) -> list[str]:
+    """Resume the saved Grok planner session for one question, read-only.
+
+    ``grok --resume SID -p PROMPT --verbatim --cwd WS --tools ""
+    --permission-mode plan --no-subagents --disable-web-search
+    --output-format json`` in the job workspace, against the user's own
+    Grok home (where the planner session lives), never a runner kit.
+    The resumed session keeps its own model: no ``-m``/``--effort``
+    override, like the Codex and OpenCode planner callbacks. Missing
+    session is a caller error, so the runner never forks a fresh
+    session silently; the JSON result lets the caller verify the
+    resumed session identity.
+    """
+    if not planner_session_id:
+        raise ValueError("missing planner session ID: refusing to fork a new session")
+    cmd = _grok_planner_base_cmd(prompt, workspace)
+    return [cmd[0], "--resume", planner_session_id, *cmd[1:]]
+
+
+def build_grok_planner_fallback_cmd(prompt: str, workspace: str) -> list[str]:
+    """Fresh read-only Grok session for the explicit resume-failure fallback.
+
+    Same read-only flags as :func:`build_grok_planner_cmd` but without
+    ``--resume``. Call only when the saved planner session cannot resume,
+    and record the turn explicitly as a fallback (invocation metadata and
+    ledger event) so it is never mistaken for a same-session answer.
+    """
+    return _grok_planner_base_cmd(prompt, workspace)
 
 
 def build_luna_prompt(task_json_text: str, extra: str = "") -> str:

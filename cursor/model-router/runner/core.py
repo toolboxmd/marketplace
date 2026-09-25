@@ -819,8 +819,10 @@ def _durable_run(state_dir, request_id: str, owner_token: str, kind: str,
             con.execute("ROLLBACK")
             raise LeaseLostError(f"job {request_id}: controller no longer holds the lease")
         if cur["cancel_requested"] or cur["status"] in store.TERMINAL:
-            con.execute("ROLLBACK")
-            raise LeaseLostError(f"job {request_id}: cancelled or terminal")
+            if not (harnesses.is_terminal_report_send(kind, meta)
+                    and cur["status"] in store.TERMINAL_REPORT_STATUSES):
+                con.execute("ROLLBACK")
+                raise LeaseLostError(f"job {request_id}: cancelled or terminal")
         other = con.execute(
             "SELECT invocation_id FROM invocations WHERE request_id=? AND state IN ('running','cancelling')"
             " AND (action_key IS NULL OR action_key != ?)", (request_id, key)).fetchone()
@@ -1388,7 +1390,8 @@ def _consume_one_invocation(state_dir, request_id: str, inv: dict, job: dict) ->
                 "SELECT 1 FROM questions WHERE request_id=? AND qid=? AND status='pending'",
                 (request_id, cb_qid)).fetchone() is not None
             if still_open and not planner_answer:
-                planner_reason = harness.callback_failure_reason(kind, rc, stdout_text, dict(job_row))
+                planner_reason = harness.callback_failure_reason(
+                    kind, rc, stdout_text, dict(job_row), inv_meta)
         if planner_reason:
             con.execute("UPDATE jobs SET status='blocked', block_reason=?, updated_at=? WHERE request_id=?"
                         " AND status NOT IN ('succeeded','failed','cancelled')",
@@ -2095,9 +2098,10 @@ def exhaustion_context(state_dir, request_id: str) -> dict:
 
 JOB_KINDS = ("ordinary", "experiment", "replay")
 # The planner callback resumes the saved planner session in its own
-# harness (Claude --resume, Codex exec resume, OpenCode run --session);
-# a harness without a usable resume path answers from a fresh session
-# seeded with the stored handoff summary.
+# harness (Claude --resume, Codex exec resume, OpenCode run --session,
+# Grok Build --resume read-only in the user's own Grok home); only an
+# explicit recorded fallback for an unresumable Grok session answers
+# from a fresh read-only session seeded with the stored handoff summary.
 PLANNER_HARNESSES = ("claude", "codex", "opencode", "grok")
 
 
@@ -5599,7 +5603,8 @@ def status_view(state_dir, request_id: str) -> dict:
         st = json.loads(job_public.get("controller_state") or "{}") or {}
     except ValueError:
         st = {}
-    job_public["controller_state"] = {k: st.get(k) for k in ("phase", "last_action_name", "seq")}
+    job_public["controller_state"] = {k: st.get(k) for k in ("phase", "last_action_name", "seq",
+                                                          "terminal_report")}
     try:
         le = json.loads(job_public.get("last_error_json") or "null")
     except ValueError:
