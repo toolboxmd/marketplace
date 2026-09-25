@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.34.0",
-  "commit": "4ca677f73b0fb4732d44761a023532ae95758e74",
+  "release": "v0.35.3",
+  "commit": "1b0508ec4a5ab4f95fae7043bd049490926a6e98",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
+    "sha256": "ba7a9c7620c6559aa1650f4b80a6b34cdd2001c23b76183ad5bdeb23af2c4ed1"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1",
+      "sha256": "ba7a9c7620c6559aa1650f4b80a6b34cdd2001c23b76183ad5bdeb23af2c4ed1",
       "mode": "100644"
     },
     {
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "d62b6a2ba1b46d790d9406b26eb9a1a78ced0db80671cafe23999e7bb87ee88d",
+      "sha256": "b088c0ee4b1f16aed718dc92f8c4b8769872a92c613e809fb625c294c2b4193d",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a341550457891be148045ef7560e7499da6063d012ce8163bf6e6db2f08d2466",
+      "sha256": "c43a7b23449cba621bb64f7271cbd9edd356040bb36dccca1daeaf1c5bc212f7",
       "mode": "100644"
     },
     {
@@ -53,7 +53,7 @@
     {
       "path": "runner/__init__.py",
       "source": "runner/__init__.py",
-      "sha256": "256ceca66a5df8768b8b89f1e9e09e1fa0a957629583689292b4985daea9a9ec",
+      "sha256": "99532673564ac3d9dc87f62c8e2a084a5f18d878136ac83506d6e34e3c5056b0",
       "mode": "100644"
     },
     {
@@ -65,91 +65,61 @@
     {
       "path": "runner/adapters.py",
       "source": "runner/adapters.py",
-      "sha256": "2c1679f3e43461a451b4bdc24c6c6ee36a402da36887a58c453b20af81add097",
+      "sha256": "e10f24ad8a2c47f49247f9fe987210898b680ef42986c02a89186267ecb95702",
       "mode": "100644"
     },
     {
       "path": "runner/cli.py",
       "source": "runner/cli.py",
-      "sha256": "fb9e86ed27e14e73b966af97fe52958a5dc6c708d560355308e771f5e9235a6b",
+      "sha256": "4ef7c6597ee7448d768c24c06a55e29a7eaaff3e0dcdc3166195a6a1d0b27f65",
       "mode": "100644"
     },
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "07cf6858147f7d256cfdb9c750af5001b7d1897fcf2222d257bc94eb6a6a5c78",
+      "sha256": "3ae865086a0369ab9118eda69a14176344d245c98f7c6b4a3e58f54b3648798e",
       "mode": "100644"
     },
     {
       "path": "runner/core.py",
       "source": "runner/core.py",
-      "sha256": "427b4028de31e057730c4aa3b40922ffde050b944af55183f432ee228bb7a2fd",
-      "mode": "100644"
-    },
-    {
-      "path": "runner/direction.py",
-      "source": "runner/direction.py",
-      "sha256": "9ea098d61e6a9866835c46c53339daf38c5e4d0e37cc7d8184a5f4dba2019c68",
-      "mode": "100644"
-    },
-    {
-      "path": "runner/harnesses.py",
-      "source": "runner/harnesses.py",
-      "sha256": "a54253949407bbdee4569fe9554c0cc348e13cf066ac3f541bfbe3ff04b30829",
-      "mode": "100644"
-    },
-    {
-      "path": "runner/kits.py",
-      "source": "runner/kits.py",
-      "sha256": "31c340c043cbb7688b46a5373ca63e364638e43f0b9730c10d5c456ece8fd8f4",
+      "sha256": "7d379c659a3e4ceaa88be2efa23545de7ac049858d99d0fd14f3374aa249d75d",
       "mode": "100644"
     },
     {
       "path": "runner/policy.py",
       "source": "runner/policy.py",
-      "sha256": "2cbd84824626fe7118a2b500deb28bb09c398d55499a47df2354266a71b6d580",
+      "sha256": "7b2777c5cb6a212e9d88672a67c9a86a04e60b71c6c02f5862f900dea9bf5a12",
       "mode": "100644"
     },
     {
       "path": "runner/runtime.py",
       "source": "runner/runtime.py",
-      "sha256": "a3cd7e98b11a63545f9549e4770f2df4b09ca6889b4ab5110299929e405db063",
+      "sha256": "6e09dbaea856c4cc898ffe43ce0f98e0a05e877d41e6302b5ea3cc1f137ea07a",
       "mode": "100644"
     },
     {
       "path": "runner/store.py",
       "source": "runner/store.py",
-      "sha256": "eb57b549924640c17ed68a4504fd70615aa5c567b51abb0b747f76f4147ea82b",
-      "mode": "100644"
-    },
-    {
-      "path": "runner/supervisor.py",
-      "source": "runner/supervisor.py",
-      "sha256": "23d9a00dc0b4897d5ea1e03e378b848d42efee41dafec214f2ef2c365ed8e99d",
+      "sha256": "b72ac57c7c553d1178e97145ed2f712fc4aa756b6824ed068cb63a3dfada91c7",
       "mode": "100644"
     },
     {
       "path": "runner/t3exec.py",
       "source": "runner/t3exec.py",
-      "sha256": "27a44beef4a42c4629ce61cbd6baac188ade50f4132bbd7c61ffe14a71367bdf",
+      "sha256": "81a468435fa89d3e614747cb5fb1b318661de755c082f9b6d1c4d2782d7bf64b",
       "mode": "100644"
     },
     {
-      "path": "skills/model-routing/SKILL.md",
-      "source": "skills/model-routing/SKILL.md",
-      "sha256": "959f5690e53d6d409e8a86f5aab01d1884084852f651f6475b647e9e9c4a95f2",
+      "path": "runner/t3snapshot.py",
+      "source": "runner/t3snapshot.py",
+      "sha256": "c675b15891104b64fe248240bae665eb321f5a094b5099a8a7fa31fe93a6601e",
       "mode": "100644"
     },
     {
-      "path": "skills/model-routing/references/codex-host.md",
-      "source": "skills/model-routing/references/codex-host.md",
-      "sha256": "aca8678ef4da51781ef6e60ac0d5fd7f26cd370fb314fd7f45f65ebb79716072",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/model-routing/references/codex.md",
-      "source": "skills/model-routing/references/codex.md",
-      "sha256": "09755e5fc1aaf7272dd392a22c4f301d718e88e1bd049f1a8814e389681dcb24",
+      "path": "skills/model-router/SKILL.md",
+      "source": "skills/model-router/SKILL.md",
+      "sha256": "4d8f8c2ad6edc768ae39f3d1516b4679c754579221ee2164030561249c72f81c",
       "mode": "100644"
     }
   ]

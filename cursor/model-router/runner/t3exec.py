@@ -1,11 +1,9 @@
 """T3 execution path for the durable local runner. Stdlib only.
 
-When a job names a planner T3 thread (``submit --planner-t3-thread``),
+Every job names a planner T3 thread (``submit --planner-t3-thread``):
 dispatcher and worker invocations run as T3 child threads of that
-planner thread instead of local harness CLIs, and the terminal job
-state is posted back into the planner thread as a message. Jobs
-without a planner T3 thread keep the direct CLI execution path
-unchanged; this module is never consulted for them.
+planner thread, and questions and the terminal job state are posted
+into the planner thread as messages (#106, #110).
 
 Wire reference: toolboxmd/t3code ``packages/contracts`` —
 ``POST /api/orchestration/dispatch`` carries a client orchestration
@@ -13,11 +11,13 @@ command (``thread.create``, ``thread.turn.start``, ...), and
 ``GET /api/orchestration/threads/:threadId`` returns the thread
 detail snapshot (messages, activities, session, latestTurn).
 
-Child identity: until the fork parent link lands (toolboxmd/t3code#8),
-a child id follows the spike convention ``sub.<parent>.<suffix>`` and
-the ``thread.create`` payload additionally carries ``parentThreadId``,
-so a fork server that honors the link keeps working without a runner
-change. The child's first message names the job and links the parent
+Child identity: a child id follows the fork convention
+``sub.<parent>.<suffix>`` (toolboxmd/t3code#8) and the ``thread.create``
+payload additionally carries ``parentThreadId``, so a server that honors
+the field keeps working without a runner change. A job's threads form a
+tree (#113): the dispatcher thread is a child of the planner thread, and
+worker, correction and recovery threads are children of the dispatcher
+thread. Every child's first message names the job and links the planner
 thread.
 
 Liveness is activity-based, never a fixed silence window: a turn is
@@ -48,6 +48,7 @@ import shutil
 import subprocess
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
@@ -59,6 +60,8 @@ from . import policy
 # reconfigured by the runner (nothing here stops any server at all).
 T3_USER_PORT = 3773
 T3_DEFAULT_URL = f"http://127.0.0.1:{T3_USER_PORT}"
+# The fork's Prism snapshot endpoint (toolboxmd/t3code#19).
+PRISM_SNAPSHOT_PATH = "/api/prism/snapshot"
 
 # Planner harness name for T3-hosted planners. Stored in jobs.planner_harness
 # alongside claude/codex/opencode/grok; selecting it is not required to use
@@ -71,30 +74,21 @@ T3_PLANNER_HARNESS = "t3"
 T3_SILENCE_SECS = 60.0
 # Poll interval while watching a T3 turn.
 T3_POLL_SECS = 2.0
+# Recovery must not watch an already-saved child forever when its turn was
+# never started or the server lost the turn state.
+T3_RECOVERY_WATCH_SECS = 120.0
 
 # A running activity of these kinds keeps a turn healthy regardless of
 # message silence (a long test run is a running tool, never a stall).
 TOOL_ACTIVITY_PREFIXES = ("tool.", "task.")
 
-# Route harness -> T3 provider instance id. T3 keys instances by driver
-# kind (``defaultInstanceIdForDriver`` in toolboxmd/t3code contracts), so a
-# route maps by its harness, not its pool: an OpenCode route on the xAI
-# pool still runs on the OpenCode instance. Overridable per harness with
-# MODEL_ROUTER_T3_INSTANCE_<HARNESS> (e.g. MODEL_ROUTER_T3_INSTANCE_OPENCODE).
-T3_DEFAULT_INSTANCES = {
-    "codex": "codex",
-    "opencode": "opencode",
-    "claude": "claudeAgent",
-    "grok": "grok",
-}
-
-# Reasoning-effort option id per harness, as each T3 adapter reads it
+# Reasoning-effort option id per T3 driver, as each adapter reads it
 # (CodexAdapter/GrokAdapter ``reasoningEffort``, ClaudeAdapter ``effort``,
-# OpenCodeAdapter ``variant``).
+# OpenCodeAdapter ``variant``). A route's driver follows its instance id.
 T3_EFFORT_OPTION = {
     "codex": "reasoningEffort",
     "grok": "reasoningEffort",
-    "claude": "effort",
+    "claudeAgent": "effort",
     "opencode": "variant",
 }
 
@@ -112,7 +106,7 @@ T3_RUNTIME_MODES = {
 
 # Error text -> provider signal. Structured evidence only where the
 # snapshot carries it (session.lastError, error-tone activities); model
-# text is never classified, matching the direct path's rule.
+# text is never classified.
 _EXHAUSTED_MARKERS = (
     "usage limit", "usage_limit", "usagelimit", "free_tier_limit",
     "freeusagelimiterror", "gousagelimiterror", "insufficient_quota",
@@ -132,16 +126,24 @@ _HARD_MARKERS = (
 class T3Error(Exception):
     """A T3 orchestration call failed (unreachable server, auth, bad payload)."""
 
+    def __init__(self, message: str, status: int | None = None):
+        super().__init__(message)
+        self.status = status
+
+
+class T3NotFoundError(T3Error):
+    """The T3 server confirmed that the requested resource is absent."""
+
+    def __init__(self, message: str):
+        super().__init__(message, status=404)
+
 
 # ---------------------------------------------------------------------------
 # Job mode and thread identity
 # ---------------------------------------------------------------------------
 
 def is_t3_job(job: dict | None) -> bool:
-    """True when the job names a planner T3 thread: the T3 path applies.
-
-    The direct CLI path stays the fallback for every other job.
-    """
+    """True when the job names a planner T3 thread (every job since #110)."""
     tid = (job or {}).get("planner_t3_thread")
     return isinstance(tid, str) and bool(tid.strip())
 
@@ -238,8 +240,7 @@ def discover_token(explicit: str | None = None) -> str:
     """Bearer token: explicit value wins, then T3_SERVER_TOKEN, then the CLI.
 
     Raises T3Error when no token is available: the caller blocks with the
-    reason instead of silently falling back to the direct path, so a
-    broken T3 setup can never masquerade as a direct-path job.
+    reason, so a broken T3 setup is always visible.
     """
     for cand in (explicit, os.environ.get("T3_SERVER_TOKEN")):
         if isinstance(cand, str) and cand.strip():
@@ -256,56 +257,48 @@ def discover_token(explicit: str | None = None) -> str:
 # ---------------------------------------------------------------------------
 
 def route_instance_id(route: str) -> str:
-    """T3 provider instance id for a policy route (harness-keyed, env-overridable)."""
-    spec = policy.route_spec(route)
-    harness = spec.get("harness") or ""
-    override = os.environ.get(f"MODEL_ROUTER_T3_INSTANCE_{harness.upper().replace('-', '_')}")
-    if isinstance(override, str) and override.strip():
-        return override.strip()
-    return T3_DEFAULT_INSTANCES.get(harness, harness)
+    """T3 provider instance id for a policy or snapshot route."""
+    return policy.route_spec(route)["instance"]
+
+
+def route_driver(route: str) -> str:
+    """T3 driver kind for a route: the known driver its instance id names."""
+    instance = route_instance_id(route)
+    return next((d for d in T3_EFFORT_OPTION if instance.startswith(d)), instance)
 
 
 def route_model_id(route: str) -> str:
-    """T3 model id for a policy route.
-
-    OpenCode selections keep the ``<provider>/<model>`` slug: the T3
-    OpenCode adapter rejects anything else, and the provider prefix is
-    what separates Zen free from Go. Other harnesses carry the bare model.
-    """
-    spec = policy.route_spec(route)
-    model = spec.get("model") or ""
-    if spec.get("harness") != "opencode" and "/" in model:
-        model = model.split("/", 1)[1]
+    """T3 model slug for a route (OpenCode keeps ``<provider>/<model>``,
+    which is what separates Zen free from Go)."""
+    model = policy.route_spec(route).get("model") or ""
     if not model:
         raise ValueError(f"route {route!r} carries no model")
     return model
 
 
 def route_effort(route: str) -> str | None:
-    """Reasoning effort for a policy route (the variant), or None."""
-    return policy.route_spec(route).get("variant")
+    """Reasoning effort for a route, or None for the provider default."""
+    return policy.route_spec(route).get("effort")
 
 
-def route_model_selection(route: str) -> dict:
-    """T3 ``ModelSelection`` for a policy route: instance, model, effort.
+def route_model_selection(route: str, role: str | None = None) -> dict:
+    """T3 ``ModelSelection`` for a route: instance, model, effort.
 
     Options use the canonical ``[{id, value}]`` array with the option id
-    the route's T3 adapter reads; OpenCode routes also carry their agent.
-    Unknown routes raise (never a silent substitution), matching the
-    direct path's rule.
+    the route's T3 adapter reads; OpenCode turns also carry their agent
+    (``plan`` for the dispatcher, ``build`` otherwise). Unknown routes
+    raise (never a silent substitution).
     """
-    spec = policy.route_spec(route)
-    harness = spec.get("harness") or ""
+    driver = route_driver(route)
     selection: dict = {"instanceId": route_instance_id(route),
                        "model": route_model_id(route)}
     options: list[dict] = []
     effort = route_effort(route)
     if effort:
-        options.append({"id": T3_EFFORT_OPTION.get(harness, "effort"),
-                        "value": effort})
-    agent = spec.get("agent")
-    if harness == "opencode" and isinstance(agent, str) and agent:
-        options.append({"id": "agent", "value": agent})
+        options.append({"id": T3_EFFORT_OPTION.get(driver, "effort"), "value": effort})
+    if driver == "opencode":
+        is_dispatch = (role or policy.route_spec(route).get("role")) == "dispatch"
+        options.append({"id": "agent", "value": "plan" if is_dispatch else "build"})
     if options:
         selection["options"] = options
     return selection
@@ -343,7 +336,7 @@ def child_create_command(child_id: str, parent_thread_id: str, project_id: str,
         "threadId": validate_thread_id(child_id),
         "projectId": project_id,
         "title": title[:200] or f"model-router {child_id}",
-        "modelSelection": route_model_selection(route),
+        "modelSelection": route_model_selection(route, role),
         "runtimeMode": modes["runtimeMode"],
         "interactionMode": modes["interactionMode"],
         "branch": None,
@@ -378,20 +371,30 @@ def turn_start_command(thread_id: str, text: str, route: str | None = None,
         "createdAt": _utcnow_iso(),
     }
     if route is not None:
-        cmd["modelSelection"] = route_model_selection(route)
+        cmd["modelSelection"] = route_model_selection(route, role)
     if title_seed:
         cmd["titleSeed"] = title_seed[:200]
     return cmd
 
 
-def child_first_message(request_id: str, kind_label: str, parent_thread_id: str,
+def turn_interrupt_command(thread_id: str) -> dict:
+    """Interrupt the active turn on an existing T3 thread."""
+    return {
+        "type": "thread.turn.interrupt",
+        "commandId": _new_id("cmd"),
+        "threadId": validate_thread_id(thread_id),
+        "createdAt": _utcnow_iso(),
+    }
+
+
+def child_first_message(request_id: str, kind_label: str, planner_thread_id: str,
                         route: str, prompt: str) -> str:
-    """First message on a job child: names the job and links the parent."""
+    """First message on a job child: names the job and links the planner thread."""
     return (
         f"[model-router job {request_id} {kind_label} on route {route}; "
-        f"planner thread {parent_thread_id}]\n\n"
+        f"planner thread {planner_thread_id}]\n\n"
         f"This turn belongs to model-router job {request_id}. "
-        f"Report back in this thread; the planner follows from thread {parent_thread_id}.\n\n"
+        f"Report back in this thread; the planner follows from thread {planner_thread_id}.\n\n"
         f"{prompt}"
     )
 
@@ -437,7 +440,10 @@ class T3Client:
                 detail = e.read().decode("utf-8", errors="replace")[:500]
             except Exception:
                 detail = ""
-            raise T3Error(f"T3 {method} {path} failed: HTTP {e.code} {detail}") from e
+            message = f"T3 {method} {path} failed: HTTP {e.code} {detail}"
+            if e.code == 404:
+                raise T3NotFoundError(message) from e
+            raise T3Error(message, status=e.code) from e
         except OSError as e:
             raise T3Error(f"T3 {method} {path} unreachable at {self.server_url}: {e}") from e
         try:
@@ -464,6 +470,13 @@ class T3Client:
         """Post one user message as a turn on an existing thread."""
         return self.dispatch(turn_start_command(thread_id, text, route, role,
                                                 title_seed, message_id))
+
+    def prism_snapshot(self, project_id: str | None = None) -> dict:
+        """GET the Prism provider snapshot (models, usage windows, roles)."""
+        path = PRISM_SNAPSHOT_PATH
+        if project_id:
+            path += "?projectId=" + urllib.parse.quote(project_id, safe="")
+        return self._request("GET", path)
 
     def create_child(self, child_id: str, parent_thread_id: str,
                      project_id: str, title: str, route: str,
@@ -650,6 +663,25 @@ def classify_provider_error(text: str | None) -> str | None:
     return None
 
 
+def evidence_dict(text: str | None) -> dict:
+    """Structured evidence for a provider error message: the message, plus
+    the first JSON object it embeds (OpenCode's retry status carries the
+    reset as ``next`` in epoch milliseconds) under ``detail``."""
+    msg = (text or "")[:2000]
+    out: dict = {"message": msg[:500]}
+    start = msg.find("{")
+    while start != -1:
+        try:
+            obj, _end = json.JSONDecoder().raw_decode(msg[start:])
+        except ValueError:
+            start = msg.find("{", start + 1)
+            continue
+        if isinstance(obj, dict):
+            out["detail"] = obj
+        break
+    return out
+
+
 def error_evidence(snapshot: dict, turn_id: str | None = None) -> str | None:
     """Explicit provider error for the active turn, or None.
 
@@ -807,8 +839,8 @@ def watch_turn(client: T3Client, thread_id: str, *,
     A stalled read is probed immediately with a fresh snapshot before it
     counts: a turn that produced activity between the two reads stays
     running. ``timeout_secs`` bounds only the watch (tests and operator
-    tools); production watches carry no elapsed deadline, matching the
-    direct path (no per-turn deadline since #88): pass None to wait as
+    tools); production watches carry no elapsed deadline (no per-turn
+    deadline since #88): pass None to wait as
     long as the turn stays active. Explicit provider errors return at
     once.
     """
@@ -951,31 +983,104 @@ def run_t3_turn(client: T3Client, *, request_id: str, kind_label: str,
                 role: str, prompt: str, title: str,
                 child_suffix: str | None = None,
                 existing_thread_id: str | None = None,
-                watch_kwargs: dict | None = None) -> dict:
+                existing_thread_state: dict | None = None,
+                watch_kwargs: dict | None = None,
+                planner_thread_id: str | None = None,
+                on_thread_created=None,
+                on_thread_state=None,
+                before_thread_start=None) -> dict:
     """Run one job turn as a T3 child thread: create, start, watch.
 
-    ``existing_thread_id`` adopts a turn a previous controller already
-    created (crash recovery) instead of starting a second writer. Returns
-    the watch outcome plus ``thread_id`` and the child identity.
+    ``parent_thread_id`` is the thread the child is created under (the
+    planner for a dispatcher, the dispatcher for a worker);
+    ``planner_thread_id`` is the planner thread the first message links,
+    defaulting to the parent. ``existing_thread_id`` adopts a turn a
+    previous controller already created (crash recovery) instead of
+    starting a second writer. Returns the watch outcome plus
+    ``thread_id`` and the child identity.
     """
+    planner = validate_thread_id(planner_thread_id or parent_thread_id)
     if existing_thread_id is not None:
         thread_id = validate_thread_id(existing_thread_id)
         adopted = True
+        state = existing_thread_state if isinstance(existing_thread_state, dict) else {}
+        created = bool(state.get("created", True))
+        turn_started = bool(state.get("turn_started", True))
+        if not created:
+            try:
+                client.thread_snapshot(thread_id)
+            except T3Error as e:
+                if "404" not in str(e):
+                    raise
+                client.create_child(thread_id, parent_thread_id, project_id,
+                                    title, route, role)
+            if on_thread_state is not None:
+                on_thread_state(thread_id, "created")
+            created = True
+        if not turn_started:
+            try:
+                snapshot = client.thread_snapshot(thread_id)
+                thread = snapshot_thread(snapshot)
+                if not thread or "latestTurn" not in thread:
+                    return {"state": "unknown",
+                            "reason": "T3 child snapshot has unknown turn state",
+                            "thread_id": thread_id, "adopted": adopted,
+                            "parent_thread_id": validate_thread_id(parent_thread_id),
+                            "planner_thread_id": planner, "route": route}
+                latest = thread.get("latestTurn")
+                if latest is None:
+                    turn_started = False
+                elif isinstance(latest, dict) and latest.get("turnId"):
+                    turn_started = True
+                else:
+                    return {"state": "unknown",
+                            "reason": "T3 child snapshot has unknown turn state",
+                            "thread_id": thread_id, "adopted": adopted,
+                            "parent_thread_id": validate_thread_id(parent_thread_id),
+                            "planner_thread_id": planner, "route": route}
+            except T3Error as e:
+                return {"state": "unknown", "reason": f"T3 child snapshot failed: {e}",
+                        "thread_id": thread_id, "adopted": adopted,
+                        "parent_thread_id": validate_thread_id(parent_thread_id),
+                        "planner_thread_id": planner, "route": route}
+            if turn_started and on_thread_state is not None:
+                on_thread_state(thread_id, "started")
+            if not turn_started:
+                if before_thread_start is not None:
+                    before_thread_start()
+                client.post_message(thread_id,
+                                    child_first_message(request_id, kind_label,
+                                                        planner, route, prompt),
+                                    route=route, role=role, title_seed=title)
+                if on_thread_state is not None:
+                    on_thread_state(thread_id, "started")
+                turn_started = True
     else:
         thread_id = child_thread_id(parent_thread_id, child_suffix)
+        if on_thread_created is not None:
+            on_thread_created(thread_id)
         client.create_child(thread_id, parent_thread_id, project_id,
                             title, route, role)
+        if on_thread_state is not None:
+            on_thread_state(thread_id, "created")
+        if before_thread_start is not None:
+            before_thread_start()
         client.post_message(thread_id,
                             child_first_message(request_id, kind_label,
-                                                parent_thread_id, route, prompt),
+                                                planner, route, prompt),
                             route=route, role=role, title_seed=title)
+        if on_thread_state is not None:
+            on_thread_state(thread_id, "started")
         adopted = False
     kwargs = dict(watch_kwargs or {})
-    if not adopted:
+    if adopted and not turn_started:
+        kwargs.setdefault("timeout_secs", T3_RECOVERY_WATCH_SECS)
+    if not adopted or not turn_started:
         kwargs.setdefault("await_new_turn", True)
     outcome = watch_turn(client, thread_id, **kwargs)
     outcome["thread_id"] = thread_id
     outcome["adopted"] = adopted
     outcome["parent_thread_id"] = validate_thread_id(parent_thread_id)
+    outcome["planner_thread_id"] = planner
     outcome["route"] = route
     return outcome
