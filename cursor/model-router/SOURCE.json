@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.29.2",
-  "commit": "0626db54928636bb1f0b4aa5fdff328ee2f928aa",
+  "release": "v0.30.0",
+  "commit": "823f261241427862d142efacf86f413b63d96078",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "150a344ba05489e25c051d726adca48aff38344b84e394663e7a089e7f4de09f",
+      "sha256": "c41542180e9a801668ab22ad712043459e32d7ccfb69a49001a3358131f9d316",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a2e693c6f52960c6b768e4699d9b30bf114363e80348be69a0ef6ed53dd980b7",
+      "sha256": "42659901f3c792eb230cf32b2c844ae738cd6d53dd84c1b7eb434e969b472ec2",
       "mode": "100644"
     },
     {
@@ -77,13 +77,13 @@
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "c57e7f37da86741fcc876b904f7c05f5d59e51d0a6a36705f2b36550f566d48a",
+      "sha256": "9913bd914f21bc16a7e8721e908f4e0635fdb1613aec7cd931f9db33fe85a00c",
       "mode": "100644"
     },
     {
       "path": "runner/core.py",
       "source": "runner/core.py",
-      "sha256": "ec1e6bba8ed2df9018daccf5b3488272fbd897a0fa5829373eb5e6b0a399a8a1",
+      "sha256": "926004b4274bf9081147327bda746f2b8af5c10e9ff8e112a57e6d13c01c193c",
       "mode": "100644"
     },
     {
@@ -111,6 +111,12 @@
       "mode": "100644"
     },
     {
+      "path": "runner/runtime.py",
+      "source": "runner/runtime.py",
+      "sha256": "a3cd7e98b11a63545f9549e4770f2df4b09ca6889b4ab5110299929e405db063",
+      "mode": "100644"
+    },
+    {
       "path": "runner/store.py",
       "source": "runner/store.py",
       "sha256": "9913c84477b5aade7c00c1d981d7cc054ff5196dc60cc758352adb2194dea54a",
@@ -119,7 +125,7 @@
     {
       "path": "runner/supervisor.py",
       "source": "runner/supervisor.py",
-      "sha256": "af9faed69a2b5602f3b31de9de61c2b311e2a4c0163bc189af7804f8707d8deb",
+      "sha256": "71ce9887fde517b01d56b4f0a5be6d3132d9bdd9456b0e8d7add31c11a7c6b82",
       "mode": "100644"
     },
     {
