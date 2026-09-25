@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.36.0",
-  "commit": "7984bd5be34babf72e2b21ebab4a35d45e903516",
+  "release": "v0.37.0",
+  "commit": "cf2bda54bd27f0b74ca91c47d1179d2e61f0c19c",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ba7a9c7620c6559aa1650f4b80a6b34cdd2001c23b76183ad5bdeb23af2c4ed1"
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "4f64d42ac42d94d8ee0ad0b820b3e92ed79356d9eff7a44613b2893684fe20b0",
+      "sha256": "ec80aeec4635eca28550574d6281cc437a825268f048632a05bccc78667de433",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "867a70774294546ebe3cac14fa311d8d27922466625e3fd9a42e9a26682a86e7",
+      "sha256": "f1a49cdeb0cce1d8c2d7cde8b8ae660a88ddd2fe44f9e8c2aac95b5d4dad6105",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "6394ae2f948fba8976942086f330e64593c54b30d9f3dfedf4973185ada7309c",
+      "sha256": "9a9fb785a8cde17aa60c1ace7cf80b9ca1eb3018ce53ae01a2c28ba5d8f296d4",
       "mode": "100644"
     },
     {
@@ -89,7 +89,7 @@
     {
       "path": "runner/policy.py",
       "source": "runner/policy.py",
-      "sha256": "59f36e0f45fcb7207ac238f5117b8c1b7a355eaea3748b8359517fe008771f55",
+      "sha256": "3b68f53f90fb96606e2fbb3a01761f2ca975090155daf7ae33f2a7aae8fa0c74",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "runner/t3snapshot.py",
       "source": "runner/t3snapshot.py",
-      "sha256": "779b45c00483e6cfda485d2bfb36a07d295f735d50c90687d8a66df9ef2dd855",
+      "sha256": "6c738da500a3e639c882ae849e02f7161468aad68a495ea48215932e2622625b",
       "mode": "100644"
     },
     {
