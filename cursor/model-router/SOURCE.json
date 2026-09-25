@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.33.1",
-  "commit": "b49653188eb2a2e81e84c5f38131dd34a28644b8",
+  "release": "v0.34.0",
+  "commit": "4ca677f73b0fb4732d44761a023532ae95758e74",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "5112596c0f3fbaa9ab0a2fddc46db517bc4e01cdf609cd7d74e6b8d2f7b0f4a1"
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "cd390e94613b4d96f0159336d8438241f6c3fd2a97cb82d34637eb318001f0d8",
+      "sha256": "d62b6a2ba1b46d790d9406b26eb9a1a78ced0db80671cafe23999e7bb87ee88d",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "88dc89b23d1eb296b577d2cd6b8fd2a8013d9d499299cdb24578106eb5b4f59c",
+      "sha256": "a341550457891be148045ef7560e7499da6063d012ce8163bf6e6db2f08d2466",
       "mode": "100644"
     },
     {
@@ -71,19 +71,19 @@
     {
       "path": "runner/cli.py",
       "source": "runner/cli.py",
-      "sha256": "e39cda5dc3e94773c5b4538c41645df15ecbf9cbf31bc8535344e7abef2b066d",
+      "sha256": "fb9e86ed27e14e73b966af97fe52958a5dc6c708d560355308e771f5e9235a6b",
       "mode": "100644"
     },
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "c37f4c36f769364cfca8ad58accc3e800011a91fc1c0ab611f5fd63ef959df26",
+      "sha256": "07cf6858147f7d256cfdb9c750af5001b7d1897fcf2222d257bc94eb6a6a5c78",
       "mode": "100644"
     },
     {
       "path": "runner/core.py",
       "source": "runner/core.py",
-      "sha256": "11bb5b2744eda9de021550cacbec89bccc22d3f28a7042eb5a8d130fb6a53582",
+      "sha256": "427b4028de31e057730c4aa3b40922ffde050b944af55183f432ee228bb7a2fd",
       "mode": "100644"
     },
     {
@@ -119,7 +119,7 @@
     {
       "path": "runner/store.py",
       "source": "runner/store.py",
-      "sha256": "b8595a4d3e1f58bd2fa81af9327d15f224b3ad914a131e9df122f3f221f9de87",
+      "sha256": "eb57b549924640c17ed68a4504fd70615aa5c567b51abb0b747f76f4147ea82b",
       "mode": "100644"
     },
     {
@@ -129,9 +129,15 @@
       "mode": "100644"
     },
     {
+      "path": "runner/t3exec.py",
+      "source": "runner/t3exec.py",
+      "sha256": "27a44beef4a42c4629ce61cbd6baac188ade50f4132bbd7c61ffe14a71367bdf",
+      "mode": "100644"
+    },
+    {
       "path": "skills/model-routing/SKILL.md",
       "source": "skills/model-routing/SKILL.md",
-      "sha256": "37d178fb0720afc986c1833c2512435f7fccd7be8fad61afd37db1d5c27005d7",
+      "sha256": "959f5690e53d6d409e8a86f5aab01d1884084852f651f6475b647e9e9c4a95f2",
       "mode": "100644"
     },
     {
