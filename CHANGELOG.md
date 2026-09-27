@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.30] - 2026-09-27
+
+### Changed
+
+- Promote AgentsMD v12.4.0 through Toolybara
+
 ## [1.5.29] - 2026-09-25
 
 ### Changed

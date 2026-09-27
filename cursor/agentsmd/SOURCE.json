@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.3.0",
-  "commit": "de853ac4a09553c87dab1d7831f3d84f2f3af545",
+  "release": "v12.4.0",
+  "commit": "1373b8e8785c9f86b003a37f2f0bba8ca93bb6dc",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "50eff4ee7cb79f54c670986bccba01e645b6b950bce116d26c9136ec5eb04366",
+      "sha256": "5f663cf55658cb3d2dd4dd62681df11fc5c62a7f68a1663e76894f100e640779",
       "mode": "100644"
     },
     {
@@ -137,7 +137,7 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "2c0b819365d29ad2443e17de16997a52d3266103a47e47a516fefff0ccdc81a0",
+      "sha256": "37893799f80986ccd7124d8ac6778818ed6790517937291a044462d2a07d0051",
       "mode": "100644"
     },
     {
@@ -167,7 +167,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "e31c3828653a41d9b40a3c083c24d52ee30620ec3094e04b5b061d62b566286f",
+      "sha256": "597ee8ef69f9978f2c5919e3106933d3ccc450b696073bbb27db1b22325734a2",
       "mode": "100644"
     },
     {
@@ -197,7 +197,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "8ee1f66a156e89a3c22143b9ac18c1ddcf3a83fe6d7e59d2955bf5a16408d404",
+      "sha256": "ba599d48d492e0357c2aea51ed8a30c8091034b260251a7d902961649af55539",
       "mode": "100644"
     },
     {
