@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.8.0",
-  "commit": "b6638d5ea445b3eff1f9ae72c4dc849472862885",
+  "release": "v13.0.0",
+  "commit": "86f7345e37cfe129376705b8f1f2e1d53907f4bc",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -53,7 +53,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "e8dab6bcb2f38e73449b8806e7bd2c35872b39590e6f09bcfe55578cf3a233ba",
+      "sha256": "9dfcd6c25581c760b4d10ce4f4d651681905ef2198f5daea1d9cc3561a5dc380",
       "mode": "100644"
     },
     {
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "124f1269ee65001c57d0fde009ce44e7ca80b46284e4b84e2455cc6cd49f30c0",
+      "sha256": "50b85a67451145545a65cea370dab8d3444fbfe07e9c34cef560c5b7da9d3eef",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "2a194e098952c44aa60e5f7c0fbbcb8a5eb9c3724c10cb416463ddc3c9e3ad94",
+      "sha256": "a00bc0144adce196b02324e240ec941543bd6394d84155e6ea2d4ceaa2bcd0c8",
       "mode": "100644"
     },
     {
@@ -161,7 +161,7 @@
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "d4b05c89df6dcb86efa29460621bb286e69e80647f57329d68d504b9f49d7aeb",
+      "sha256": "9113634b8a7d504d610de47e295717a6fef2537f1954158e93ea3914e493c965",
       "mode": "100644"
     },
     {
@@ -539,19 +539,19 @@
     {
       "path": "skills/operations/workflows/to-spec/index.md",
       "source": "skills/operations/workflows/to-spec/index.md",
-      "sha256": "d9b9b98e618551c7a02d22a48fdcadfad1c9c0f63542eb2b12e33b87ba73eb7c",
+      "sha256": "cb20e3d104a57bc8fef98e62588e7125f19bd6231aafd665651e0b8ad85046c1",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/to-tickets/index.md",
       "source": "skills/operations/workflows/to-tickets/index.md",
-      "sha256": "fde3d5eda6c7b6079a6afdd0483e660b19e08cc79922f264e0579f42812b978e",
+      "sha256": "08d4745286c11ca461971027917e73bc61b6e77177ddb9f8a382113c40968868",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "sha256": "2ff80337d2e3fcdee4dcdbe1444e81087154d63cda820cc3815967d36debd260",
+      "sha256": "98a4c1eb40fbf7bd95eb16b0bdbcaa6f58476f068e7050a04003ec659297281e",
       "mode": "100644"
     },
     {
@@ -599,7 +599,7 @@
     {
       "path": "skills/operations/workflows/wayfinder/index.md",
       "source": "skills/operations/workflows/wayfinder/index.md",
-      "sha256": "cbcb5d73cf66ee8f89b2b6a0c7b0ea69e792dc340c507a521688ee12fefb0064",
+      "sha256": "7f2917263877c9476bc5d5e916c56b581459de9532e10f7e970fb9b3d6b508ce",
       "mode": "100644"
     },
     {
