@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.7.0",
-  "commit": "409ff0691e66f21ca7c7ba0a36d7f04be680fd9c",
+  "release": "v12.8.0",
+  "commit": "b6638d5ea445b3eff1f9ae72c4dc849472862885",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "6a6d2cad2359e830208612047a18a1847008afec9ac5aa8364037f8cfd1eea20",
+      "sha256": "124f1269ee65001c57d0fde009ce44e7ca80b46284e4b84e2455cc6cd49f30c0",
       "mode": "100644"
     },
     {
@@ -287,13 +287,13 @@
     {
       "path": "skills/operations/workflows/elon-method/index.md",
       "source": "skills/operations/workflows/elon-method/index.md",
-      "sha256": "ad97afd4eb7d787b675eb9b3bed0050e2d9469bf7216b3f6514fca7671e14045",
+      "sha256": "1db717eec00d7f259a558a151bb6bee3b317cb9695264868fd1b43209d36159b",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/elon-method/references/algorithm.md",
       "source": "skills/operations/workflows/elon-method/references/algorithm.md",
-      "sha256": "dbf6a4adadd4d5d0f230d0a446d576acfac6334697d440622c5390afb17fabd5",
+      "sha256": "1909b1b1d4a69c15c2e7d8e81e54411af1c8abea04b703a6a4a91207dacacdcd",
       "mode": "100644"
     },
     {
