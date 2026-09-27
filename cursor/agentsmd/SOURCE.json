@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.4.0",
-  "commit": "1373b8e8785c9f86b003a37f2f0bba8ca93bb6dc",
+  "release": "v12.5.0",
+  "commit": "1e888d14d2e73883325c6b3c1ddc9fdf595a19dd",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "5f663cf55658cb3d2dd4dd62681df11fc5c62a7f68a1663e76894f100e640779",
+      "sha256": "0135efe007f3683ffb725b6ced900d3dfedc918b833a4dd6dd70b7dc13d24458",
       "mode": "100644"
     },
     {
@@ -347,13 +347,13 @@
     {
       "path": "skills/operations/workflows/project-direction/index.md",
       "source": "skills/operations/workflows/project-direction/index.md",
-      "sha256": "69e96a9a69a94f52154346168c21adf1336be4561829f5fe872d12fd31f67171",
+      "sha256": "f6fdd4ba5df8406c53c55da0c327a46e6f33feb931e6b06f70cf9d574fecbf17",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/project-direction/references/context.md",
       "source": "skills/operations/workflows/project-direction/references/context.md",
-      "sha256": "89ebd80008021d1146f9f669ee4e76b73ab723084ce61c6b1b1a5d9fd2d87e53",
+      "sha256": "a7b10e680712b724006871b2f443eba335b1e47436510840a8fa870a7ef60536",
       "mode": "100644"
     },
     {
