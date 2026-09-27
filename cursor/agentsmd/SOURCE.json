@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v12.6.0",
-  "commit": "1023ed569cc69df7121e15306647f38bd92843ed",
+  "release": "v12.7.0",
+  "commit": "409ff0691e66f21ca7c7ba0a36d7f04be680fd9c",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "166d8c2982f8cb0e3233144935d4fafeb672ee4d5bc7cbaff4b2384be95fda4b",
+      "sha256": "6a6d2cad2359e830208612047a18a1847008afec9ac5aa8364037f8cfd1eea20",
       "mode": "100644"
     },
     {
@@ -137,7 +137,7 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "37893799f80986ccd7124d8ac6778818ed6790517937291a044462d2a07d0051",
+      "sha256": "2a363c300c1cd3e59e2a46155f41094a056c9a245eaa29d37d4288d5459c4598",
       "mode": "100644"
     },
     {
@@ -155,19 +155,19 @@
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "fb00d46c4e0c11a0f00b1c567c4d4ff4e7c56746aed8e377a8cae544642d2f04",
+      "sha256": "f352ad09ca27fef103574f0bde953354f8e1ecd7007eb3a464d9d64f50f6d43a",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "f4b3de518f540a40c778ac75d1ec111ad70da0fd411539be875ed0bbbf54c65e",
+      "sha256": "d4b05c89df6dcb86efa29460621bb286e69e80647f57329d68d504b9f49d7aeb",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "380adab8b36d2eec34535f4b9d786a3207eb7a01a97bc17a0c6ee685a4f4651f",
+      "sha256": "bd779291823257086d879911315082be5786992f8cc1fe71ecfe2f6afa11a599",
       "mode": "100644"
     },
     {
@@ -197,7 +197,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "ba599d48d492e0357c2aea51ed8a30c8091034b260251a7d902961649af55539",
+      "sha256": "6379df6294d6248dabb8e0efe55a2ed97a5e14f0ef7b2b695ce3dd5607d35929",
       "mode": "100644"
     },
     {
