@@ -69,8 +69,8 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/model-router.git",
-        "sha": "f8308ed00815c029a413e579dbf783b887d11ebd",
-        "ref": "v0.38.0"
+        "sha": "10209cc3e6f651821594d4f5660641cba33b29e4",
+        "ref": "v0.38.1"
       },
       "policy": {
         "installation": "AVAILABLE",
