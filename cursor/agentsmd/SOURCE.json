@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.2.0",
-  "commit": "038d40b1a3dd92b4ed051470878bd2f80ce85bab",
+  "release": "v14.3.0",
+  "commit": "68bb87785c724fdb2e2059bc4c4752f72dd01d65",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "269600cd339c9cfeebdf8fbd62860a991893c7d24672d95124966049991fcd93",
+      "sha256": "e9243a5d74c8a27864157100569269bb180078e1de144fe62f4bcf930dc81d38",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "1c2a3422ea9110e2ac0fe70c2f3d280a5b0cba7f69a45594a4f43ef6bae0cad6",
+      "sha256": "5bcde5e36eb05f08458ffaf22727ba4a122da0c5455cb92c4de7dce19582e597",
       "mode": "100644"
     },
     {
@@ -359,7 +359,7 @@
     {
       "path": "skills/operations/workflows/project-direction/references/file-contracts.md",
       "source": "skills/operations/workflows/project-direction/references/file-contracts.md",
-      "sha256": "b76baf6fc92048a0cf149430f5c010a95efd3a045a553db078bfab06f8da00ea",
+      "sha256": "428001cb6a703c52b0e692692adca4009a07fa516c3a94b4af293f747bf06df7",
       "mode": "100644"
     },
     {
@@ -438,6 +438,12 @@
       "path": "skills/operations/workflows/reflection/references/learning-and-placement.md",
       "source": "skills/operations/workflows/reflection/references/learning-and-placement.md",
       "sha256": "65d0c8e2c0d145d41ebd68178ecc75bddcbaffc7cb44b556568099f7e0df972e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/workflows/reflection/references/preferences-pruning.md",
+      "source": "skills/operations/workflows/reflection/references/preferences-pruning.md",
+      "sha256": "6641bf2717afc5316f0582a468ba7ec96923b476bb0ac65cf0bbcfa55ebe3a1a",
       "mode": "100644"
     },
     {
