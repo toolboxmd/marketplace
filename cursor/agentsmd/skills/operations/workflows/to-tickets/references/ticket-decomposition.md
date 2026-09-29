@@ -71,11 +71,22 @@ response.
 ## Issue template
 
 ```markdown
+**What:** <the result, one plain sentence>
+**Why:** <the problem or its root cause, one sentence>
+**So what:** <what happens next and who does it>
+
 ## Parent
 <parent Issue reference>
 
 ## Outcome
 <one narrow, complete, user-visible result>
+
+## Elon record
+
+- **Requirements and who asked:** <each requirement and its source>
+- **Deleted:** <what was cut>
+- **Bottleneck:** <where the work waits>
+- **Checked myself:** <what you ran or read>
 
 ## Acceptance criteria
 - [ ] Observable criterion
