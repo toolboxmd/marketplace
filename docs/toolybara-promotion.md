@@ -67,6 +67,13 @@ An existing tag pointing elsewhere fails closed. This prevents a source-release
 event racing the Marketplace base release and making `versionctl` reject the
 next patch for skipping an unpublished version anchor.
 
+Toolybara finalization releases its own promotion merges. Any other push to
+`main` that changes `VERSION` runs `release-version-commit.yml`: it skips when
+`v<VERSION>` already exists for that commit, fails if the tag points elsewhere,
+and otherwise runs `versionctl release-check`, creates the annotated tag and the
+GitHub Release from the matching `CHANGELOG.md` entry, and sends
+`module_release_published` so deferred promotions continue.
+
 The reconciliation job starts from the live `main` commit and independently:
 
 1. Visits enrolled modules in policy order and lists each repository's published
