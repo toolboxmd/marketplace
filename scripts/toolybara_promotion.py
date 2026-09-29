@@ -1624,6 +1624,42 @@ def _supersede_manual_pr(
     _require_manual_pr_closed_unmerged(request)
 
 
+def pending_modules(root: Path, promoted: str) -> list[str]:
+    """Name other enrolled modules with a published stable release newer than accepted.
+
+    This is only a wake signal. The woken run resolves and validates every
+    release independently, exactly as for any other Wake Hint.
+    """
+    pending = []
+    for project, module in modules(root).items():
+        if project == promoted:
+            continue
+        current = _current_release(root, project)
+        for item in _published_releases(module["github"]):
+            tag = item.get("tag_name")
+            if (item.get("draft") or item.get("prerelease") or not isinstance(tag, str)
+                    or not VERSION_TAG_RE.fullmatch(tag)):
+                continue
+            if current is None or _version(tag) > _version(current):
+                pending.append(project)
+                break
+    return pending
+
+
+def wake_next_module(root: Path, promoted: str, *, request) -> list[str]:
+    """After a completed promotion, start one more run while another module waits.
+
+    Only a completed promotion calls this, so wake-ups never outnumber
+    promotions. A run with nothing pending finalizes nothing and stops the
+    chain. The dispatch carries no tag, so it names no release.
+    """
+    pending = pending_modules(root, promoted)
+    if pending:
+        request("POST", f"/repos/{MARKETPLACE_REPOSITORY}/dispatches",
+                {"event_type": "module_release_published"})
+    return pending
+
+
 def finalize(args: argparse.Namespace) -> dict:
     snapshot = _gh_request("GET", f"/repos/{MARKETPLACE_REPOSITORY}/pulls/{args.pr_number}")
     if not isinstance(snapshot, dict):
@@ -1721,7 +1757,14 @@ def finalize(args: argparse.Namespace) -> dict:
         raise PromotionError("Marketplace GitHub Release URL is missing")
     if getattr(args, "project", "agentsmd") == "agentsmd":
         _supersede_manual_pr(args.pr_number, merge_sha, release_url, request=write_request)
-    result = {**evidence, "merge": merge_sha, "releaseUrl": release_url}
+    try:
+        pending = wake_next_module(args.base_root.resolve(), getattr(args, "project", "agentsmd"),
+                                   request=write_request)
+        wake = f"woke the next run for `{', '.join(pending)}`" if pending else "nothing pending"
+    except (PromotionError, OSError, ValueError) as error:
+        # The promotion is already released; the schedule still catches up.
+        wake = f"not sent: {error}"
+    result = {**evidence, "merge": merge_sha, "releaseUrl": release_url, "nextWake": wake}
     _append_summary(
         args.summary,
         [
@@ -1732,6 +1775,7 @@ def finalize(args: argparse.Namespace) -> dict:
             f"- Marketplace tag: `v{args.marketplace_version}`",
             f"- GitHub Release: {release_url}",
             f"- Promoted Project: `{getattr(args, 'project', 'agentsmd')}`",
+            f"- Next module wake-up: {wake}",
         ],
     )
     return result

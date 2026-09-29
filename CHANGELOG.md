@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.52] - 2026-09-29
+
+### Fixed
+
+- Wake the next pending module right after a Toolybara promotion instead of waiting for the schedule
+
 ## [1.5.51] - 2026-09-29
 
 ### Changed

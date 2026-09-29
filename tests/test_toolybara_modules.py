@@ -176,6 +176,51 @@ class ModulePromotionTests(unittest.TestCase):
         self.assertEqual(selected[0]["id"], "model-router")
         self.assertEqual(selected[2].candidate["release"], "v0.1.0")
 
+    def test_two_pending_modules_both_promote_through_wake_ups_without_schedule(self):
+        agents = source_fixture(self.root / "agents", "agentsmd", "99.0.0")
+        sources = {"agentsmd.git": agents, "model-router.git": self.router}
+        published = {"toolboxmd/agentsmd": "v99.0.0", "toolboxmd/model-router": "v0.1.0",
+                     "toolboxmd/agent-observer": "v0.5.0"}
+
+        def clone(url, destination, **kwargs):
+            git(self.root, "clone", "-q", str(sources[url.rsplit("/", 1)[-1]]), str(destination))
+
+        def releases(repository):
+            return [{"tag_name": published[repository]}, {"tag_name": "v999.0.0", "draft": True}]
+
+        wakes = []
+        request = lambda method, endpoint, payload=None, **kwargs: wakes.append((method, endpoint, payload))
+        base, promoted = self.base, []
+        with (patch.object(promotion, "_published_releases", side_effect=releases),
+              patch.object(promotion, "_clone", side_effect=clone)):
+            # Run 1 is a release event; run 2 is only this chain's untagged wake-up.
+            for run, wake_tag in (("1", "v0.1.0"), ("2", "")):
+                args = Namespace(project=None, wake_tag=wake_tag, summary=None)
+                with patch.dict(os.environ, GITHUB_RUN_NUMBER=run):
+                    selected, _ = promotion.discover_modules(base, self.root / f"run-{run}", args, "b" * 40)
+                project, release = selected[0]["id"], selected[2].candidate["release"]
+                base, _ = self.promote(base, project, sources[f"{project}.git"], release, f"promoted-{run}")
+                git(base, "config", "user.name", "Fixture")
+                git(base, "config", "user.email", "fixture@example.invalid")
+                commit(base)
+                promoted.append(project)
+                promotion.wake_next_module(base, project, request=request)
+        self.assertEqual(promoted, ["agentsmd", "model-router"])
+        # One untagged wake-up after the first promotion; none once nothing is pending.
+        self.assertEqual(wakes, [("POST", "/repos/toolboxmd/marketplace/dispatches",
+                                  {"event_type": "module_release_published"})])
+
+    def test_no_wake_up_when_nothing_is_pending(self):
+        accepted = promotion._catalog_by_name(self.base)
+        accepted["model-router"] = {"release": "v0.1.0"}
+        request = Mock()
+        with (patch.object(promotion, "_published_releases", side_effect=lambda repository: [
+                {"tag_name": accepted[repository.split("/")[1]].get("release")},
+                {"tag_name": "v999.0.0", "prerelease": True}]),
+              patch.object(promotion, "_current_release", side_effect=lambda root, project: accepted[project]["release"])):
+            self.assertEqual(promotion.wake_next_module(self.base, "agentsmd", request=request), [])
+        request.assert_not_called()
+
     def test_pull_request_branch_is_bound_to_selected_project(self):
         snapshot = {"number": 70, "state": "open", "draft": False, "user": {"login": "toolybara[bot]"},
                     "head": {"ref": "toolybara/promote-model-router", "sha": "h" * 40,

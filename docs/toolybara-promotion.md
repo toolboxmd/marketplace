@@ -91,7 +91,8 @@ The reconciliation job starts from the live `main` commit and independently:
 
 Invalid candidates never mutate `main`. Discovery reports an invalid module
 and continues to the next enrolled module. One run promotes at most one module;
-later scheduled or event runs pick up remaining releases. If no candidate is
+the finalization wake-up below, event runs, and scheduled runs pick up remaining
+releases. If no candidate is
 available, invalid modules fail with evidence, unpublished modules report
 `pending`, and accepted newest releases report `duplicate` with freshly checked
 source identity. A failure after candidate generation stops that run. Module
@@ -169,6 +170,16 @@ the merge call, the job fails and leaves the pull request open. If release
 creation fails after a successful merge, rerunning the failed job recognizes
 only the same Toolybara-authored and Toolybara-merged head, revalidates any
 moved-base result, and resumes exact tag and release creation idempotently.
+
+After a completed promotion, whether merged in this run or already merged by
+an earlier attempt, the Trusted Final Job checks whether any other enrolled
+module has a published stable release newer than its accepted one. If so, it
+sends one `module_release_published` repository dispatch without a tag, using
+the same fresh Toolybara token, so the next module is reconciled at once rather
+than on GitHub's best-effort schedule. The woken run validates independently.
+Only completed promotions send wake-ups, so a run with nothing pending
+finalizes nothing and ends the chain. A failed wake-up check leaves the
+released promotion intact and is reported in the job summary.
 
 For AgentsMD only, after the Toolybara promotion is released, the job comments
 on and closes pull request #15 as a superseded manual proposal. It states explicitly that #15 was
