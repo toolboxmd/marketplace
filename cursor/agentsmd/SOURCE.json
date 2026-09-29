@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v13.4.0",
-  "commit": "35c1c5511a9b7262fc874dcd0da775cfb50f5724",
+  "release": "v13.6.0",
+  "commit": "844014a940e065aa90d2508215646ebca7ef695a",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "e33b1aa60ace4e0de3252aefaa5a12c01bae8c0370658705b2cebdfb2b257844",
+      "sha256": "66bcc7471f4ca6bed3b255adacc2804880b4ab2adb78324996de8f1c0cde6bb1",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "a00bc0144adce196b02324e240ec941543bd6394d84155e6ea2d4ceaa2bcd0c8",
+      "sha256": "4891e59b58447f8b412235277434b9f5678724343700fb09a2b2ef5ea9a4fc24",
       "mode": "100644"
     },
     {
@@ -137,7 +137,7 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "2a363c300c1cd3e59e2a46155f41094a056c9a245eaa29d37d4288d5459c4598",
+      "sha256": "4bafa3d7e7a64a1c2f8c6edb61b9dc2382111f23dbf19372c47c646afbb10b97",
       "mode": "100644"
     },
     {
@@ -293,7 +293,7 @@
     {
       "path": "skills/operations/workflows/elon-method/references/algorithm.md",
       "source": "skills/operations/workflows/elon-method/references/algorithm.md",
-      "sha256": "1909b1b1d4a69c15c2e7d8e81e54411af1c8abea04b703a6a4a91207dacacdcd",
+      "sha256": "6d94a905ce65e0f182467b00b9d6205dd7b7b9687aee2906c561cd263b775429",
       "mode": "100644"
     },
     {
@@ -539,7 +539,7 @@
     {
       "path": "skills/operations/workflows/to-spec/index.md",
       "source": "skills/operations/workflows/to-spec/index.md",
-      "sha256": "cb20e3d104a57bc8fef98e62588e7125f19bd6231aafd665651e0b8ad85046c1",
+      "sha256": "7c36659fe7444b567a8dcb9d9ef26445dcddddc7e36fe5a6d11c87bcc6796302",
       "mode": "100644"
     },
     {
@@ -551,7 +551,7 @@
     {
       "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "sha256": "98a4c1eb40fbf7bd95eb16b0bdbcaa6f58476f068e7050a04003ec659297281e",
+      "sha256": "2e1c07c1e1ee391af3e34788cf5446a21d54a251c668e5232c6a5a28da2586a1",
       "mode": "100644"
     },
     {

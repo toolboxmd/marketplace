@@ -103,6 +103,10 @@ first unblocked Issue's implementation-authority boundary.
 ## Parent Issue template
 
 ```markdown
+**What:** <the result, one plain sentence>
+**Why:** <the problem or its root cause, one sentence>
+**So what:** <what happens next and who does it>
+
 ## Outcome
 
 The observable result this effort must deliver.
@@ -114,6 +118,13 @@ The problem from the user's perspective.
 ## Solution
 
 The proposed solution from the user's perspective.
+
+## Elon record
+
+- **Requirements and who asked:** <each requirement and its source>
+- **Deleted:** <what was cut>
+- **Bottleneck:** <where the work waits>
+- **Checked myself:** <what you ran or read>
 
 ## Acceptance criteria
 

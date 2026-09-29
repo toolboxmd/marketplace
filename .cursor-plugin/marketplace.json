@@ -11,7 +11,7 @@
       "name": "agentsmd",
       "source": "./cursor/agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
-      "version": "13.4.0"
+      "version": "13.6.0"
     },
     {
       "name": "model-router",
