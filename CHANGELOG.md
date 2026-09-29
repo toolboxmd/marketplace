@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.57] - 2026-09-29
+
+### Fixed
+
+- Resend the reconciliation wake when a version commit is already tagged and released, so a rerun after a failed dispatch still continues pending Toolybara promotions
+
 ## [1.5.56] - 2026-09-29
 
 ### Changed

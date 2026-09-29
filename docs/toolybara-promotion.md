@@ -74,8 +74,10 @@ tag and the GitHub Release from the matching `CHANGELOG.md` entry, and sends
 `module_release_published` so deferred promotions continue. An existing tag is
 complete only when it is annotated, points at the pushed commit, and has one
 published non-draft release; an annotated tag without any release gets its
-release and the wake-up. A lightweight tag, a tag pointing elsewhere, a draft,
-or any other invalid state fails closed for manual repair.
+release. Both cases still send the wake-up, so rerunning after a failed
+dispatch wakes pending promotions without a second tag or release. A
+lightweight tag, a tag pointing elsewhere, a draft, or any other invalid state
+fails closed for manual repair.
 
 The reconciliation job starts from the live `main` commit and independently:
 
