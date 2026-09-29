@@ -75,6 +75,12 @@ def _existing_release_state(tag: str, sha: str, reference, request: Callable[...
     return "complete"
 
 
+def _wake_reconciliation(request: Callable[..., dict | list | None]) -> None:
+    # Reconciliation treats repeats as duplicate, so resending on rerun is safe
+    # and recovers a run whose release succeeded but whose dispatch failed.
+    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
+
+
 def _publish_release(root: Path, sha: str, version: str, tag: str,
                      request: Callable[..., dict | list | None]) -> dict:
     release = request(
@@ -91,7 +97,7 @@ def _publish_release(root: Path, sha: str, version: str, tag: str,
     )
     if not isinstance(release, dict) or release.get("tag_name") != tag or release.get("draft") is not False:
         raise PromotionError("Marketplace GitHub Release identity is invalid")
-    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
+    _wake_reconciliation(request)
     return release
 
 
@@ -102,14 +108,16 @@ def release_version_commit(
     request: Callable[..., dict | list | None] = _gh_request,
     release_check: Callable[[Path], None] = _release_check,
 ) -> dict:
-    """Skip a complete release, recover a missing one, or check, tag, release, and wake reconciliation."""
+    """Resend the wake-up for a complete release, recover a missing one, or check, tag, release, and wake reconciliation."""
     version = (root / "VERSION").read_text(encoding="utf-8").strip()
     tag = f"v{version}"
     _version(tag)
     reference = request("GET", f"{REPO}/git/ref/tags/{tag}", allow_not_found=True)
     if reference is not None:
         if _existing_release_state(tag, sha, reference, request) == "complete":
-            return {"state": "skipped", "tag": tag, "reason": "annotated tag and published release exist"}
+            _wake_reconciliation(request)
+            return {"state": "resent", "tag": tag, "wake": WAKE_EVENT,
+                    "reason": "annotated tag and published release exist; resent reconciliation wake-up"}
         release = _publish_release(root, sha, version, tag, request)
         return {"state": "recovered", "tag": tag, "releaseUrl": release.get("html_url"), "wake": WAKE_EVENT}
 

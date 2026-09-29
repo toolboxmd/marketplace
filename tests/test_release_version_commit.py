@@ -98,14 +98,35 @@ class ReleaseVersionCommitTests(unittest.TestCase):
                 release.release_version_commit(checkout(directory), SHA, request=github, release_check=fail)
         self.assertEqual(github.writes(), [])
 
-    def test_valid_annotated_tag_and_published_release_skip_without_writes(self):
+    def test_complete_tag_and_release_resend_wake_up(self):
         with tempfile.TemporaryDirectory() as directory:
             github = FakeGitHub(existing(releases=[PUBLISHED]))
             checked = []
             result = release.release_version_commit(checkout(directory), SHA, request=github, release_check=checked.append)
-        self.assertEqual(result["state"], "skipped")
+        self.assertEqual(result["state"], "resent")
+        self.assertEqual(result["wake"], "module_release_published")
         self.assertEqual(checked, [])
-        self.assertEqual(github.writes(), [])
+        self.assertEqual(github.writes(), [(f"{REPO}/dispatches", {"event_type": "module_release_published"})])
+
+    def test_rerun_after_failed_wake_up_resends_it(self):
+        # The earlier run released but failed to dispatch; the rerun sees a
+        # complete tag and release and still dispatches the wake-up.
+        class FailingDispatch(FakeGitHub):
+            def __call__(self, method, endpoint, payload=None, *, allow_not_found=False):
+                if method == "POST" and endpoint == f"{REPO}/dispatches":
+                    raise release.PromotionError("dispatch failed")
+                return super().__call__(method, endpoint, payload, allow_not_found=allow_not_found)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = checkout(directory)
+            failing = FailingDispatch(existing(releases=[PUBLISHED]))
+            with self.assertRaises(release.PromotionError):
+                release.release_version_commit(root, SHA, request=failing, release_check=lambda _: None)
+            rerun = FakeGitHub(existing(releases=[PUBLISHED]))
+            result = release.release_version_commit(root, SHA, request=rerun, release_check=lambda _: None)
+        self.assertEqual(result["state"], "resent")
+        self.assertEqual(result["wake"], "module_release_published")
+        self.assertEqual(rerun.writes(), [(f"{REPO}/dispatches", {"event_type": "module_release_published"})])
 
     def test_annotated_tag_without_release_recovers_release_and_wakes_reconciliation(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -149,8 +170,8 @@ class ReleaseVersionCommitTests(unittest.TestCase):
             documents[f"{REPO}/releases?per_page=100&page=2"] = [PUBLISHED]
             github = FakeGitHub(documents)
             result = release.release_version_commit(checkout(directory), SHA, request=github, release_check=lambda _: None)
-        self.assertEqual(result["state"], "skipped")
-        self.assertEqual(github.writes(), [])
+        self.assertEqual(result["state"], "resent")
+        self.assertEqual(github.writes(), [(f"{REPO}/dispatches", {"event_type": "module_release_published"})])
 
     def test_workflow_runs_only_for_non_toolybara_version_pushes_to_main(self):
         # Text guard on the workflow wiring; the behavioral proof is the script tests above.
