@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.1.1",
-  "commit": "6c48d236cb944948c6464acdeded0e1e158adb62",
+  "release": "v14.2.0",
+  "commit": "038d40b1a3dd92b4ed051470878bd2f80ce85bab",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "bd928975d3563dceda0c4bb061739df633463bcfa60880fd706159709979c31d",
+      "sha256": "269600cd339c9cfeebdf8fbd62860a991893c7d24672d95124966049991fcd93",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "82af54edd38ebef4dd382476d4304554fd10bbd7e27b4535d7df1f490dfee4f6",
+      "sha256": "1c2a3422ea9110e2ac0fe70c2f3d280a5b0cba7f69a45594a4f43ef6bae0cad6",
       "mode": "100644"
     },
     {
@@ -161,7 +161,7 @@
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "7187d653b611f45430fdfc1cd83b49ae52f9fe74d378cec6498182b7697d5a8a",
+      "sha256": "659bbf8d0a15e21522244a0508af06ea5a893620bca2bbbef8e6fd0ba375ae4c",
       "mode": "100644"
     },
     {
@@ -197,7 +197,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "6379df6294d6248dabb8e0efe55a2ed97a5e14f0ef7b2b695ce3dd5607d35929",
+      "sha256": "0cd50e6c022e6a26341098da1c2d6ca1818194cbe39511e08ae2c36cc0ba498e",
       "mode": "100644"
     },
     {
@@ -275,7 +275,7 @@
     {
       "path": "skills/operations/workflows/domain-modeling/index.md",
       "source": "skills/operations/workflows/domain-modeling/index.md",
-      "sha256": "aeb3774687b0432a7ca619404a4efb4973726c1f76b0c95d023ee9c30b0fab1a",
+      "sha256": "da3c20943fbfa1f88bbbe0319dc3489b2f62c8e3942328e6f929b9558db0b4dd",
       "mode": "100644"
     },
     {
@@ -527,7 +527,7 @@
     {
       "path": "skills/operations/workflows/technical-writing/index.md",
       "source": "skills/operations/workflows/technical-writing/index.md",
-      "sha256": "78bf18ea786ab2b5eed5f0f608b878c6a32672abb2839f198cea4d167d25c49f",
+      "sha256": "91a0a8a565e5b8757eb2b881a0880df76aef4ce8d29c789dc2c8bbe460bbb090",
       "mode": "100644"
     },
     {
@@ -611,7 +611,7 @@
     {
       "path": "skills/operations/workflows/writing-for-agents/index.md",
       "source": "skills/operations/workflows/writing-for-agents/index.md",
-      "sha256": "d2657cf862ad9c76724b11ac9c1384de645fdf5aa91ea3ccc211fd01d616629f",
+      "sha256": "d5f1f0f59e2ac886a99e2e2947e5b41ba09e88dfd031b693cd8eff19d3d3b1fb",
       "mode": "100644"
     },
     {
