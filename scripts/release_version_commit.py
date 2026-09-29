@@ -2,7 +2,9 @@
 """Tag and release a version commit on main that Toolybara did not release itself.
 
 An existing tag counts as done only when it is annotated, points at the pushed
-commit, and has one published release; a missing release is recovered.
+commit, and has one published release; a missing release is recovered. Every
+path that ends with a published release sends the reconciliation wake, so a
+rerun after a failed dispatch still wakes pending promotions.
 """
 
 from __future__ import annotations
@@ -91,8 +93,11 @@ def _publish_release(root: Path, sha: str, version: str, tag: str,
     )
     if not isinstance(release, dict) or release.get("tag_name") != tag or release.get("draft") is not False:
         raise PromotionError("Marketplace GitHub Release identity is invalid")
-    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
     return release
+
+
+def _wake(request: Callable[..., dict | list | None]) -> None:
+    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
 
 
 def release_version_commit(
@@ -102,15 +107,18 @@ def release_version_commit(
     request: Callable[..., dict | list | None] = _gh_request,
     release_check: Callable[[Path], None] = _release_check,
 ) -> dict:
-    """Skip a complete release, recover a missing one, or check, tag, release, and wake reconciliation."""
+    """Keep a complete release, recover a missing one, or check, tag, and release; then wake reconciliation."""
     version = (root / "VERSION").read_text(encoding="utf-8").strip()
     tag = f"v{version}"
     _version(tag)
     reference = request("GET", f"{REPO}/git/ref/tags/{tag}", allow_not_found=True)
     if reference is not None:
         if _existing_release_state(tag, sha, reference, request) == "complete":
-            return {"state": "skipped", "tag": tag, "reason": "annotated tag and published release exist"}
+            _wake(request)
+            return {"state": "skipped", "tag": tag, "reason": "annotated tag and published release exist",
+                    "wake": WAKE_EVENT}
         release = _publish_release(root, sha, version, tag, request)
+        _wake(request)
         return {"state": "recovered", "tag": tag, "releaseUrl": release.get("html_url"), "wake": WAKE_EVENT}
 
     release_check(root)
@@ -134,6 +142,7 @@ def release_version_commit(
         raise PromotionError("annotated tag object creation failed")
     request("POST", f"{REPO}/git/refs", {"ref": f"refs/tags/{tag}", "sha": tag_sha})
     release = _publish_release(root, sha, version, tag, request)
+    _wake(request)
     return {"state": "released", "tag": tag, "releaseUrl": release.get("html_url"), "wake": WAKE_EVENT}
 
 
