@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.55] - 2026-09-29
+
+### Fixed
+
+- Tag and release human-merged version commits on main automatically so Toolybara promotions no longer stall at `deferred-base-release`
+
 ## [1.5.54] - 2026-09-29
 
 ### Changed
