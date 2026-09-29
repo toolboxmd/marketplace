@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.3.1",
-  "commit": "42152be82897a83d1b20591852ee68ad141dc452",
+  "release": "v14.4.0",
+  "commit": "3fa82c05a7a2e474b4ca6c3edfdfb205601c4661",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a0013c990110cf95bfa7d394f6f3f343c60d383eb1b670807dfcc01f3ba7d2c1",
+      "sha256": "2d116a0732d1aa6c6e065ae1c088ff60eb2de0034f416a446ce33b66556f6b54",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "5bcde5e36eb05f08458ffaf22727ba4a122da0c5455cb92c4de7dce19582e597",
+      "sha256": "7dcffb2d9bf91f01b88de522d587e443c1fbf27e44fdecaf984423c46c6d3f4e",
       "mode": "100644"
     },
     {
@@ -611,7 +611,7 @@
     {
       "path": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
       "source": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "e351dec599ef3fed1e797c1094f6e3c4802adea56df9f8d0d511d9b283b571a9",
+      "sha256": "42c3262de21a9dfd1b16b584dc23e658812c848c950620277d46bf9f7720f652",
       "mode": "100644"
     },
     {
