@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.5.1",
-  "commit": "9049e7553bd6dcbdc21f7fd5b4eda9fbee68a0e3",
+  "release": "v14.5.2",
+  "commit": "40c332133191e4af9eca1f9a200ee31d0c0b0839",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "82f4d2db2043c85341bcc1e64d578b4791c8bb3cc2924374187a5749374b890e",
+      "sha256": "a993a55ee2e54afe287d241e7beb3c37240f5b9fd28fe6c07e12f678b4915c4b",
       "mode": "100644"
     },
     {
@@ -671,7 +671,7 @@
     {
       "path": "tools/versionctl/src/versionctl/repository.py",
       "source": "tools/versionctl/src/versionctl/repository.py",
-      "sha256": "09141539ee659f82d12341b67f0061f7ede053c60cc4006e40911a7d1726f208",
+      "sha256": "492c94ed689481872b766b235f1cd5602dd6599aef36c0e00aa190caceaea044",
       "mode": "100644"
     },
     {
@@ -683,7 +683,7 @@
     {
       "path": "tools/versionctl/src/versionctl/service.py",
       "source": "tools/versionctl/src/versionctl/service.py",
-      "sha256": "ec19039b222cf8dd1ec03b25231ec459c944999dc8e6f3db9e2c8c7a5215381c",
+      "sha256": "97ab7d246a0fa39e2b84629a2df3005e269c57e4a0199438478925a1eccbf7ad",
       "mode": "100644"
     }
   ]
