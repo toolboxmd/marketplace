@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v13.6.0",
-  "commit": "844014a940e065aa90d2508215646ebca7ef695a",
+  "release": "v14.0.0",
+  "commit": "53296e53426fa81ae037f37248b65cfd9a5f625a",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198"
+    "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "ca115ab7996927b1227c9e34398c386dfb3c6bc8029d47dc7e357a76b64bc198",
+      "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37",
       "mode": "100644"
     },
     {
@@ -53,7 +53,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "9dfcd6c25581c760b4d10ce4f4d651681905ef2198f5daea1d9cc3561a5dc380",
+      "sha256": "23f463fbe35b0ae570424feb54ab46f635aa6b90fe2b59eb5f063cbad02601b4",
       "mode": "100644"
     },
     {
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "66bcc7471f4ca6bed3b255adacc2804880b4ab2adb78324996de8f1c0cde6bb1",
+      "sha256": "c72bbdeda99714db1c8024d3311da4aef3c0db3b9b9f11455a7cfe10d5e9aba3",
       "mode": "100644"
     },
     {
@@ -83,7 +83,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "4daa25f706e37216973a1bd6ec1387bee6ec5b81f320e14574d42b2860f8fae2",
+      "sha256": "70801ef64c39a9fb665d0e68b6ff89c7232be6fc2e235a7ec3f478a94174d77f",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "4891e59b58447f8b412235277434b9f5678724343700fb09a2b2ef5ea9a4fc24",
+      "sha256": "82af54edd38ebef4dd382476d4304554fd10bbd7e27b4535d7df1f490dfee4f6",
       "mode": "100644"
     },
     {
@@ -125,7 +125,7 @@
     {
       "path": "skills/operations/references/artifacts.md",
       "source": "skills/operations/references/artifacts.md",
-      "sha256": "23be6c7dd3a1ee7efaf5d16dc1b130bff780c27b913f5f314989f8ee45c6e687",
+      "sha256": "6658115cc97ed781be057ee67c87004d595b3ff543ea383ba5c4e2e861b34c00",
       "mode": "100644"
     },
     {
@@ -347,13 +347,13 @@
     {
       "path": "skills/operations/workflows/project-direction/index.md",
       "source": "skills/operations/workflows/project-direction/index.md",
-      "sha256": "f6fdd4ba5df8406c53c55da0c327a46e6f33feb931e6b06f70cf9d574fecbf17",
+      "sha256": "ff46e13a18fa1f6d71bf396c8f3ee0d885a2762b499fc0f67d90679df9cefd2a",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/project-direction/references/context.md",
       "source": "skills/operations/workflows/project-direction/references/context.md",
-      "sha256": "a7b10e680712b724006871b2f443eba335b1e47436510840a8fa870a7ef60536",
+      "sha256": "83105978d2b34d2d45c63182190481b9a419c8987b2907db50673b397a57e602",
       "mode": "100644"
     },
     {
@@ -437,7 +437,7 @@
     {
       "path": "skills/operations/workflows/reflection/references/learning-and-placement.md",
       "source": "skills/operations/workflows/reflection/references/learning-and-placement.md",
-      "sha256": "7dbc0050f63520adacd9806e9aaf5a2b83e209070b1d76d261883eb9086a577a",
+      "sha256": "65d0c8e2c0d145d41ebd68178ecc75bddcbaffc7cb44b556568099f7e0df972e",
       "mode": "100644"
     },
     {
@@ -551,7 +551,7 @@
     {
       "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "sha256": "2e1c07c1e1ee391af3e34788cf5446a21d54a251c668e5232c6a5a28da2586a1",
+      "sha256": "0ef406aa1328980797f4eb4c8c9e1acd3420f9622cd154c5901aaf6a84626b09",
       "mode": "100644"
     },
     {
