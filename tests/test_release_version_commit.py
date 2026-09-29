@@ -23,6 +23,18 @@ SHA = "a" * 40
 REPO = "/repos/toolboxmd/marketplace"
 
 
+PUBLISHED = {"tag_name": "v1.5.55", "draft": False, "prerelease": False, "published_at": "2026-09-29T12:00:00Z"}
+
+
+def existing(*, commit=SHA, name="v1.5.55", releases=()):
+    """GitHub state with an annotated v1.5.55 tag and the given release list."""
+    return {
+        f"{REPO}/git/ref/tags/v1.5.55": {"object": {"type": "tag", "sha": "t" * 40}},
+        f"{REPO}/git/tags/{'t' * 40}": {"tag": name, "object": {"type": "commit", "sha": commit}},
+        f"{REPO}/releases?per_page=100&page=1": list(releases) if isinstance(releases, (list, tuple)) else releases,
+    }
+
+
 class FakeGitHub:
     def __init__(self, documents: dict):
         self.documents = documents
@@ -86,29 +98,62 @@ class ReleaseVersionCommitTests(unittest.TestCase):
                 release.release_version_commit(checkout(directory), SHA, request=github, release_check=fail)
         self.assertEqual(github.writes(), [])
 
-    def test_existing_tag_for_this_commit_skips_without_writes(self):
+    def test_valid_annotated_tag_and_published_release_skip_without_writes(self):
         with tempfile.TemporaryDirectory() as directory:
-            github = FakeGitHub({
-                f"{REPO}/git/ref/tags/v1.5.55": {"object": {"type": "tag", "sha": "t" * 40}},
-                f"{REPO}/git/tags/{'t' * 40}": {"object": {"type": "commit", "sha": SHA}},
-            })
+            github = FakeGitHub(existing(releases=[PUBLISHED]))
             checked = []
             result = release.release_version_commit(checkout(directory), SHA, request=github, release_check=checked.append)
         self.assertEqual(result["state"], "skipped")
         self.assertEqual(checked, [])
         self.assertEqual(github.writes(), [])
 
-    def test_existing_tag_for_another_commit_fails_without_writes(self):
+    def test_annotated_tag_without_release_recovers_release_and_wakes_reconciliation(self):
         with tempfile.TemporaryDirectory() as directory:
-            github = FakeGitHub({
-                f"{REPO}/git/ref/tags/v1.5.55": {"object": {"type": "tag", "sha": "t" * 40}},
-                f"{REPO}/git/tags/{'t' * 40}": {"object": {"type": "commit", "sha": "b" * 40}},
-            })
-            with self.assertRaises(release.PromotionError):
-                release.release_version_commit(checkout(directory), SHA, request=github, release_check=lambda _: None)
+            github = FakeGitHub(existing(releases=[]))
+            checked = []
+            result = release.release_version_commit(checkout(directory), SHA, request=github, release_check=checked.append)
+        self.assertEqual(result["state"], "recovered")
+        self.assertEqual(checked, [])
+        writes = github.writes()
+        self.assertEqual([endpoint for endpoint, _ in writes], [f"{REPO}/releases", f"{REPO}/dispatches"])
+        published, wake = (payload for _, payload in writes)
+        self.assertEqual(published["body"], "## [1.5.55] - 2026-09-29\n\n### Fixed\n\n- Tag it")
+        self.assertEqual((published["tag_name"], published["draft"], published["prerelease"]), ("v1.5.55", False, False))
+        self.assertEqual(wake, {"event_type": "module_release_published"})
+
+    def test_invalid_existing_tag_or_release_state_fails_without_writes(self):
+        cases = {
+            "lightweight tag on the expected commit": {
+                f"{REPO}/git/ref/tags/v1.5.55": {"object": {"type": "commit", "sha": SHA}},
+            },
+            "annotated tag for another commit": existing(commit="b" * 40, releases=[]),
+            "annotation for another tag name": existing(name="v1.5.54", releases=[PUBLISHED]),
+            "draft release only": existing(releases=[{**PUBLISHED, "draft": True, "published_at": None}]),
+            "prerelease": existing(releases=[{**PUBLISHED, "prerelease": True}]),
+            "release without publication time": existing(releases=[{**PUBLISHED, "published_at": None}]),
+            "duplicate releases": existing(releases=[PUBLISHED, PUBLISHED]),
+            "malformed release list": existing(releases={"message": "oops"}),
+        }
+        for name, documents in cases.items():
+            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
+                github = FakeGitHub(documents)
+                checked = []
+                with self.assertRaises(release.PromotionError):
+                    release.release_version_commit(checkout(directory), SHA, request=github, release_check=checked.append)
+                self.assertEqual(checked, [])
+                self.assertEqual(github.writes(), [])
+
+    def test_release_lookup_follows_pages(self):
+        with tempfile.TemporaryDirectory() as directory:
+            documents = existing(releases=[{"tag_name": f"v0.0.{n}"} for n in range(100)])
+            documents[f"{REPO}/releases?per_page=100&page=2"] = [PUBLISHED]
+            github = FakeGitHub(documents)
+            result = release.release_version_commit(checkout(directory), SHA, request=github, release_check=lambda _: None)
+        self.assertEqual(result["state"], "skipped")
         self.assertEqual(github.writes(), [])
 
     def test_workflow_runs_only_for_non_toolybara_version_pushes_to_main(self):
+        # Text guard on the workflow wiring; the behavioral proof is the script tests above.
         workflow = WORKFLOW.read_text(encoding="utf-8")
         for text in (
             "  push:\n    branches:\n      - main\n    paths:\n      - VERSION\n",

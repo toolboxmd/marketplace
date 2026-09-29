@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Tag, release, and wake reconciliation unless the tag exists
+      - name: Tag, release, and wake reconciliation unless already released
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/release_version_commit.py --sha "$GITHUB_SHA"

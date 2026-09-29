@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Tag and release a version commit on main that Toolybara did not release itself."""
+"""Tag and release a version commit on main that Toolybara did not release itself.
+
+An existing tag counts as done only when it is annotated, points at the pushed
+commit, and has one published release; a missing release is recovered.
+"""
 
 from __future__ import annotations
 
@@ -34,6 +38,63 @@ def changelog_entry(root: Path, version: str) -> str:
     return changelog[changelog.index(heading):].split("\n## [", 1)[0].strip()
 
 
+def _releases_for(tag: str, request: Callable[..., dict | list | None]) -> list[dict]:
+    """Every release, including drafts, whose tag name is the version tag."""
+    found, page = [], 1
+    while True:
+        releases = request("GET", f"{REPO}/releases?per_page=100&page={page}")
+        if not isinstance(releases, list):
+            raise PromotionError("Marketplace release list is invalid")
+        found.extend(item for item in releases if isinstance(item, dict) and item.get("tag_name") == tag)
+        if len(releases) < 100:
+            return found
+        page += 1
+
+
+def _existing_release_state(tag: str, sha: str, reference, request: Callable[..., dict | list | None]) -> str:
+    """Return complete or missing-release for a valid annotated tag; fail on anything else."""
+    target = reference.get("object") if isinstance(reference, dict) else None
+    if not isinstance(target, dict) or target.get("type") != "tag":
+        raise PromotionError(f"{tag} exists but is not an annotated tag; fix it manually")
+    annotation = request("GET", f"{REPO}/git/tags/{target.get('sha')}")
+    pointed = annotation.get("object") if isinstance(annotation, dict) else None
+    if not isinstance(pointed, dict) or annotation.get("tag") != tag or pointed.get("type") != "commit":
+        raise PromotionError(f"{tag} annotation is invalid")
+    if pointed.get("sha") != sha:
+        raise PromotionError(f"{tag} already exists but does not point to {sha}")
+    releases = _releases_for(tag, request)
+    if not releases:
+        return "missing-release"
+    if len(releases) != 1:
+        raise PromotionError(f"{tag} has {len(releases)} releases; fix it manually")
+    release = releases[0]
+    if release.get("draft") is not False:
+        raise PromotionError(f"{tag} has only a draft release; publish or delete it manually")
+    if release.get("prerelease") is not False or not release.get("published_at"):
+        raise PromotionError(f"{tag} release is not a stable published release")
+    return "complete"
+
+
+def _publish_release(root: Path, sha: str, version: str, tag: str,
+                     request: Callable[..., dict | list | None]) -> dict:
+    release = request(
+        "POST",
+        f"{REPO}/releases",
+        {
+            "tag_name": tag,
+            "target_commitish": sha,
+            "name": f"ToolboxMD Marketplace {tag}",
+            "body": changelog_entry(root, version),
+            "draft": False,
+            "prerelease": False,
+        },
+    )
+    if not isinstance(release, dict) or release.get("tag_name") != tag or release.get("draft") is not False:
+        raise PromotionError("Marketplace GitHub Release identity is invalid")
+    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
+    return release
+
+
 def release_version_commit(
     root: Path,
     sha: str,
@@ -41,18 +102,16 @@ def release_version_commit(
     request: Callable[..., dict | list | None] = _gh_request,
     release_check: Callable[[Path], None] = _release_check,
 ) -> dict:
-    """Skip when the tag exists; otherwise check, tag, release, and wake reconciliation."""
+    """Skip a complete release, recover a missing one, or check, tag, release, and wake reconciliation."""
     version = (root / "VERSION").read_text(encoding="utf-8").strip()
     tag = f"v{version}"
     _version(tag)
     reference = request("GET", f"{REPO}/git/ref/tags/{tag}", allow_not_found=True)
     if reference is not None:
-        target = reference.get("object", {}) if isinstance(reference, dict) else {}
-        if target.get("type") == "tag":
-            target = (request("GET", f"{REPO}/git/tags/{target.get('sha')}") or {}).get("object", {})
-        if target.get("sha") != sha:
-            raise PromotionError(f"{tag} already exists but does not point to {sha}")
-        return {"state": "skipped", "tag": tag, "reason": "tag already exists"}
+        if _existing_release_state(tag, sha, reference, request) == "complete":
+            return {"state": "skipped", "tag": tag, "reason": "annotated tag and published release exist"}
+        release = _publish_release(root, sha, version, tag, request)
+        return {"state": "recovered", "tag": tag, "releaseUrl": release.get("html_url"), "wake": WAKE_EVENT}
 
     release_check(root)
     commit = request("GET", f"{REPO}/commits/{sha}")
@@ -74,21 +133,7 @@ def release_version_commit(
     if not isinstance(tag_sha, str):
         raise PromotionError("annotated tag object creation failed")
     request("POST", f"{REPO}/git/refs", {"ref": f"refs/tags/{tag}", "sha": tag_sha})
-    release = request(
-        "POST",
-        f"{REPO}/releases",
-        {
-            "tag_name": tag,
-            "target_commitish": sha,
-            "name": f"ToolboxMD Marketplace {tag}",
-            "body": changelog_entry(root, version),
-            "draft": False,
-            "prerelease": False,
-        },
-    )
-    if not isinstance(release, dict) or release.get("tag_name") != tag or release.get("draft") is not False:
-        raise PromotionError("Marketplace GitHub Release identity is invalid")
-    request("POST", f"{REPO}/dispatches", {"event_type": WAKE_EVENT})
+    release = _publish_release(root, sha, version, tag, request)
     return {"state": "released", "tag": tag, "releaseUrl": release.get("html_url"), "wake": WAKE_EVENT}
 
 
