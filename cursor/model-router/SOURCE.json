@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.42.0",
-  "commit": "5745323dfe79c751d361ce461d387a6a9040c351",
+  "release": "v0.42.1",
+  "commit": "a377231d9b790fca481b65cc5c50467084c300a9",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ba7a9c7620c6559aa1650f4b80a6b34cdd2001c23b76183ad5bdeb23af2c4ed1"
@@ -41,7 +41,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "6c17554dba43398fe2fba3e3c6fa2dac4695faa18b6e61aa72342cdc56fe7852",
+      "sha256": "d8b0876e7932991a8fc74df0ab19676d7ab66e34cbb63cf2299d02993ceb8caf",
       "mode": "100644"
     },
     {
