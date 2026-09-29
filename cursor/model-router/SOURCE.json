@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "model-router",
-  "release": "v0.43.0",
-  "commit": "f90b92bfba448d8d75004856d853b1ed82c1fa0a",
+  "release": "v0.44.0",
+  "commit": "696407ec3b61ef4553163ccb444737160cca173c",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "ba7a9c7620c6559aa1650f4b80a6b34cdd2001c23b76183ad5bdeb23af2c4ed1"
@@ -35,13 +35,13 @@
     {
       "path": "RUNNER.md",
       "source": "RUNNER.md",
-      "sha256": "30ab618f4762c4ab47a6cbb6c660ed4886eec1d342ceaaa41312ce6867a95e59",
+      "sha256": "55446148e0ad399c1fe5d55080a45d67a66193aaa0c7167f4f407aa0c701b5e0",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "45cf252eabfb9874cf77978f8074fddb21798cd05a2ba646116b3999024fd35d",
+      "sha256": "2e67466499d10d356b662dee575193faed47851ad2cd230d762d2d5b4231118f",
       "mode": "100644"
     },
     {
@@ -65,25 +65,25 @@
     {
       "path": "runner/adapters.py",
       "source": "runner/adapters.py",
-      "sha256": "23392c5e60cb9a9cfe498a8425a88b47c14c67411908c7822f3487b1c42dc06c",
+      "sha256": "de36e131bb241529662b6ef5b53d570cc0162bbfb9085538ef694b60d059c14b",
       "mode": "100644"
     },
     {
       "path": "runner/cli.py",
       "source": "runner/cli.py",
-      "sha256": "3be15330370e85947c7d412af836daed5bab03a6b90a20396594c76e397053de",
+      "sha256": "9559157ff0d7e9adc91c29f83a214e54b52830d60b0bb1d4f1636d3edf437cca",
       "mode": "100644"
     },
     {
       "path": "runner/controller.py",
       "source": "runner/controller.py",
-      "sha256": "ff5b887256699b426e59e34d5c7ef9084ae71aeac52ed0486088fe3bd11b6988",
+      "sha256": "64aff26cafa4fabb571b9832914c584ebae4112e4ee0ddec1315832edac88219",
       "mode": "100644"
     },
     {
       "path": "runner/core.py",
       "source": "runner/core.py",
-      "sha256": "9f2a212f6ddc6ba07ba8470ce1e8160036b3d93d48084bd2e75050ff767f1ad0",
+      "sha256": "214ffd66cb357691ca08fcd90ec355ce6ae1e5a5989ded4a59082ffc73c6f37b",
       "mode": "100644"
     },
     {
@@ -101,7 +101,7 @@
     {
       "path": "runner/store.py",
       "source": "runner/store.py",
-      "sha256": "042652d20266e47d48ff00d19c5a807b965f6467cf4b38407abceaa3dded715d",
+      "sha256": "ae904d27fe81d3f287a35bb322d9d310f6791515badb51fff61964f12c25491a",
       "mode": "100644"
     },
     {
@@ -119,7 +119,7 @@
     {
       "path": "runner/t3snapshot.py",
       "source": "runner/t3snapshot.py",
-      "sha256": "8f857688a4bda3c74314c7e9747d1311f96d765c7c573dc14757382049d8c0c9",
+      "sha256": "4c952324f81038b7a0f729166f1083b6552e2b1f1a38afc78d1ac2aa405eb74d",
       "mode": "100644"
     },
     {

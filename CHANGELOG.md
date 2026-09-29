@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.76] - 2026-09-29
+
+### Changed
+
+- Promote model-router v0.44.0 through Toolybara
+
 ## [1.5.75] - 2026-09-29
 
 ### Changed
