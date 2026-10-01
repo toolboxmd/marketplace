@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.89] - 2026-10-01
+
+### Changed
+
+- Retire model-router from the marketplace (Closes #153)
+
 ## [1.5.88] - 2026-10-01
 
 ### Changed

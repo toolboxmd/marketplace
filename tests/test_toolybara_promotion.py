@@ -633,7 +633,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "draft": False,
             "user": {"login": "toolybara[bot]"},
             "head": {
-                "ref": "toolybara/promote-model-router",
+                "ref": "toolybara/promote-agent-observer",
                 "sha": "p" * 40,
                 "repo": {"full_name": "toolboxmd/marketplace"},
             },
@@ -646,7 +646,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "draft": False,
             "user": {"login": "toolybara[bot]"},
             "head": {
-                "ref": "toolybara/promote-model-router",
+                "ref": "toolybara/promote-agent-observer",
                 "sha": "p" * 40,
                 "repo": {"full_name": "toolboxmd/marketplace"},
             },
@@ -680,14 +680,14 @@ class TrustedPullRequestTests(unittest.TestCase):
             request=fake_request,
             push=fake_push,
             before_update=updated.append,
-            project="model-router",
+            project="agent-observer",
         )
 
         self.assertEqual((head, superseded), ("h" * 40, True))
         self.assertEqual(updated, ["h" * 40])
         self.assertEqual(
             pushes,
-            [(Path("/candidate"), "toolybara/promote-model-router", "p" * 40)],
+            [(Path("/candidate"), "toolybara/promote-agent-observer", "p" * 40)],
         )
         # The exact stale PR is re-fetched, closed, and verified before the
         # reserved branch is pushed; it is never PATCHed for reuse.
@@ -710,7 +710,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "head-sha": (
                 "head",
                 {
-                    "ref": "toolybara/promote-model-router",
+                    "ref": "toolybara/promote-agent-observer",
                     "sha": "x" * 40,
                     "repo": {"full_name": "toolboxmd/marketplace"},
                 },
@@ -718,7 +718,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "head-repository": (
                 "head",
                 {
-                    "ref": "toolybara/promote-model-router",
+                    "ref": "toolybara/promote-agent-observer",
                     "sha": "p" * 40,
                     "repo": {"full_name": "attacker/marketplace"},
                 },
@@ -748,7 +748,7 @@ class TrustedPullRequestTests(unittest.TestCase):
                         before_update=lambda _head: self.fail(
                             "stale-base mutation must not prove"
                         ),
-                        project="model-router",
+                        project="agent-observer",
                     )
 
     def test_stale_base_change_on_refetch_fails_closed_without_close_or_push(
@@ -760,7 +760,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "draft": False,
             "user": {"login": "toolybara[bot]"},
             "head": {
-                "ref": "toolybara/promote-model-router",
+                "ref": "toolybara/promote-agent-observer",
                 "sha": "p" * 40,
                 "repo": {"full_name": "toolboxmd/marketplace"},
             },
@@ -793,7 +793,7 @@ class TrustedPullRequestTests(unittest.TestCase):
                 request=fake_request,
                 push=fake_push,
                 before_update=updated.append,
-                project="model-router",
+                project="agent-observer",
             )
 
         self.assertEqual(pushes, [])
@@ -807,7 +807,7 @@ class TrustedPullRequestTests(unittest.TestCase):
             "draft": False,
             "user": {"login": "toolybara[bot]"},
             "head": {
-                "ref": "toolybara/promote-model-router",
+                "ref": "toolybara/promote-agent-observer",
                 "sha": "p" * 40,
                 "repo": {"full_name": "toolboxmd/marketplace"},
             },
@@ -839,7 +839,7 @@ class TrustedPullRequestTests(unittest.TestCase):
                         (root, ref, previous)
                     ),
                     before_update=updated.append,
-                    project="model-router",
+                    project="agent-observer",
                 )
             return pushes, updated
 

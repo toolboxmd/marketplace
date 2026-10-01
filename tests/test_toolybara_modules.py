@@ -52,7 +52,7 @@ def source_fixture(root, project, version):
             shutil.copytree(ROOT / "cursor/agentsmd" / directory, root / directory)
     else:
         (root / "bin").mkdir()
-        launcher = root / "bin/model-router"
+        launcher = root / "bin/fixture-runtime"
         launcher.write_text("#!/usr/bin/env python3\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).resolve().parents[1]))\nimport runner\nprint(runner.result)\n")
         launcher.chmod(0o755)
         (root / "runner").mkdir()
@@ -77,18 +77,22 @@ class ModulePromotionTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.base = self.root / "base"
         shutil.copytree(ROOT, self.base, ignore=shutil.ignore_patterns(".git", "__pycache__"))
-        # The suite must also work inside an already promoted candidate.
-        catalog = json.loads((self.base / "catalog.json").read_text())
-        catalog["plugins"] = [p for p in catalog["plugins"] if p["name"] != "model-router"]
-        (self.base / "catalog.json").write_text(json.dumps(catalog, indent=2) + "\n")
-        index = self.base / ".cursor-plugin/marketplace.json"
-        data = json.loads(index.read_text())
-        data["plugins"] = [p for p in data["plugins"] if p["name"] != "model-router"]
-        index.write_text(json.dumps(data, indent=2) + "\n")
-        shutil.rmtree(self.base / "cursor/model-router", ignore_errors=True)
+        # Enroll a disposable Cursor-capable fixture module with a bundled
+        # runtime in the copied base only; the retired module is gone from the
+        # real policy, so the suite must not depend on it.
+        policy_path = self.base / "toolybara/modules.json"
+        policy = json.loads(policy_path.read_text())
+        policy["modules"].insert(1, {
+            "id": "fixture-runtime",
+            "github": "toolboxmd/fixture-runtime",
+            "category": "Developer Tools",
+            "cursorRuntime": ["bin", "runner"],
+            "cursor": True,
+        })
+        policy_path.write_text(json.dumps(policy, indent=2) + "\n")
         initialize(self.base)
         self.tag_base(self.base)
-        self.router = source_fixture(self.root / "router", "model-router", "0.1.0")
+        self.router = source_fixture(self.root / "router", "fixture-runtime", "0.1.0")
 
     def tag_base(self, root):
         git(root, "tag", "-a", "v" + (root / "VERSION").read_text().strip(), "-m", "Published base")
@@ -106,14 +110,14 @@ class ModulePromotionTests(unittest.TestCase):
 
     def test_first_release_bundles_runtime_then_agentsmd_update_preserves_it(self):
         initial = promotion._catalog_by_name(self.base)
-        candidate, receipt = self.promote(self.base, "model-router", self.router, "v0.1.0", "first")
+        candidate, receipt = self.promote(self.base, "fixture-runtime", self.router, "v0.1.0", "first")
         subprocess.run([sys.executable, str(candidate / "tests/test_catalog.py")], check=True)
         catalog = promotion._catalog_by_name(candidate)
-        self.assertEqual({k: v for k, v in catalog.items() if k != "model-router"}, initial)
-        self.assertEqual(catalog["model-router"]["github"], "toolboxmd/model-router")
+        self.assertEqual({k: v for k, v in catalog.items() if k != "fixture-runtime"}, initial)
+        self.assertEqual(catalog["fixture-runtime"]["github"], "toolboxmd/fixture-runtime")
         index = json.loads((candidate / ".cursor-plugin/marketplace.json").read_text())
-        self.assertEqual([p["name"] for p in index["plugins"]], ["agentsmd", "model-router"])
-        output = subprocess.check_output([str(candidate / "cursor/model-router/bin/model-router")], cwd=self.root).decode().strip()
+        self.assertEqual([p["name"] for p in index["plugins"]], ["agentsmd", "fixture-runtime"])
+        output = subprocess.check_output([str(candidate / "cursor/fixture-runtime/bin/fixture-runtime")], cwd=self.root).decode().strip()
         self.assertEqual(output, "bundled runtime works")
         preserved = promotion.working_tree_id(candidate)  # Generation above remains deterministic.
         self.assertEqual(receipt["tree"], preserved)
@@ -123,63 +127,65 @@ class ModulePromotionTests(unittest.TestCase):
         self.tag_base(candidate)
         agents = source_fixture(self.root / "agents", "agentsmd", "99.0.0")
         second, _ = self.promote(candidate, "agentsmd", agents, "v99.0.0", "second")
-        self.assertEqual(promotion._catalog_by_name(second)["model-router"], catalog["model-router"])
-        self.assertEqual((second / "cursor/model-router/SOURCE.json").read_bytes(),
-                         (candidate / "cursor/model-router/SOURCE.json").read_bytes())
+        self.assertEqual(promotion._catalog_by_name(second)["fixture-runtime"], catalog["fixture-runtime"])
+        self.assertEqual((second / "cursor/fixture-runtime/SOURCE.json").read_bytes(),
+                         (candidate / "cursor/fixture-runtime/SOURCE.json").read_bytes())
         self.assertEqual([p["name"] for p in json.loads((second / ".cursor-plugin/marketplace.json").read_text())["plugins"]],
-                         ["agentsmd", "model-router"])
+                         ["agentsmd", "fixture-runtime"])
 
     def test_native_only_module_does_not_change_cursor_distribution(self):
         policy_path = self.base / "toolybara/modules.json"
         policy = json.loads(policy_path.read_text())
-        policy["modules"][1].update(cursor=False, cursorRuntime=[])
+        for entry in policy["modules"]:
+            if entry["id"] == "fixture-runtime":
+                entry.update(cursor=False, cursorRuntime=[])
         policy_path.write_text(json.dumps(policy))
         commit(self.base)
-        candidate, source = self.promote(self.base, "model-router", self.router, "v0.1.0", "native-only")
-        self.assertFalse((candidate / "cursor/model-router").exists())
+        candidate, source = self.promote(self.base, "fixture-runtime", self.router, "v0.1.0", "native-only")
+        self.assertFalse((candidate / "cursor/fixture-runtime").exists())
         self.assertEqual((candidate / ".cursor-plugin/marketplace.json").read_bytes(),
                          (self.base / ".cursor-plugin/marketplace.json").read_bytes())
         evidence = promotion.accepted_duplicate_evidence(candidate, source, base_sha="b" * 40)
         self.assertEqual(evidence["state"], "duplicate")
 
     def test_selected_module_rejects_other_package_and_catalog_changes(self):
-        candidate, source = self.promote(self.base, "model-router", self.router, "v0.1.0", "candidate")
+        candidate, source = self.promote(self.base, "fixture-runtime", self.router, "v0.1.0", "candidate")
         with self.assertRaisesRegex(promotion.PromotionError, "allowlist"):
-            promotion.validate_generated_paths({"cursor/agentsmd/VERSION"}, "model-router")
+            promotion.validate_generated_paths({"cursor/agentsmd/VERSION"}, "fixture-runtime")
         catalog = json.loads((candidate / "catalog.json").read_text())
         catalog["plugins"][0]["sha"] = "f" * 40
         (candidate / "catalog.json").write_text(json.dumps(catalog))
-        with self.assertRaisesRegex(promotion.PromotionError, "non-model-router"):
+        with self.assertRaisesRegex(promotion.PromotionError, "non-fixture-runtime"):
             promotion.validate_candidate_state(self.base, candidate, source)
         with self.assertRaisesRegex(ValueError, "not enrolled"):
             promotion.build_generated_candidate(base_root=self.base, candidate_root=candidate,
                 source_root=self.router, release="v0.1.0", project="unapproved")
 
     def test_pending_module_does_not_publish_and_invalid_module_does_not_block_another(self):
-        args = Namespace(project="model-router", wake_tag="v999.0.0", summary=None)
+        args = Namespace(project="fixture-runtime", wake_tag="v999.0.0", summary=None)
         before = promotion.working_tree_id(self.base)
         with patch.object(promotion, "_published_releases", return_value=[]), patch.object(promotion, "_clone"):
             selected, observations = promotion.discover_modules(self.base, self.root, args, "b" * 40)
         self.assertIsNone(selected)
-        self.assertEqual(observations, [{"state": "pending", "project": "model-router"}])
+        self.assertEqual(observations, [{"state": "pending", "project": "fixture-runtime"}])
         self.assertEqual(before, promotion.working_tree_id(self.base))
         args.project = None
         def releases(repository):
             return [{"tag_name": "v99.0.0" if repository.endswith("agentsmd") else "v0.1.0"}]
         def clone(url, destination):
-            if url.endswith("model-router.git"):
+            if url.endswith("fixture-runtime.git"):
                 git(self.root, "clone", "-q", str(self.router), str(destination))
             else:
                 destination.mkdir()  # Invalid source cannot produce a release.
         with patch.object(promotion, "_published_releases", side_effect=releases), patch.object(promotion, "_clone", side_effect=clone):
             selected, _ = promotion.discover_modules(self.base, self.root, args, "b" * 40)
-        self.assertEqual(selected[0]["id"], "model-router")
+        self.assertEqual(selected[0]["id"], "fixture-runtime")
         self.assertEqual(selected[2].candidate["release"], "v0.1.0")
 
     def test_two_pending_modules_both_promote_through_wake_ups_without_schedule(self):
         agents = source_fixture(self.root / "agents", "agentsmd", "99.0.0")
-        sources = {"agentsmd.git": agents, "model-router.git": self.router}
-        published = {"toolboxmd/agentsmd": "v99.0.0", "toolboxmd/model-router": "v0.1.0",
+        sources = {"agentsmd.git": agents, "fixture-runtime.git": self.router}
+        published = {"toolboxmd/agentsmd": "v99.0.0", "toolboxmd/fixture-runtime": "v0.1.0",
                      "toolboxmd/agent-observer": "v0.5.0"}
 
         def clone(url, destination, **kwargs):
@@ -205,14 +211,14 @@ class ModulePromotionTests(unittest.TestCase):
                 commit(base)
                 promoted.append(project)
                 promotion.wake_next_module(base, project, request=request)
-        self.assertEqual(promoted, ["agentsmd", "model-router"])
+        self.assertEqual(promoted, ["agentsmd", "fixture-runtime"])
         # One untagged wake-up after the first promotion; none once nothing is pending.
         self.assertEqual(wakes, [("POST", "/repos/toolboxmd/marketplace/dispatches",
                                   {"event_type": "module_release_published"})])
 
     def test_no_wake_up_when_nothing_is_pending(self):
         accepted = promotion._catalog_by_name(self.base)
-        accepted["model-router"] = {"release": "v0.1.0"}
+        accepted["fixture-runtime"] = {"release": "v0.1.0"}
         request = Mock()
         with (patch.object(promotion, "_published_releases", side_effect=lambda repository: [
                 {"tag_name": accepted[repository.split("/")[1]].get("release")},
@@ -223,10 +229,10 @@ class ModulePromotionTests(unittest.TestCase):
 
     def test_pull_request_branch_is_bound_to_selected_project(self):
         snapshot = {"number": 70, "state": "open", "draft": False, "user": {"login": "toolybara[bot]"},
-                    "head": {"ref": "toolybara/promote-model-router", "sha": "h" * 40,
+                    "head": {"ref": "toolybara/promote-fixture-runtime", "sha": "h" * 40,
                              "repo": {"full_name": "toolboxmd/marketplace"}},
                     "base": {"ref": "main", "sha": "b" * 40}, "mergeable": True}
-        expected = {"project": "model-router", "number": 70, "head": "h" * 40, "base": "b" * 40}
+        expected = {"project": "fixture-runtime", "number": 70, "head": "h" * 40, "base": "b" * 40}
         promotion.validate_pull_request(snapshot, expected, require_mergeable=True)
         with self.assertRaises(promotion.PromotionError):
             promotion.validate_pull_request(snapshot, {**expected, "project": "agentsmd"}, require_mergeable=True)
@@ -239,7 +245,7 @@ class ModulePromotionTests(unittest.TestCase):
         pushed = []
 
         def clone(url, destination, **kwargs):
-            source = {"agentsmd.git": agents, "model-router.git": self.router,
+            source = {"agentsmd.git": agents, "fixture-runtime.git": self.router,
                       "marketplace.git": self.base}[url.rsplit("/", 1)[-1]]
             git(self.root, "clone", "-q", str(source), str(destination))
 
@@ -255,7 +261,7 @@ class ModulePromotionTests(unittest.TestCase):
             if method == "GET":
                 return None
             self.assertEqual(method, "POST")
-            self.assertEqual(payload["head"], "toolybara/promote-model-router")
+            self.assertEqual(payload["head"], "toolybara/promote-fixture-runtime")
             return {"number": 70, "state": "open", "draft": False,
                     "user": {"login": "toolybara[bot]"},
                     "head": {"ref": pushed[-1][0], "sha": pushed[-1][1],
@@ -286,7 +292,7 @@ class ModulePromotionTests(unittest.TestCase):
                     promotion.reconcile(args)
             with patch.dict(os.environ, GITHUB_RUN_NUMBER="2", GITHUB_RUN_ATTEMPT="1"):
                 result = promotion.reconcile(args)
-        self.assertEqual((result["state"], result["project"]), ("candidate", "model-router"))
+        self.assertEqual((result["state"], result["project"]), ("candidate", "fixture-runtime"))
         self.assertEqual(len(pushed), 1)
         adapter.record.assert_called_once()
 
@@ -296,7 +302,7 @@ class ModulePromotionTests(unittest.TestCase):
         stale_base = "a" * 40
         stale = {"number": 65, "state": "open", "draft": False,
                  "user": {"login": "toolybara[bot]"},
-                 "head": {"ref": "toolybara/promote-model-router", "sha": previous,
+                  "head": {"ref": "toolybara/promote-fixture-runtime", "sha": previous,
                           "repo": {"full_name": "toolboxmd/marketplace"}},
                  "base": {"ref": "main", "sha": stale_base}}
         closed = {**json.loads(json.dumps(stale)),
@@ -305,7 +311,7 @@ class ModulePromotionTests(unittest.TestCase):
         pushed = []
 
         def clone(url, destination, **kwargs):
-            source = {"model-router.git": self.router,
+            source = {"fixture-runtime.git": self.router,
                       "marketplace.git": self.base}[url.rsplit("/", 1)[-1]]
             git(self.root, "clone", "-q", str(source), str(destination))
 
@@ -317,7 +323,7 @@ class ModulePromotionTests(unittest.TestCase):
         def request(method, endpoint, payload=None, **kwargs):
             calls.append((method, endpoint, payload))
             if method == "GET" and endpoint.endswith(
-                    "/git/ref/heads/toolybara%2Fpromote-model-router"):
+                    "/git/ref/heads/toolybara%2Fpromote-fixture-runtime"):
                 return {"object": {"sha": previous}}
             if method == "GET" and endpoint.endswith("/pulls/65"):
                 return json.loads(json.dumps(stale))
@@ -328,7 +334,7 @@ class ModulePromotionTests(unittest.TestCase):
                 # the stale PR never moves its base to current main.
                 return json.loads(json.dumps(stale))
             if method == "POST" and endpoint.endswith("/pulls"):
-                self.assertEqual(payload["head"], "toolybara/promote-model-router")
+                self.assertEqual(payload["head"], "toolybara/promote-fixture-runtime")
                 self.assertEqual(payload["base"], "main")
                 return {"number": 71, "state": "open", "draft": False,
                         "user": {"login": "toolybara[bot]"},
@@ -341,7 +347,7 @@ class ModulePromotionTests(unittest.TestCase):
 
         adapter = Mock()
         adapter.record.return_value = {"sha256": "a" * 64}
-        args = Namespace(project="model-router", wake_tag="", output=None,
+        args = Namespace(project="fixture-runtime", wake_tag="", output=None,
                          summary=None, proof_output=self.root / "proof.json")
         pulls = [[json.loads(json.dumps(stale))], [json.loads(json.dumps(stale))], []]
         with (patch.object(promotion, "__file__", str(self.base / "scripts/toolybara_promotion.py")),
@@ -357,7 +363,7 @@ class ModulePromotionTests(unittest.TestCase):
               patch.object(promotion, "_push", side_effect=push),
               patch.dict(os.environ, GH_TOKEN="fixture", GITHUB_RUN_NUMBER="1", GITHUB_RUN_ATTEMPT="1")):
             result = promotion.reconcile(args)
-        self.assertEqual((result["state"], result["project"]), ("candidate", "model-router"))
+        self.assertEqual((result["state"], result["project"]), ("candidate", "fixture-runtime"))
         self.assertEqual(result["pr_number"], 71)
         self.assertEqual(result["base_sha"], base_sha)
         self.assertEqual(result["head_sha"], pushed[-1][1])
@@ -382,7 +388,7 @@ class EnrollmentTests(unittest.TestCase):
         enrolled_modules = modules(ROOT)
         # Required pre-existing enrollments survive; new approved modules must
         # not force this test to change.
-        for required in ("agentsmd", "model-router"):
+        for required in ("agentsmd", "agent-observer"):
             self.assertIn(required, enrolled_modules)
         observer = enrolled(ROOT, "agent-observer")
         self.assertEqual(observer["github"], "toolboxmd/agent-observer")
@@ -397,7 +403,7 @@ class EnrollmentTests(unittest.TestCase):
             root = Path(tmp)
             (root / "toolybara").mkdir()
             policy = json.loads((ROOT / "toolybara/modules.json").read_text())
-            router = next(entry for entry in policy["modules"] if entry["id"] == "model-router")
+            router = next(entry for entry in policy["modules"] if entry["id"] == "agentsmd")
             for path in ("../credentials", "/tmp", "SOURCE.json", ".github"):
                 router["cursorRuntime"] = [path]
                 (root / "toolybara/modules.json").write_text(json.dumps(policy))

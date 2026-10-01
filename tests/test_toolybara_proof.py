@@ -140,7 +140,7 @@ class ProofTests(unittest.TestCase):
     def test_source_release_digest_base_head_and_environment_invalidate(self):
         with patch.dict(os.environ, {"ImageOS": "TestOS", "ImageVersion": "20260907.300.1"}):
             self.receipt = self.record()
-            for key, value in {"project": "model-router", "repository": "toolboxmd/other", "source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
+            for key, value in {"project": "agent-observer", "repository": "toolboxmd/other", "source": "c" * 40, "recordSha256": "c" * 64, "release": "v10.0.0", "base": self.head, "head": self.base_sha}.items():
                 with self.subTest(key=key), self.assertRaises(shared.ProofError):
                     self.reuse({**self.expected, key: value})
             # A rolling runner image version alone must not invalidate exact proof
@@ -207,7 +207,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(policy["checks"]["suite"]["argv"], ["bash", "tests/run-all.sh"])
         self.assertEqual(set(policy["rules"][0]["paths"]), {
             "catalog.json", ".agents/plugins/marketplace.json", ".claude-plugin/marketplace.json",
-            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "cursor/agentsmd/*", "cursor/model-router/*", "VERSION", "CHANGELOG.md",
+            ".cursor-plugin/marketplace.json", ".grok-plugin/marketplace.json", "cursor/agentsmd/*", "VERSION", "CHANGELOG.md",
         })
 
     def test_same_run_transport_has_no_candidate_selected_run_or_permissions(self):

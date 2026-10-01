@@ -37,16 +37,6 @@
       }
     },
     {
-      "name": "model-router",
-      "description": "Complete authorized software work through one durable routing policy that selects subscription capacity and returns the target project's proof.",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/toolboxmd/model-router.git",
-        "sha": "126b368d24dd57c29d04e07372ea9701d7dfad35",
-        "ref": "v0.44.1"
-      }
-    },
-    {
       "name": "agent-observer",
       "description": "Make routine agent work on this Mac measurable across Codex, Claude Code, OpenCode and Grok Build, so routing and workflow decisions use reproducible evidence from real tasks.",
       "source": {
