@@ -36,12 +36,11 @@ module id, exact ToolboxMD source repository, catalog category, whether Cursor
 delivery is supported, and any extra released paths needed by that Cursor
 package. Native Codex, Claude Code, and Grok Build packages use the complete
 source tree pinned by ingestion. Cursor packages include Skills plus approved
-runtime paths. AgentsMD retains its existing runtime adapter; Model Router
-includes `bin/` and `runner/`.
+runtime paths. AgentsMD retains its existing runtime adapter.
 
 Enrollment does not publish an unreleased module. The first valid release
 creates its catalog entry from this approved identity, then the same ingestion
-path owns later updates. Model Router is published; Agent Observer is enrolled
+path owns later updates. Agent Observer is enrolled
 but waits for its first valid release. Agent Observer is native-host-only
 (`cursor: false`, empty `cursorRuntime`) because its source package at
 `task/1-codex-timeline` afe9d64 ships `.claude-plugin/plugin.json`,

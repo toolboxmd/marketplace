@@ -62,8 +62,7 @@
         ".grok-plugin/marketplace.json",
         "cursor/agentsmd/*",
         "VERSION",
-        "CHANGELOG.md",
-        "cursor/model-router/*"
+        "CHANGELOG.md"
       ],
       "checks": [
         "suite",

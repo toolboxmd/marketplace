@@ -9,16 +9,6 @@
       "cursor": true
     },
     {
-      "id": "model-router",
-      "github": "toolboxmd/model-router",
-      "category": "Developer Tools",
-      "cursorRuntime": [
-        "bin",
-        "runner"
-      ],
-      "cursor": true
-    },
-    {
       "id": "agent-observer",
       "github": "toolboxmd/agent-observer",
       "category": "Developer Tools",
