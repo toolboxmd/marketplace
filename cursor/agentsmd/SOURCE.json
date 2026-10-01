@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.5.8",
-  "commit": "69d3a7baee2b400ce38c869b7ea88864513189d2",
+  "release": "v14.5.9",
+  "commit": "ed894d908061052555d288d3d3e00c871ab2e834",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -65,7 +65,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "f3111eda82d9dc9c490669b0bd01958e9c7feedd4ce2483457653a8343aadb83",
+      "sha256": "7ba216dabe4fde177adfc67936a0f847148583a256a21677bef05d220885d9ba",
       "mode": "100644"
     },
     {
@@ -335,7 +335,7 @@
     {
       "path": "skills/operations/workflows/project-direction/evals/evals.json",
       "source": "skills/operations/workflows/project-direction/evals/evals.json",
-      "sha256": "630bb53b8eabdef87a7b585157acd83b140a28eff95248be4ab286fc09f3b1f9",
+      "sha256": "46165431f76cc0f6488e9e765108fd32d74688defff25a46cbd69bdc63b6a9a5",
       "mode": "100644"
     },
     {
@@ -347,13 +347,13 @@
     {
       "path": "skills/operations/workflows/project-direction/index.md",
       "source": "skills/operations/workflows/project-direction/index.md",
-      "sha256": "ff46e13a18fa1f6d71bf396c8f3ee0d885a2762b499fc0f67d90679df9cefd2a",
+      "sha256": "7780649daefb5a0bb61fec8db8077b99a6b9aaf491a189b902cf4436829537ba",
       "mode": "100644"
     },
     {
       "path": "skills/operations/workflows/project-direction/references/context.md",
       "source": "skills/operations/workflows/project-direction/references/context.md",
-      "sha256": "83105978d2b34d2d45c63182190481b9a419c8987b2907db50673b397a57e602",
+      "sha256": "5d1fbdadf99210ee160c68b27b38c3721431c55e39bf1db5429eeeecaef25e72",
       "mode": "100644"
     },
     {
