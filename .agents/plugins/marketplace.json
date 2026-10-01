@@ -84,8 +84,8 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agent-observer.git",
-        "sha": "8eb222742772a5af9d4236648472a8777a4e61f0",
-        "ref": "v0.7.1"
+        "sha": "5d29c49d410876610cb4e8cf6c856dedcb4ef880",
+        "ref": "v0.9.0"
       },
       "policy": {
         "installation": "AVAILABLE",
