@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v14.6.0",
-  "commit": "8cad98f68a8ce46dc8bb05954775dd63172a9f26",
+  "release": "v15.0.0",
+  "commit": "9a201a3f63744d2dd12131ac4855cffbaab29bc1",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -45,27 +45,21 @@
       "mode": "100644"
     },
     {
-      "path": "LICENSES/use-grok-Apache-2.0.txt",
-      "source": "LICENSES/use-grok-Apache-2.0.txt",
-      "sha256": "815b13facfb5c67fa53f2c1ae8211df2b6fd1c415e39260093e5b257b403a18d",
-      "mode": "100644"
-    },
-    {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "23f463fbe35b0ae570424feb54ab46f635aa6b90fe2b59eb5f063cbad02601b4",
+      "sha256": "7c891dd7c6f29a5349291c42861eac2c5e8650fdca6765b2abfc0a80072bfba4",
       "mode": "100644"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
       "source": "THIRD_PARTY_NOTICES.md",
-      "sha256": "2067ba78e63f6f54a0bff9412ca865f539be3001f1183d49d33c28365b865b51",
+      "sha256": "66dd71375fdf28076fbc7bc66dfc9f1bb376fc82ea0462b0605360d5625f4516",
       "mode": "100644"
     },
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "582860a95bd5d0b175654f8aee1181198acb6cb22eac581963c6f8317b8061b3",
+      "sha256": "55d90fdc3f902e5c0b16b3378f9eaa36e970a1c09723c33de7d47d0370044012",
       "mode": "100644"
     },
     {
@@ -105,15 +99,9 @@
       "mode": "100644"
     },
     {
-      "path": "provenance/use-grok.lock.json",
-      "source": "provenance/use-grok.lock.json",
-      "sha256": "9b5f9f12617205691beb62c9b7c1d2efce66a81db832cf01b0d397357398653b",
-      "mode": "100644"
-    },
-    {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "6f72debb12821230c59c858aaaec31ea4325f35920aad25877af2a24153eba05",
+      "sha256": "cc8f263f8c7c4b846a292939d14a65280c9f24d647d23c076d6bb3dc2f2ebb76",
       "mode": "100644"
     },
     {
@@ -558,18 +546,6 @@
       "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "sha256": "0ef406aa1328980797f4eb4c8c9e1acd3420f9622cd154c5901aaf6a84626b09",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/use-grok/index.md",
-      "source": "skills/operations/workflows/use-grok/index.md",
-      "sha256": "3e866575b126ee14e850f5b2059a2b2c3e5cb7ab42ae6196da89c773885001d1",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/use-grok/references/grok-cli.md",
-      "source": "skills/operations/workflows/use-grok/references/grok-cli.md",
-      "sha256": "020ffc068c8ef9e948699272a214787ffbf2fdb3a2bf069decdb3293d27d86d6",
       "mode": "100644"
     },
     {
