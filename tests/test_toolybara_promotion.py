@@ -434,7 +434,7 @@ class GeneratedScopeTests(unittest.TestCase):
             "scripts/toolybara_promotion.py",
             "tests/test_catalog.py",
             ".github/workflows/toolybara-reconciliation.yml",
-            "plugins/use-grok/SKILL.md",
+            "plugins/other-plugin/SKILL.md",
         ):
             with self.subTest(unexpected=unexpected):
                 with self.assertRaisesRegex(
@@ -454,7 +454,7 @@ class GeneratedScopeTests(unittest.TestCase):
             base_catalog = {
                 "plugins": [
                     {"name": "karpathy-wiki", "sha": "k" * 40},
-                    {"name": "use-grok", "sha": "u" * 40},
+                    {"name": "other-plugin", "sha": "u" * 40},
                     {"name": "agentsmd", "release": "v8.5.1", "sha": "a" * 40},
                 ]
             }

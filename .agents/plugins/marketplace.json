@@ -19,21 +19,6 @@
       "category": "Developer Tools"
     },
     {
-      "name": "use-grok",
-      "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/toolboxmd/use-grok.git",
-        "sha": "02cfb3c9d990c77bbcc7775049e174e4306854a9",
-        "ref": "v0.3.0"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Developer Tools"
-    },
-    {
       "name": "agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "source": {

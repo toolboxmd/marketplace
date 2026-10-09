@@ -17,17 +17,6 @@
       "homepage": "https://github.com/toolboxmd/karpathy-wiki"
     },
     {
-      "name": "use-grok",
-      "description": "Delegate research, coding, and reviews to the local Grok Build CLI.",
-      "category": "developer-tools",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/toolboxmd/use-grok.git",
-        "sha": "02cfb3c9d990c77bbcc7775049e174e4306854a9"
-      },
-      "homepage": "https://github.com/toolboxmd/use-grok"
-    },
-    {
       "name": "agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "category": "developer-tools",
