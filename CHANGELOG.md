@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.90] - 2026-10-09
+
+### Changed
+
+- Retire use-grok from the marketplace (Closes #155)
+
 ## [1.5.89] - 2026-10-01
 
 ### Changed

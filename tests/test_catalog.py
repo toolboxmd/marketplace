@@ -28,7 +28,7 @@ from toolybara_modules import modules
 
 CATALOG = json.loads((ROOT / "catalog.json").read_text(encoding="utf-8"))
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-REQUIRED_PLUGIN_NAMES = ("karpathy-wiki", "use-grok", "agentsmd", "codex-thinking-knob")
+REQUIRED_PLUGIN_NAMES = ("karpathy-wiki", "agentsmd", "codex-thinking-knob")
 
 
 def _expected_names(host: str) -> tuple[str, ...]:
@@ -164,11 +164,6 @@ class PublishedCatalogTests(unittest.TestCase):
                     f"100{path.stat().st_mode & 0o777:o}",
                     published["mode"],
                 )
-        self.assertEqual(
-            by_name["use-grok"]["sha"],
-            "02cfb3c9d990c77bbcc7775049e174e4306854a9",
-        )
-        self.assertEqual(by_name["use-grok"]["release"], "v0.3.0")
         self.assertEqual(
             by_name["karpathy-wiki"]["sha"],
             "d8107e727f4b585a9927cad813f90fda6b559ef3",

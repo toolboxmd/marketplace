@@ -6,7 +6,6 @@ Codex, Claude Code, and Grok Build add this marketplace, then install the
 plugins they want:
 
 - `karpathy-wiki@toolboxmd`
-- `use-grok@toolboxmd`
 - `agentsmd@toolboxmd`
 - `codex-thinking-knob@toolboxmd` (Codex only)
 
@@ -36,8 +35,7 @@ codex plugin marketplace add toolboxmd/marketplace
 }
 ```
 
-Then enable plugins as `karpathy-wiki@toolboxmd`, `use-grok@toolboxmd`, or
-`agentsmd@toolboxmd`.
+Then enable plugins as `karpathy-wiki@toolboxmd` or `agentsmd@toolboxmd`.
 
 If you previously enabled `karpathy-wiki@karpathy-wiki-local` or
 `agentsmd@agentsmd-local`, rename those keys to the `*@toolboxmd` form.
@@ -52,7 +50,6 @@ Then install by name (trust hooks only from this publisher):
 
 ```bash
 grok plugin install karpathy-wiki --trust
-grok plugin install use-grok --trust
 grok plugin install agentsmd --trust
 ```
 
@@ -65,7 +62,6 @@ After the marketplace is added:
 
 ```bash
 codex plugin add karpathy-wiki@toolboxmd
-codex plugin add use-grok@toolboxmd
 codex plugin add agentsmd@toolboxmd
 ```
 
@@ -93,8 +89,8 @@ pointer, and per-wiki runtime files survive uninstalling karpathy-wiki.
 
 ## Local sibling checkouts
 
-For live checkouts next to each other (this machine: `karpathy-wiki`,
-`use-grok`, `agentsmd` as siblings), generate host indexes from this catalog:
+For live checkouts next to each other (this machine: `karpathy-wiki` and
+`agentsmd` as siblings), generate host indexes from this catalog:
 
 ```bash
 python3 scripts/render_catalog.py --local-root /path/to/sibling-root
@@ -178,7 +174,7 @@ validator before local installation or submission.
 ## Add a plugin
 
 1. Give the plugin repo manifests for its supported hosts only. Name is the
-   short plugin id (`use-grok`, not `toolboxmd-use-grok`). Version mirrors
+   short plugin id (`agentsmd`, not `toolboxmd-agentsmd`). Version mirrors
    that repo's `VERSION`.
 2. Add one object to `catalog.json` (`name`, `description`, `github`, `sha`,
    `category`).
