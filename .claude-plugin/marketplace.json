@@ -22,8 +22,8 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agentsmd.git",
-        "sha": "9a201a3f63744d2dd12131ac4855cffbaab29bc1",
-        "ref": "v15.0.0"
+        "sha": "5e351a90d01ffeb089795bceb24a7b48251987d5",
+        "ref": "v16.0.0"
       }
     },
     {
