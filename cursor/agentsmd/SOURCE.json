@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v16.0.0",
-  "commit": "5e351a90d01ffeb089795bceb24a7b48251987d5",
+  "release": "v16.1.0",
+  "commit": "728b4a589e6e3b82775c7ef9d484e3ce8525590e",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "63f771c327e92574fbd77919586079c38f669058a5e6b67ccec385ef8fcde882",
+      "sha256": "32432b1207472725d2ff242a3c804108d734db278bc9013841d4c4992d090a6c",
       "mode": "100644"
     },
     {
@@ -101,7 +101,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "dc6a1145d8d2efde6741935d0926918730e3998f960d9ae8d8701f8f7aea3128",
+      "sha256": "654081d76beb1a2488d8fa448ed3766e123e66b57b23c25af9e9c8c987392450",
       "mode": "100644"
     },
     {
@@ -485,7 +485,7 @@
     {
       "path": "skills/operations/workflows/software-design/index.md",
       "source": "skills/operations/workflows/software-design/index.md",
-      "sha256": "c524ca5af434017842089755988966369479a4a0a039bc1bb56b18735c04cd2d",
+      "sha256": "13702d8f691b93ca56d84fd8fe889f0237dbc1cd5c7fdfecd9427665b266980d",
       "mode": "100644"
     },
     {
