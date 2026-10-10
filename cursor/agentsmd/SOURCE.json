@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v15.0.0",
-  "commit": "9a201a3f63744d2dd12131ac4855cffbaab29bc1",
+  "release": "v16.0.0",
+  "commit": "5e351a90d01ffeb089795bceb24a7b48251987d5",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "55d90fdc3f902e5c0b16b3378f9eaa36e970a1c09723c33de7d47d0370044012",
+      "sha256": "63f771c327e92574fbd77919586079c38f669058a5e6b67ccec385ef8fcde882",
       "mode": "100644"
     },
     {
@@ -101,19 +101,13 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "cc8f263f8c7c4b846a292939d14a65280c9f24d647d23c076d6bb3dc2f2ebb76",
+      "sha256": "dc6a1145d8d2efde6741935d0926918730e3998f960d9ae8d8701f8f7aea3128",
       "mode": "100644"
     },
     {
       "path": "skills/operations/agents/openai.yaml",
       "source": "skills/operations/agents/openai.yaml",
       "sha256": "27f527a041ff3fa87f424e67ca676c2d111599202d1a661d7f6c3352682c51d0",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/references/artifacts.md",
-      "source": "skills/operations/references/artifacts.md",
-      "sha256": "6658115cc97ed781be057ee67c87004d595b3ff543ea383ba5c4e2e861b34c00",
       "mode": "100644"
     },
     {
@@ -155,7 +149,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "c8f79872cd57d960cfa9a505acbe9e08f89e58ec70466c667fdd733a27bade37",
+      "sha256": "fadb96790d85f0b7212611bdfbe032727ba992796812bbaeb629570de916eccc",
       "mode": "100644"
     },
     {
@@ -185,7 +179,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "0cd50e6c022e6a26341098da1c2d6ca1818194cbe39511e08ae2c36cc0ba498e",
+      "sha256": "fdc066b40db962c21a0fdd44e62a94eaf59c8276d7a1e322a53ac7dc572136be",
       "mode": "100644"
     },
     {
@@ -371,7 +365,7 @@
     {
       "path": "skills/operations/workflows/project-verification/index.md",
       "source": "skills/operations/workflows/project-verification/index.md",
-      "sha256": "953d2b31b3865b5c67be43ae823b92a4ecf6991ca53bc3f90a5232c63fe650b6",
+      "sha256": "87b0924a0ff1ba5c7795a2c9925dbb84719a1ae433a505b66ef2634f823cc531",
       "mode": "100644"
     },
     {
@@ -413,7 +407,7 @@
     {
       "path": "skills/operations/workflows/prototype/index.md",
       "source": "skills/operations/workflows/prototype/index.md",
-      "sha256": "9faadc5cd50fd803b9ff16a576c544ea9ddf0ccc80775999f7771bcc0db45bbd",
+      "sha256": "99ed1929913aa75df11aeece6456de7b543dc0d7d584e1c5fdb4c9ec413e2193",
       "mode": "100644"
     },
     {
@@ -425,7 +419,7 @@
     {
       "path": "skills/operations/workflows/reflection/references/learning-and-placement.md",
       "source": "skills/operations/workflows/reflection/references/learning-and-placement.md",
-      "sha256": "65d0c8e2c0d145d41ebd68178ecc75bddcbaffc7cb44b556568099f7e0df972e",
+      "sha256": "b8de1214af31ce78cd621ff32baff892837f9594f267d23bc44242c90aa8e4bf",
       "mode": "100644"
     },
     {
@@ -437,7 +431,7 @@
     {
       "path": "skills/operations/workflows/research/index.md",
       "source": "skills/operations/workflows/research/index.md",
-      "sha256": "689fcd203787421d8868e08e536e0aff977fdd975e32ff45f1a518a1bc308d5e",
+      "sha256": "ccecc2ba5f86d97b98bdf0b03e2d1cfb31ddf9a179a5874f8e58774069a3629b",
       "mode": "100644"
     },
     {
