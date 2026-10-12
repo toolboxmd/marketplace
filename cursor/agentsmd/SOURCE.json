@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v16.1.1",
-  "commit": "080c85fad75dbedf8b8f34cebe0b9389750b60e1",
+  "release": "v16.2.0",
+  "commit": "bae29d41474bf54af6bbea9e5745a4000d13eb8f",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "d28c87b9f7d1ecc2c8cd2e5819747bf4ada7909c941d82da9eaa4078f662dc75",
+      "sha256": "e9f8839c742db21d285464b01dfb2e572f802c366729873cdc4a296c8c3a01ea",
       "mode": "100644"
     },
     {
@@ -149,7 +149,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "fadb96790d85f0b7212611bdfbe032727ba992796812bbaeb629570de916eccc",
+      "sha256": "bfe1eddd625f61260d7bc9bb5d60b842fb4ad9f7b3dc1b3feafc5f92f38c8de1",
       "mode": "100644"
     },
     {
@@ -527,7 +527,7 @@
     {
       "path": "skills/operations/workflows/to-spec/index.md",
       "source": "skills/operations/workflows/to-spec/index.md",
-      "sha256": "7c36659fe7444b567a8dcb9d9ef26445dcddddc7e36fe5a6d11c87bcc6796302",
+      "sha256": "95efbdaec7d7dd897e35e00ee9a5d4182aec7411fa92c0990912c342b7c9a153",
       "mode": "100644"
     },
     {
@@ -539,7 +539,7 @@
     {
       "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "sha256": "0ef406aa1328980797f4eb4c8c9e1acd3420f9622cd154c5901aaf6a84626b09",
+      "sha256": "2c2b735e8755d005026dba5e69546ffb0adc95e8f9f34298f31504aed1c1f565",
       "mode": "100644"
     },
     {
