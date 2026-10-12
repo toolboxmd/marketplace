@@ -34,7 +34,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/toolboxmd/agent-observer.git",
-        "sha": "7439be718852cef6380f3add8711584bc7b2482c"
+        "sha": "4c626940bd8bd211d24c6295308119853f8b142d"
       },
       "homepage": "https://github.com/toolboxmd/agent-observer"
     }
