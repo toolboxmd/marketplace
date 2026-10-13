@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.1.0",
-  "commit": "d918de0539e1190f8a9b147fe6945f59134873c3",
+  "release": "v17.1.1",
+  "commit": "f6fcf84d884372a5878fc048ead281eb0819b76d",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "fae9b2a1dfc20c5d45c531c772f09855ba529937ade2db24af23735d525d1836"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "f7706814666750fd7025244979af210eacbcb53c6a92df616a99370a4b2da686",
+      "sha256": "4122339269cc45f5ef394d24cc3c574432cfd8acb76850bc09fa33708a9a5ee3",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "70801ef64c39a9fb665d0e68b6ff89c7232be6fc2e235a7ec3f478a94174d77f",
+      "sha256": "7a139f201e1475e6eea20969c72d9f1536b4dcce5fec53ef6d0da2da81e11860",
       "mode": "100644"
     },
     {
@@ -101,7 +101,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "7ec0d220d9649da5d8454ec1eb667242e07c75f64cdfb7c7f2c832d4d2fb12a7",
+      "sha256": "f8b28880b459dfa0392de23e30e1e6cef57bdc2133d171a62cf98a379552790f",
       "mode": "100644"
     },
     {
@@ -113,7 +113,7 @@
     {
       "path": "skills/operations/procedures/code-review/index.md",
       "source": "skills/operations/procedures/code-review/index.md",
-      "sha256": "c012e813a3c49f125d9eb8046d1eda1a3a1a65e037d0137af8cd9ff83ee22ef1",
+      "sha256": "c1c0f42430109b36e2ea801f5b611a542cd51d47c219100e1d08bf43c6ac4fcd",
       "mode": "100644"
     },
     {
@@ -137,13 +137,13 @@
     {
       "path": "skills/operations/procedures/delivery-profile/index.md",
       "source": "skills/operations/procedures/delivery-profile/index.md",
-      "sha256": "31139b87fe3e4f557109e768fd2dc71d67ab6f87b6cdbf5cbf51bdb84c6b24f9",
+      "sha256": "06dee6d51fe474eca422885a9493a19d5ef60b80a369bdf17c650539cee411f4",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/diagnosis/index.md",
       "source": "skills/operations/procedures/diagnosis/index.md",
-      "sha256": "2b54ee3f739209a0d8b0f52978da79bdc160144cf4f5c53ded40caca3bbc3100",
+      "sha256": "1a13f0f578f55577c638724322af240f508ae655a197c12199570bbd2def5d52",
       "mode": "100644"
     },
     {
@@ -179,7 +179,7 @@
     {
       "path": "skills/operations/procedures/domain-modeling/index.md",
       "source": "skills/operations/procedures/domain-modeling/index.md",
-      "sha256": "f5c55a2b98ebbbecf0688b10241e2cbf9c390669412c5f7d1fca93302b7ba2c8",
+      "sha256": "f1857b2f07ffa8951b605943f600ee848eca58eab4adb1290b2a0c5f8b069fbe",
       "mode": "100644"
     },
     {
@@ -191,7 +191,7 @@
     {
       "path": "skills/operations/procedures/elon-method/index.md",
       "source": "skills/operations/procedures/elon-method/index.md",
-      "sha256": "1db717eec00d7f259a558a151bb6bee3b317cb9695264868fd1b43209d36159b",
+      "sha256": "8b74628a8f08915c7d69942590f21e89d30bb608c6e913b10349b86bc773bc0b",
       "mode": "100644"
     },
     {
@@ -227,7 +227,7 @@
     {
       "path": "skills/operations/procedures/grill-with-docs/index.md",
       "source": "skills/operations/procedures/grill-with-docs/index.md",
-      "sha256": "a88f7494308a038c7dfdb6f8fba20980f325a8c0ca8f559b89af3e2b5075c115",
+      "sha256": "f6cacf4afa4053d66fe99876239dbf547fbe81d89220a4be1dc80767b7b9f190",
       "mode": "100644"
     },
     {
@@ -251,13 +251,13 @@
     {
       "path": "skills/operations/procedures/project-direction/index.md",
       "source": "skills/operations/procedures/project-direction/index.md",
-      "sha256": "7780649daefb5a0bb61fec8db8077b99a6b9aaf491a189b902cf4436829537ba",
+      "sha256": "9e9c979b420a91953c17d734747186f46693898e56446b3642364c477f65472b",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/project-direction/references/context.md",
       "source": "skills/operations/procedures/project-direction/references/context.md",
-      "sha256": "5d1fbdadf99210ee160c68b27b38c3721431c55e39bf1db5429eeeecaef25e72",
+      "sha256": "ae82432b535e16a1612dd01d352fefa77649602a2f15e972842ecac19b98963c",
       "mode": "100644"
     },
     {
@@ -287,7 +287,7 @@
     {
       "path": "skills/operations/procedures/project-verification/index.md",
       "source": "skills/operations/procedures/project-verification/index.md",
-      "sha256": "87b0924a0ff1ba5c7795a2c9925dbb84719a1ae433a505b66ef2634f823cc531",
+      "sha256": "ffd6f2cd50983b13fa4b29a5c59ea82b522140217f2501fda19359122bde9fb1",
       "mode": "100644"
     },
     {
@@ -329,19 +329,19 @@
     {
       "path": "skills/operations/procedures/prototype/index.md",
       "source": "skills/operations/procedures/prototype/index.md",
-      "sha256": "99ed1929913aa75df11aeece6456de7b543dc0d7d584e1c5fdb4c9ec413e2193",
+      "sha256": "599bdccb75541928d74b9725d3453ad8a39c16d886544004a2333b3604bbfdd3",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/reflection/index.md",
       "source": "skills/operations/procedures/reflection/index.md",
-      "sha256": "c8f8dfdc2ce58b5c03b6c7f058478d4e7d7e1459205ef9b790e0468d16033f87",
+      "sha256": "e364d6946fc8c407d1ea02b7222357f428edf6cb39d685da27372c553d7de7d4",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/reflection/references/learning-and-placement.md",
       "source": "skills/operations/procedures/reflection/references/learning-and-placement.md",
-      "sha256": "b8de1214af31ce78cd621ff32baff892837f9594f267d23bc44242c90aa8e4bf",
+      "sha256": "dd06f89333dbcdc5c4aefdf2050c1c8781fe5fadf7967c7c65b435d53b18aa32",
       "mode": "100644"
     },
     {
@@ -353,7 +353,7 @@
     {
       "path": "skills/operations/procedures/research/index.md",
       "source": "skills/operations/procedures/research/index.md",
-      "sha256": "ccecc2ba5f86d97b98bdf0b03e2d1cfb31ddf9a179a5874f8e58774069a3629b",
+      "sha256": "85dffabe6d61b4534832f3d4322bdc6149cedd67372b938d8e370eb74998b1ff",
       "mode": "100644"
     },
     {
@@ -365,7 +365,7 @@
     {
       "path": "skills/operations/procedures/research/references/history.md",
       "source": "skills/operations/procedures/research/references/history.md",
-      "sha256": "08370235d5afbe72db6894c6f60e5a3088c75a89c38874e603f50a43d941e422",
+      "sha256": "eed806330a8d9442667d1e1038b82c563f45ad1f6e02adfbcd724b80990ba2ee",
       "mode": "100644"
     },
     {
@@ -389,13 +389,13 @@
     {
       "path": "skills/operations/procedures/research/references/sources/code-history.md",
       "source": "skills/operations/procedures/research/references/sources/code-history.md",
-      "sha256": "b2f5fd4c55f23e916cd4d0ac207a766d32d9dd47099a2a9d5b0fe273cc6685b9",
+      "sha256": "69c3179940b78a51643b96ca2b96efdd0820160da2d390f8dd59ea5f5ff0e0a2",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/research/references/sources/decision-records.md",
       "source": "skills/operations/procedures/research/references/sources/decision-records.md",
-      "sha256": "dfbd0327218151d1e9182b5a528c2c71eac4222077f563b7c673e75add1016c9",
+      "sha256": "298e75ca3ce7196483678f04c1b29afa60987cc5187f6886ae7b997d99f614ac",
       "mode": "100644"
     },
     {
@@ -407,7 +407,7 @@
     {
       "path": "skills/operations/procedures/software-design/index.md",
       "source": "skills/operations/procedures/software-design/index.md",
-      "sha256": "af242a4345aea23eb5c795248e94fe1bc22f9ab1b7b03d9a6dba504ddfda86b4",
+      "sha256": "d7853b0496d66c543c2661de82b9b712b9d6b01bb747d77f437c02e9275dc714",
       "mode": "100644"
     },
     {
@@ -437,7 +437,7 @@
     {
       "path": "skills/operations/procedures/technical-writing/index.md",
       "source": "skills/operations/procedures/technical-writing/index.md",
-      "sha256": "91a0a8a565e5b8757eb2b881a0880df76aef4ce8d29c789dc2c8bbe460bbb090",
+      "sha256": "ab793d6744976714f7a16ab5e29198287d001065c53c354bcd211e311699193c",
       "mode": "100644"
     },
     {
@@ -449,19 +449,19 @@
     {
       "path": "skills/operations/procedures/to-spec/index.md",
       "source": "skills/operations/procedures/to-spec/index.md",
-      "sha256": "95efbdaec7d7dd897e35e00ee9a5d4182aec7411fa92c0990912c342b7c9a153",
+      "sha256": "5a115f8e42b9af048bce9b8807c9541a930361b783ecb13cd0d4d2624d2c1b66",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/to-tickets/index.md",
       "source": "skills/operations/procedures/to-tickets/index.md",
-      "sha256": "08d4745286c11ca461971027917e73bc61b6e77177ddb9f8a382113c40968868",
+      "sha256": "3a9150f0cd225b966dc2ff1d12752689814baa514af7814d956b67747b36a31a",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/to-tickets/references/ticket-decomposition.md",
       "source": "skills/operations/procedures/to-tickets/references/ticket-decomposition.md",
-      "sha256": "2c2b735e8755d005026dba5e69546ffb0adc95e8f9f34298f31504aed1c1f565",
+      "sha256": "260d72468d8e51234b8c6ed5178408e8086c9e07836bb424ef2bc6845d94b203",
       "mode": "100644"
     },
     {
@@ -479,7 +479,7 @@
     {
       "path": "skills/operations/procedures/version-control/index.md",
       "source": "skills/operations/procedures/version-control/index.md",
-      "sha256": "79edb91c8e60b165ad91969312baa7a102c5e88faa12a37f41f130ef23e9c9c1",
+      "sha256": "6229cd95f33277c33f3c1f6e02039c07b734f495cfd92ec53974c136f32aa81e",
       "mode": "100644"
     },
     {
@@ -497,19 +497,19 @@
     {
       "path": "skills/operations/procedures/wayfinder/index.md",
       "source": "skills/operations/procedures/wayfinder/index.md",
-      "sha256": "7f2917263877c9476bc5d5e916c56b581459de9532e10f7e970fb9b3d6b508ce",
+      "sha256": "c365b0f5027a160c792442828d0d7f1bb9db487b04747cecdc5eb015bccbcf85",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
       "source": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "1a1ecb5934e728553b94187103379510fd657b7872b9f6251e68e5bfd86097da",
+      "sha256": "69f8167a792ed98d3f0753fc1f8f2bad3d00709475700292beb141b97edaa914",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/writing-for-agents/index.md",
       "source": "skills/operations/procedures/writing-for-agents/index.md",
-      "sha256": "d5f1f0f59e2ac886a99e2e2947e5b41ba09e88dfd031b693cd8eff19d3d3b1fb",
+      "sha256": "fec7e5b67a0386ebf47de2655ec0cbd2faccd74b4f8409bff264c1e350aea4a8",
       "mode": "100644"
     },
     {
@@ -521,7 +521,7 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "d447580863799956e3b7117e170151fc0799450f5c1f48ec36ce0aa2a0bf8d9d",
+      "sha256": "234998f8dde27cfed89cb7b33f927fc2fc411b6fe2c3318ad1df226d83424bef",
       "mode": "100644"
     },
     {
@@ -539,19 +539,19 @@
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "f352ad09ca27fef103574f0bde953354f8e1ecd7007eb3a464d9d64f50f6d43a",
+      "sha256": "2997f3e661a55b5bf34796de1c13b043acb933d32d47de5d58c00ad973e8fab7",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "6e260020fc267627c68e352640d7154347c1e673367a5143e424af0742cfcd80",
+      "sha256": "2e7780cc76f65785c131e4fd3c81ad8b15062ecab4911270c79909bf76280172",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "b0ddee7df25ddb43cd50fae2e031baeb5b7d41cbdf168e14e585d5c976de10de",
+      "sha256": "80e37ca090fca2d923108fa9941bb6c9afbc9e54583b64a020693247310ae77c",
       "mode": "100644"
     },
     {
@@ -581,7 +581,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "b2d0f71c9f93582d9a9bfae8d1eeecf69791aeb2234168a02cebb4ec07556d2e",
+      "sha256": "5d42183478bb42b5d2af3c65d57c25c0f1f0550dac1c42a270b38f4dc84de348",
       "mode": "100644"
     },
     {
