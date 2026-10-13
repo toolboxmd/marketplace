@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v16.5.0",
-  "commit": "12ec0f3ebdec3daaaff5791abbe5a98a49898e19",
+  "release": "v17.0.0",
+  "commit": "03e22d07884851948179267a42302056cbfce72e",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
+    "sha256": "fae9b2a1dfc20c5d45c531c772f09855ba529937ade2db24af23735d525d1836"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37",
+      "sha256": "fae9b2a1dfc20c5d45c531c772f09855ba529937ade2db24af23735d525d1836",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "a97cc614f821bfa7a1e8a5e4401944a9a93c9e8f270f30cb79b93b1c418ecad4",
+      "sha256": "8c30575264b2772c7a69c5bb6069a28f0e0a7a0df735871bde2d99ee674316ac",
       "mode": "100644"
     },
     {
@@ -95,19 +95,421 @@
     {
       "path": "provenance/pstack.lock.json",
       "source": "provenance/pstack.lock.json",
-      "sha256": "9e1cd43d4a1bad4105d0102c9149ce833b6fbabb05db3ee678ccf383390339a7",
+      "sha256": "3fbaac40887e2c27f1a7b2909661d6d78365b78ba400172c7fedc21844fff72d",
       "mode": "100644"
     },
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "654081d76beb1a2488d8fa448ed3766e123e66b57b23c25af9e9c8c987392450",
+      "sha256": "7ec0d220d9649da5d8454ec1eb667242e07c75f64cdfb7c7f2c832d4d2fb12a7",
       "mode": "100644"
     },
     {
       "path": "skills/operations/agents/openai.yaml",
       "source": "skills/operations/agents/openai.yaml",
       "sha256": "27f527a041ff3fa87f424e67ca676c2d111599202d1a661d7f6c3352682c51d0",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/code-review/index.md",
+      "source": "skills/operations/procedures/code-review/index.md",
+      "sha256": "c012e813a3c49f125d9eb8046d1eda1a3a1a65e037d0137af8cd9ff83ee22ef1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/code-review/references/impact-analysis.md",
+      "source": "skills/operations/procedures/code-review/references/impact-analysis.md",
+      "sha256": "c7cd00634ba6b4a257d95486d22b82b042133e2231d3c9dae7f64d1c65b6eb27",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/code-review/references/review-method.md",
+      "source": "skills/operations/procedures/code-review/references/review-method.md",
+      "sha256": "f9cd9b5d09e49690c4a7bf9964014190655f973041c569910336378c2d4a3210",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/code-review/references/structure-and-constraints.md",
+      "source": "skills/operations/procedures/code-review/references/structure-and-constraints.md",
+      "sha256": "7db081d783fd97bad2e2a2ed75ca7650c3c04bdf2c01c12d5d561105442c0903",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/delivery-profile/index.md",
+      "source": "skills/operations/procedures/delivery-profile/index.md",
+      "sha256": "31139b87fe3e4f557109e768fd2dc71d67ab6f87b6cdbf5cbf51bdb84c6b24f9",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/diagnosis/index.md",
+      "source": "skills/operations/procedures/diagnosis/index.md",
+      "sha256": "2b54ee3f739209a0d8b0f52978da79bdc160144cf4f5c53ded40caca3bbc3100",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/diagnosis/references/performance.md",
+      "source": "skills/operations/procedures/diagnosis/references/performance.md",
+      "sha256": "002d47e46434bf41d6c4bff16eadd84f808f1b4a7e4cb6ad3d281029dee73eab",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/diagnosis/references/reproduction-and-cause.md",
+      "source": "skills/operations/procedures/diagnosis/references/reproduction-and-cause.md",
+      "sha256": "db6a68efc4b7228d0869dee85040b4f9c73d3df6e723ff0a0323442727634ebd",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/diagnosis/references/runtime-and-traces.md",
+      "source": "skills/operations/procedures/diagnosis/references/runtime-and-traces.md",
+      "sha256": "7659db835391bb34550ac6107eb7ae47f1ae0038db64281099323f14b4e5473c",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/domain-modeling/ADR-FORMAT.md",
+      "source": "skills/operations/procedures/domain-modeling/ADR-FORMAT.md",
+      "sha256": "7a0bed7b7dc2ff024e86a4a3fd1b9fa61245abc16a4bb75a1e70fb9607149d62",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/domain-modeling/GLOSSARY-FORMAT.md",
+      "source": "skills/operations/procedures/domain-modeling/GLOSSARY-FORMAT.md",
+      "sha256": "5c44465f14eaf536ffd7ad6414b3dfb26593610530c733e01996fc1d4304d55a",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/domain-modeling/index.md",
+      "source": "skills/operations/procedures/domain-modeling/index.md",
+      "sha256": "f5c55a2b98ebbbecf0688b10241e2cbf9c390669412c5f7d1fca93302b7ba2c8",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/evals/procedure-selection.json",
+      "source": "skills/operations/procedures/elon-method/evals/procedure-selection.json",
+      "sha256": "fe02c0ead1e92796db2ac12227f4ac0c24891b9d3ef7bf192abc2dfe6cd747ec",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/index.md",
+      "source": "skills/operations/procedures/elon-method/index.md",
+      "sha256": "1db717eec00d7f259a558a151bb6bee3b317cb9695264868fd1b43209d36159b",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/references/algorithm.md",
+      "source": "skills/operations/procedures/elon-method/references/algorithm.md",
+      "sha256": "6d94a905ce65e0f182467b00b9d6205dd7b7b9687aee2906c561cd263b775429",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/references/current-constraint.md",
+      "source": "skills/operations/procedures/elon-method/references/current-constraint.md",
+      "sha256": "6cc5e14875a68bf768f5554c4e63d8ca04289ab512ae2d618197f25a74b40deb",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/references/first-principles.md",
+      "source": "skills/operations/procedures/elon-method/references/first-principles.md",
+      "sha256": "aab06d66ab72572432ff746a2492b7086bf151bc0c951710088bf076a0179b7e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/references/idiot-index.md",
+      "source": "skills/operations/procedures/elon-method/references/idiot-index.md",
+      "sha256": "5efd4777b349c186c21cb316063f8b564a4db6fd547899c22d6d2fcf7db27cc3",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/elon-method/references/marketplace-project-record-regression.md",
+      "source": "skills/operations/procedures/elon-method/references/marketplace-project-record-regression.md",
+      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/grill-with-docs/index.md",
+      "source": "skills/operations/procedures/grill-with-docs/index.md",
+      "sha256": "a88f7494308a038c7dfdb6f8fba20980f325a8c0ca8f559b89af3e2b5075c115",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/grilling/index.md",
+      "source": "skills/operations/procedures/grilling/index.md",
+      "sha256": "585019587fe0c77c6031fcf1ba6490f1ec034e67f86bc443cd09230809c71325",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/evals/evals.json",
+      "source": "skills/operations/procedures/project-direction/evals/evals.json",
+      "sha256": "46165431f76cc0f6488e9e765108fd32d74688defff25a46cbd69bdc63b6a9a5",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/evals/procedure-selection.json",
+      "source": "skills/operations/procedures/project-direction/evals/procedure-selection.json",
+      "sha256": "7f03c9cbe26e43a567bcfa198c34c1b96f39359dc21d1475d17a001ca0e97909",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/index.md",
+      "source": "skills/operations/procedures/project-direction/index.md",
+      "sha256": "7780649daefb5a0bb61fec8db8077b99a6b9aaf491a189b902cf4436829537ba",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/references/context.md",
+      "source": "skills/operations/procedures/project-direction/references/context.md",
+      "sha256": "5d1fbdadf99210ee160c68b27b38c3721431c55e39bf1db5429eeeecaef25e72",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/references/file-contracts.md",
+      "source": "skills/operations/procedures/project-direction/references/file-contracts.md",
+      "sha256": "428001cb6a703c52b0e692692adca4009a07fa516c3a94b4af293f747bf06df7",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/templates/MISSION.md",
+      "source": "skills/operations/procedures/project-direction/templates/MISSION.md",
+      "sha256": "00381e925d20d0f8c6584867c000677e104614b856a72c8f35e8ab319c1e8a95",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/templates/OBJECTIVE.md",
+      "source": "skills/operations/procedures/project-direction/templates/OBJECTIVE.md",
+      "sha256": "eea27d0557025c04b35e46c657d4dd38755da64fa1af351a5e230df82ea80777",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-direction/templates/VISION.md",
+      "source": "skills/operations/procedures/project-direction/templates/VISION.md",
+      "sha256": "8081ad2dab69e157f7d6020745a463b6066a4c220d17f54a73e4f4686eff10a4",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-verification/index.md",
+      "source": "skills/operations/procedures/project-verification/index.md",
+      "sha256": "87b0924a0ff1ba5c7795a2c9925dbb84719a1ae433a505b66ef2634f823cc531",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-verification/references/create-and-maintain.md",
+      "source": "skills/operations/procedures/project-verification/references/create-and-maintain.md",
+      "sha256": "6ada706279b53c99460c568783ce697f80f7d66ad64ba04675cb0bead72bdb54",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-verification/references/observations.md",
+      "source": "skills/operations/procedures/project-verification/references/observations.md",
+      "sha256": "bdd9de4a5786c94c1e221eb0b86867629bd1cb96de58a0ad826cca7e3f6007d5",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/project-verification/references/verification-contract.md",
+      "source": "skills/operations/procedures/project-verification/references/verification-contract.md",
+      "sha256": "906c567f897467981e18060afd8639224a1f79d34a05bc1fb548f1908e353238",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/prototype/EMPIRICAL.md",
+      "source": "skills/operations/procedures/prototype/EMPIRICAL.md",
+      "sha256": "7bd6d879be3b1163bd8d867836fbd46c43fe7ad8c8d0ab062932582052559634",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/prototype/LOGIC.md",
+      "source": "skills/operations/procedures/prototype/LOGIC.md",
+      "sha256": "4b12a744216cd11be4b1a310bd39e87b840e0b90b4d21b4cd2d33b7b4e1d3867",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/prototype/UI.md",
+      "source": "skills/operations/procedures/prototype/UI.md",
+      "sha256": "d6f7049d84fca314a3ef4d1a298c0a0abbe32648be83753377abcc32c9950869",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/prototype/index.md",
+      "source": "skills/operations/procedures/prototype/index.md",
+      "sha256": "99ed1929913aa75df11aeece6456de7b543dc0d7d584e1c5fdb4c9ec413e2193",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/reflection/index.md",
+      "source": "skills/operations/procedures/reflection/index.md",
+      "sha256": "c8f8dfdc2ce58b5c03b6c7f058478d4e7d7e1459205ef9b790e0468d16033f87",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/reflection/references/learning-and-placement.md",
+      "source": "skills/operations/procedures/reflection/references/learning-and-placement.md",
+      "sha256": "b8de1214af31ce78cd621ff32baff892837f9594f267d23bc44242c90aa8e4bf",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/reflection/references/preferences-pruning.md",
+      "source": "skills/operations/procedures/reflection/references/preferences-pruning.md",
+      "sha256": "6641bf2717afc5316f0582a468ba7ec96923b476bb0ac65cf0bbcfa55ebe3a1a",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/index.md",
+      "source": "skills/operations/procedures/research/index.md",
+      "sha256": "ccecc2ba5f86d97b98bdf0b03e2d1cfb31ddf9a179a5874f8e58774069a3629b",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/explanation.md",
+      "source": "skills/operations/procedures/research/references/explanation.md",
+      "sha256": "62455f0673b9b0900f9b26ca348d811a1ef4592ab24c75eed4c3d3d4eeab0a77",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/history.md",
+      "source": "skills/operations/procedures/research/references/history.md",
+      "sha256": "08370235d5afbe72db6894c6f60e5a3088c75a89c38874e603f50a43d941e422",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/mechanics.md",
+      "source": "skills/operations/procedures/research/references/mechanics.md",
+      "sha256": "8bbf81059b4934c9d821698580eced7a1fa5a74574af66b7d11b56c0cee1d9b5",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/recall.md",
+      "source": "skills/operations/procedures/research/references/recall.md",
+      "sha256": "95e10962430f6f0a51495d21016c6fa83aafa716f5c9c68cbd72a3a68eaff113",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/sources/analytics.md",
+      "source": "skills/operations/procedures/research/references/sources/analytics.md",
+      "sha256": "d3c4a8ea492bf86344e7a5e0a3afe8cfe84c09f9c977718e1568330dc6a9e395",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/sources/code-history.md",
+      "source": "skills/operations/procedures/research/references/sources/code-history.md",
+      "sha256": "b2f5fd4c55f23e916cd4d0ac207a766d32d9dd47099a2a9d5b0fe273cc6685b9",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/sources/decision-records.md",
+      "source": "skills/operations/procedures/research/references/sources/decision-records.md",
+      "sha256": "dfbd0327218151d1e9182b5a528c2c71eac4222077f563b7c673e75add1016c9",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/research/references/sources/operational-evidence.md",
+      "source": "skills/operations/procedures/research/references/sources/operational-evidence.md",
+      "sha256": "ed3b5de6b5f9ddf8bf5153304a6aca4287534ebd778d6a8def4394ca54b909e4",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/software-design/index.md",
+      "source": "skills/operations/procedures/software-design/index.md",
+      "sha256": "af242a4345aea23eb5c795248e94fe1bc22f9ab1b7b03d9a6dba504ddfda86b4",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/software-design/references/change-existing-systems.md",
+      "source": "skills/operations/procedures/software-design/references/change-existing-systems.md",
+      "sha256": "ba6f86da663d2aca78e9cb09522384043323d0f0376519d10a58319a415e9e5f",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/software-design/references/compare-designs.md",
+      "source": "skills/operations/procedures/software-design/references/compare-designs.md",
+      "sha256": "c4260a61602a2743b23adbb92089390439c75b7f01d779002a3f3c70f5ee13ef",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/software-design/references/state-and-boundaries.md",
+      "source": "skills/operations/procedures/software-design/references/state-and-boundaries.md",
+      "sha256": "38b7310de88b1704b1b59000b3a97042b01bccf433daf5beab0bcc9e059b80d2",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/software-design/references/typescript.md",
+      "source": "skills/operations/procedures/software-design/references/typescript.md",
+      "sha256": "92b6948979d2f9d20fc0d098274e3756eb1a85ecb1f5db5f7e1d3f2fbba26f68",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/technical-writing/index.md",
+      "source": "skills/operations/procedures/technical-writing/index.md",
+      "sha256": "91a0a8a565e5b8757eb2b881a0880df76aef4ce8d29c789dc2c8bbe460bbb090",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/technical-writing/references/prose.md",
+      "source": "skills/operations/procedures/technical-writing/references/prose.md",
+      "sha256": "673b56293ecb503018321f345a1fb5075e677bdc2b6ad38ace4b176e2ed5e5c1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/to-spec/index.md",
+      "source": "skills/operations/procedures/to-spec/index.md",
+      "sha256": "95efbdaec7d7dd897e35e00ee9a5d4182aec7411fa92c0990912c342b7c9a153",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/to-tickets/index.md",
+      "source": "skills/operations/procedures/to-tickets/index.md",
+      "sha256": "08d4745286c11ca461971027917e73bc61b6e77177ddb9f8a382113c40968868",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/to-tickets/references/ticket-decomposition.md",
+      "source": "skills/operations/procedures/to-tickets/references/ticket-decomposition.md",
+      "sha256": "2c2b735e8755d005026dba5e69546ffb0adc95e8f9f34298f31504aed1c1f565",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/version-control/evals/evals.json",
+      "source": "skills/operations/procedures/version-control/evals/evals.json",
+      "sha256": "8ae53740b2597748462e5ca1402d6f51f5f1afb280ae1a8283a40da7aceded4e",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/version-control/evals/procedure-selection.json",
+      "source": "skills/operations/procedures/version-control/evals/procedure-selection.json",
+      "sha256": "4d08e1bd4c5efa0ba5b1bcc7419e3ada911794bdd6fe6bf6cafb826fed5ac546",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/version-control/index.md",
+      "source": "skills/operations/procedures/version-control/index.md",
+      "sha256": "79edb91c8e60b165ad91969312baa7a102c5e88faa12a37f41f130ef23e9c9c1",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/version-control/references/bump-rules.md",
+      "source": "skills/operations/procedures/version-control/references/bump-rules.md",
+      "sha256": "961b2ef3d9ca984bb5e62a0c07811011cc7bca943e64591d82a344cc18cfcd1b",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/version-control/references/project-policy.md",
+      "source": "skills/operations/procedures/version-control/references/project-policy.md",
+      "sha256": "4ea31df00ed4ff9b78f4ace09373098b2f464db0eebe60c5d019bfb68ba2354d",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/wayfinder/index.md",
+      "source": "skills/operations/procedures/wayfinder/index.md",
+      "sha256": "7f2917263877c9476bc5d5e916c56b581459de9532e10f7e970fb9b3d6b508ce",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
+      "source": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
+      "sha256": "1a1ecb5934e728553b94187103379510fd657b7872b9f6251e68e5bfd86097da",
+      "mode": "100644"
+    },
+    {
+      "path": "skills/operations/procedures/writing-for-agents/index.md",
+      "source": "skills/operations/procedures/writing-for-agents/index.md",
+      "sha256": "d5f1f0f59e2ac886a99e2e2947e5b41ba09e88dfd031b693cd8eff19d3d3b1fb",
       "mode": "100644"
     },
     {
@@ -119,7 +521,7 @@
     {
       "path": "skills/operations/references/delivery.md",
       "source": "skills/operations/references/delivery.md",
-      "sha256": "1a3677a57a1957b0b61c3d7ebe115cfd555c041c8f9ea6a7b41a533260b7016a",
+      "sha256": "d447580863799956e3b7117e170151fc0799450f5c1f48ec36ce0aa2a0bf8d9d",
       "mode": "100644"
     },
     {
@@ -143,13 +545,13 @@
     {
       "path": "skills/operations/references/implementation.md",
       "source": "skills/operations/references/implementation.md",
-      "sha256": "659bbf8d0a15e21522244a0508af06ea5a893620bca2bbbef8e6fd0ba375ae4c",
+      "sha256": "6e260020fc267627c68e352640d7154347c1e673367a5143e424af0742cfcd80",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "bfe1eddd625f61260d7bc9bb5d60b842fb4ad9f7b3dc1b3feafc5f92f38c8de1",
+      "sha256": "b0ddee7df25ddb43cd50fae2e031baeb5b7d41cbdf168e14e585d5c976de10de",
       "mode": "100644"
     },
     {
@@ -179,415 +581,13 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "fdc066b40db962c21a0fdd44e62a94eaf59c8276d7a1e322a53ac7dc572136be",
+      "sha256": "b2d0f71c9f93582d9a9bfae8d1eeecf69791aeb2234168a02cebb4ec07556d2e",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/visual-parity.md",
       "source": "skills/operations/references/visual-parity.md",
       "sha256": "ea0897e640da45a64461aa96e224f3dbc673592c26f870a71601d7fc4277bb8f",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/code-review/index.md",
-      "source": "skills/operations/workflows/code-review/index.md",
-      "sha256": "c012e813a3c49f125d9eb8046d1eda1a3a1a65e037d0137af8cd9ff83ee22ef1",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/code-review/references/impact-analysis.md",
-      "source": "skills/operations/workflows/code-review/references/impact-analysis.md",
-      "sha256": "c7cd00634ba6b4a257d95486d22b82b042133e2231d3c9dae7f64d1c65b6eb27",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/code-review/references/review-method.md",
-      "source": "skills/operations/workflows/code-review/references/review-method.md",
-      "sha256": "f9cd9b5d09e49690c4a7bf9964014190655f973041c569910336378c2d4a3210",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/code-review/references/structure-and-constraints.md",
-      "source": "skills/operations/workflows/code-review/references/structure-and-constraints.md",
-      "sha256": "7db081d783fd97bad2e2a2ed75ca7650c3c04bdf2c01c12d5d561105442c0903",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/delivery-profile/index.md",
-      "source": "skills/operations/workflows/delivery-profile/index.md",
-      "sha256": "31139b87fe3e4f557109e768fd2dc71d67ab6f87b6cdbf5cbf51bdb84c6b24f9",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/diagnosis/index.md",
-      "source": "skills/operations/workflows/diagnosis/index.md",
-      "sha256": "2b54ee3f739209a0d8b0f52978da79bdc160144cf4f5c53ded40caca3bbc3100",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/diagnosis/references/performance.md",
-      "source": "skills/operations/workflows/diagnosis/references/performance.md",
-      "sha256": "002d47e46434bf41d6c4bff16eadd84f808f1b4a7e4cb6ad3d281029dee73eab",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/diagnosis/references/reproduction-and-cause.md",
-      "source": "skills/operations/workflows/diagnosis/references/reproduction-and-cause.md",
-      "sha256": "db6a68efc4b7228d0869dee85040b4f9c73d3df6e723ff0a0323442727634ebd",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/diagnosis/references/runtime-and-traces.md",
-      "source": "skills/operations/workflows/diagnosis/references/runtime-and-traces.md",
-      "sha256": "7659db835391bb34550ac6107eb7ae47f1ae0038db64281099323f14b4e5473c",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/domain-modeling/ADR-FORMAT.md",
-      "source": "skills/operations/workflows/domain-modeling/ADR-FORMAT.md",
-      "sha256": "7a0bed7b7dc2ff024e86a4a3fd1b9fa61245abc16a4bb75a1e70fb9607149d62",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/domain-modeling/GLOSSARY-FORMAT.md",
-      "source": "skills/operations/workflows/domain-modeling/GLOSSARY-FORMAT.md",
-      "sha256": "5c44465f14eaf536ffd7ad6414b3dfb26593610530c733e01996fc1d4304d55a",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/domain-modeling/index.md",
-      "source": "skills/operations/workflows/domain-modeling/index.md",
-      "sha256": "f5c55a2b98ebbbecf0688b10241e2cbf9c390669412c5f7d1fca93302b7ba2c8",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/evals/procedure-selection.json",
-      "source": "skills/operations/workflows/elon-method/evals/procedure-selection.json",
-      "sha256": "fe02c0ead1e92796db2ac12227f4ac0c24891b9d3ef7bf192abc2dfe6cd747ec",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/index.md",
-      "source": "skills/operations/workflows/elon-method/index.md",
-      "sha256": "1db717eec00d7f259a558a151bb6bee3b317cb9695264868fd1b43209d36159b",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/references/algorithm.md",
-      "source": "skills/operations/workflows/elon-method/references/algorithm.md",
-      "sha256": "6d94a905ce65e0f182467b00b9d6205dd7b7b9687aee2906c561cd263b775429",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/references/current-constraint.md",
-      "source": "skills/operations/workflows/elon-method/references/current-constraint.md",
-      "sha256": "6cc5e14875a68bf768f5554c4e63d8ca04289ab512ae2d618197f25a74b40deb",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/references/first-principles.md",
-      "source": "skills/operations/workflows/elon-method/references/first-principles.md",
-      "sha256": "aab06d66ab72572432ff746a2492b7086bf151bc0c951710088bf076a0179b7e",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/references/idiot-index.md",
-      "source": "skills/operations/workflows/elon-method/references/idiot-index.md",
-      "sha256": "5efd4777b349c186c21cb316063f8b564a4db6fd547899c22d6d2fcf7db27cc3",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/elon-method/references/marketplace-project-record-regression.md",
-      "source": "skills/operations/workflows/elon-method/references/marketplace-project-record-regression.md",
-      "sha256": "e899911f4b50384817eae349ba5442c3476792eb53cd80227f7de87fad3e852c",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/grill-with-docs/index.md",
-      "source": "skills/operations/workflows/grill-with-docs/index.md",
-      "sha256": "a88f7494308a038c7dfdb6f8fba20980f325a8c0ca8f559b89af3e2b5075c115",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/grilling/index.md",
-      "source": "skills/operations/workflows/grilling/index.md",
-      "sha256": "585019587fe0c77c6031fcf1ba6490f1ec034e67f86bc443cd09230809c71325",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/evals/evals.json",
-      "source": "skills/operations/workflows/project-direction/evals/evals.json",
-      "sha256": "46165431f76cc0f6488e9e765108fd32d74688defff25a46cbd69bdc63b6a9a5",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/evals/procedure-selection.json",
-      "source": "skills/operations/workflows/project-direction/evals/procedure-selection.json",
-      "sha256": "7f03c9cbe26e43a567bcfa198c34c1b96f39359dc21d1475d17a001ca0e97909",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/index.md",
-      "source": "skills/operations/workflows/project-direction/index.md",
-      "sha256": "7780649daefb5a0bb61fec8db8077b99a6b9aaf491a189b902cf4436829537ba",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/references/context.md",
-      "source": "skills/operations/workflows/project-direction/references/context.md",
-      "sha256": "5d1fbdadf99210ee160c68b27b38c3721431c55e39bf1db5429eeeecaef25e72",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/references/file-contracts.md",
-      "source": "skills/operations/workflows/project-direction/references/file-contracts.md",
-      "sha256": "428001cb6a703c52b0e692692adca4009a07fa516c3a94b4af293f747bf06df7",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/templates/MISSION.md",
-      "source": "skills/operations/workflows/project-direction/templates/MISSION.md",
-      "sha256": "00381e925d20d0f8c6584867c000677e104614b856a72c8f35e8ab319c1e8a95",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/templates/OBJECTIVE.md",
-      "source": "skills/operations/workflows/project-direction/templates/OBJECTIVE.md",
-      "sha256": "eea27d0557025c04b35e46c657d4dd38755da64fa1af351a5e230df82ea80777",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-direction/templates/VISION.md",
-      "source": "skills/operations/workflows/project-direction/templates/VISION.md",
-      "sha256": "8081ad2dab69e157f7d6020745a463b6066a4c220d17f54a73e4f4686eff10a4",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-verification/index.md",
-      "source": "skills/operations/workflows/project-verification/index.md",
-      "sha256": "87b0924a0ff1ba5c7795a2c9925dbb84719a1ae433a505b66ef2634f823cc531",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-verification/references/create-and-maintain.md",
-      "source": "skills/operations/workflows/project-verification/references/create-and-maintain.md",
-      "sha256": "6ada706279b53c99460c568783ce697f80f7d66ad64ba04675cb0bead72bdb54",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-verification/references/observations.md",
-      "source": "skills/operations/workflows/project-verification/references/observations.md",
-      "sha256": "bdd9de4a5786c94c1e221eb0b86867629bd1cb96de58a0ad826cca7e3f6007d5",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/project-verification/references/verification-contract.md",
-      "source": "skills/operations/workflows/project-verification/references/verification-contract.md",
-      "sha256": "906c567f897467981e18060afd8639224a1f79d34a05bc1fb548f1908e353238",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/prototype/EMPIRICAL.md",
-      "source": "skills/operations/workflows/prototype/EMPIRICAL.md",
-      "sha256": "7bd6d879be3b1163bd8d867836fbd46c43fe7ad8c8d0ab062932582052559634",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/prototype/LOGIC.md",
-      "source": "skills/operations/workflows/prototype/LOGIC.md",
-      "sha256": "4b12a744216cd11be4b1a310bd39e87b840e0b90b4d21b4cd2d33b7b4e1d3867",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/prototype/UI.md",
-      "source": "skills/operations/workflows/prototype/UI.md",
-      "sha256": "d6f7049d84fca314a3ef4d1a298c0a0abbe32648be83753377abcc32c9950869",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/prototype/index.md",
-      "source": "skills/operations/workflows/prototype/index.md",
-      "sha256": "99ed1929913aa75df11aeece6456de7b543dc0d7d584e1c5fdb4c9ec413e2193",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/reflection/index.md",
-      "source": "skills/operations/workflows/reflection/index.md",
-      "sha256": "c8f8dfdc2ce58b5c03b6c7f058478d4e7d7e1459205ef9b790e0468d16033f87",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/reflection/references/learning-and-placement.md",
-      "source": "skills/operations/workflows/reflection/references/learning-and-placement.md",
-      "sha256": "b8de1214af31ce78cd621ff32baff892837f9594f267d23bc44242c90aa8e4bf",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/reflection/references/preferences-pruning.md",
-      "source": "skills/operations/workflows/reflection/references/preferences-pruning.md",
-      "sha256": "6641bf2717afc5316f0582a468ba7ec96923b476bb0ac65cf0bbcfa55ebe3a1a",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/index.md",
-      "source": "skills/operations/workflows/research/index.md",
-      "sha256": "ccecc2ba5f86d97b98bdf0b03e2d1cfb31ddf9a179a5874f8e58774069a3629b",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/explanation.md",
-      "source": "skills/operations/workflows/research/references/explanation.md",
-      "sha256": "62455f0673b9b0900f9b26ca348d811a1ef4592ab24c75eed4c3d3d4eeab0a77",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/history.md",
-      "source": "skills/operations/workflows/research/references/history.md",
-      "sha256": "08370235d5afbe72db6894c6f60e5a3088c75a89c38874e603f50a43d941e422",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/mechanics.md",
-      "source": "skills/operations/workflows/research/references/mechanics.md",
-      "sha256": "8bbf81059b4934c9d821698580eced7a1fa5a74574af66b7d11b56c0cee1d9b5",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/recall.md",
-      "source": "skills/operations/workflows/research/references/recall.md",
-      "sha256": "95e10962430f6f0a51495d21016c6fa83aafa716f5c9c68cbd72a3a68eaff113",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/sources/analytics.md",
-      "source": "skills/operations/workflows/research/references/sources/analytics.md",
-      "sha256": "d3c4a8ea492bf86344e7a5e0a3afe8cfe84c09f9c977718e1568330dc6a9e395",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/sources/code-history.md",
-      "source": "skills/operations/workflows/research/references/sources/code-history.md",
-      "sha256": "b2f5fd4c55f23e916cd4d0ac207a766d32d9dd47099a2a9d5b0fe273cc6685b9",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/sources/decision-records.md",
-      "source": "skills/operations/workflows/research/references/sources/decision-records.md",
-      "sha256": "dfbd0327218151d1e9182b5a528c2c71eac4222077f563b7c673e75add1016c9",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/research/references/sources/operational-evidence.md",
-      "source": "skills/operations/workflows/research/references/sources/operational-evidence.md",
-      "sha256": "ed3b5de6b5f9ddf8bf5153304a6aca4287534ebd778d6a8def4394ca54b909e4",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/software-design/index.md",
-      "source": "skills/operations/workflows/software-design/index.md",
-      "sha256": "af242a4345aea23eb5c795248e94fe1bc22f9ab1b7b03d9a6dba504ddfda86b4",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/software-design/references/change-existing-systems.md",
-      "source": "skills/operations/workflows/software-design/references/change-existing-systems.md",
-      "sha256": "ba6f86da663d2aca78e9cb09522384043323d0f0376519d10a58319a415e9e5f",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/software-design/references/compare-designs.md",
-      "source": "skills/operations/workflows/software-design/references/compare-designs.md",
-      "sha256": "c4260a61602a2743b23adbb92089390439c75b7f01d779002a3f3c70f5ee13ef",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/software-design/references/state-and-boundaries.md",
-      "source": "skills/operations/workflows/software-design/references/state-and-boundaries.md",
-      "sha256": "38b7310de88b1704b1b59000b3a97042b01bccf433daf5beab0bcc9e059b80d2",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/software-design/references/typescript.md",
-      "source": "skills/operations/workflows/software-design/references/typescript.md",
-      "sha256": "92b6948979d2f9d20fc0d098274e3756eb1a85ecb1f5db5f7e1d3f2fbba26f68",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/technical-writing/index.md",
-      "source": "skills/operations/workflows/technical-writing/index.md",
-      "sha256": "91a0a8a565e5b8757eb2b881a0880df76aef4ce8d29c789dc2c8bbe460bbb090",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/technical-writing/references/prose.md",
-      "source": "skills/operations/workflows/technical-writing/references/prose.md",
-      "sha256": "673b56293ecb503018321f345a1fb5075e677bdc2b6ad38ace4b176e2ed5e5c1",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/to-spec/index.md",
-      "source": "skills/operations/workflows/to-spec/index.md",
-      "sha256": "95efbdaec7d7dd897e35e00ee9a5d4182aec7411fa92c0990912c342b7c9a153",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/to-tickets/index.md",
-      "source": "skills/operations/workflows/to-tickets/index.md",
-      "sha256": "08d4745286c11ca461971027917e73bc61b6e77177ddb9f8a382113c40968868",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "source": "skills/operations/workflows/to-tickets/references/ticket-decomposition.md",
-      "sha256": "2c2b735e8755d005026dba5e69546ffb0adc95e8f9f34298f31504aed1c1f565",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/version-control/evals/evals.json",
-      "source": "skills/operations/workflows/version-control/evals/evals.json",
-      "sha256": "8ae53740b2597748462e5ca1402d6f51f5f1afb280ae1a8283a40da7aceded4e",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/version-control/evals/procedure-selection.json",
-      "source": "skills/operations/workflows/version-control/evals/procedure-selection.json",
-      "sha256": "4d08e1bd4c5efa0ba5b1bcc7419e3ada911794bdd6fe6bf6cafb826fed5ac546",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/version-control/index.md",
-      "source": "skills/operations/workflows/version-control/index.md",
-      "sha256": "79edb91c8e60b165ad91969312baa7a102c5e88faa12a37f41f130ef23e9c9c1",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/version-control/references/bump-rules.md",
-      "source": "skills/operations/workflows/version-control/references/bump-rules.md",
-      "sha256": "961b2ef3d9ca984bb5e62a0c07811011cc7bca943e64591d82a344cc18cfcd1b",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/version-control/references/project-policy.md",
-      "source": "skills/operations/workflows/version-control/references/project-policy.md",
-      "sha256": "4ea31df00ed4ff9b78f4ace09373098b2f464db0eebe60c5d019bfb68ba2354d",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/wayfinder/index.md",
-      "source": "skills/operations/workflows/wayfinder/index.md",
-      "sha256": "7f2917263877c9476bc5d5e916c56b581459de9532e10f7e970fb9b3d6b508ce",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
-      "source": "skills/operations/workflows/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "42c3262de21a9dfd1b16b584dc23e658812c848c950620277d46bf9f7720f652",
-      "mode": "100644"
-    },
-    {
-      "path": "skills/operations/workflows/writing-for-agents/index.md",
-      "source": "skills/operations/workflows/writing-for-agents/index.md",
-      "sha256": "d5f1f0f59e2ac886a99e2e2947e5b41ba09e88dfd031b693cd8eff19d3d3b1fb",
       "mode": "100644"
     },
     {
