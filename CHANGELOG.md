@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.106] - 2026-10-13
+
+### Changed
+
+- Drop retired Model Router from the Objective
+
 ## [1.5.105] - 2026-10-13
 
 ### Changed
