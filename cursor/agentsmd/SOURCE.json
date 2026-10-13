@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v16.2.0",
-  "commit": "bae29d41474bf54af6bbea9e5745a4000d13eb8f",
+  "release": "v16.3.0",
+  "commit": "f67d85cb589a69d24445cfadcb783332fde92d63",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "18866ea125a760046e9f42b2b6bbd4f9fad6e1865a18080c218f11215f59ad37"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "e9f8839c742db21d285464b01dfb2e572f802c366729873cdc4a296c8c3a01ea",
+      "sha256": "442d60ceb4689751d898269271f37f194cbed742dc3a7334bbab865cce08de4e",
       "mode": "100644"
     },
     {
@@ -257,7 +257,7 @@
     {
       "path": "skills/operations/workflows/domain-modeling/index.md",
       "source": "skills/operations/workflows/domain-modeling/index.md",
-      "sha256": "da3c20943fbfa1f88bbbe0319dc3489b2f62c8e3942328e6f929b9558db0b4dd",
+      "sha256": "f5c55a2b98ebbbecf0688b10241e2cbf9c390669412c5f7d1fca93302b7ba2c8",
       "mode": "100644"
     },
     {
