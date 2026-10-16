@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.1.1",
-  "commit": "f6fcf84d884372a5878fc048ead281eb0819b76d",
+  "release": "v17.2.0",
+  "commit": "2f04c90a926a986f82ebba00971cfb5f98ffbe01",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
-    "sha256": "fae9b2a1dfc20c5d45c531c772f09855ba529937ade2db24af23735d525d1836"
+    "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
   },
   "manifestFieldSources": {
     "name": ".toolboxmd/project.json",
@@ -23,7 +23,7 @@
     {
       "path": ".toolboxmd/project.json",
       "source": ".toolboxmd/project.json",
-      "sha256": "fae9b2a1dfc20c5d45c531c772f09855ba529937ade2db24af23735d525d1836",
+      "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "4122339269cc45f5ef394d24cc3c574432cfd8acb76850bc09fa33708a9a5ee3",
+      "sha256": "2372b27fe0ec9eab7a449a95f65983176de6e12531a8da268068f2675d33925b",
       "mode": "100644"
     },
     {
@@ -72,6 +72,12 @@
       "path": "docs/adr/0001-persistent-host-automation.md",
       "source": "docs/adr/0001-persistent-host-automation.md",
       "sha256": "ef2856ac59bc4d08c69ead330a8a2195b55fb1befba1f2af5f02b8efe13f4e31",
+      "mode": "100644"
+    },
+    {
+      "path": "docs/musecode.md",
+      "source": "docs/musecode.md",
+      "sha256": "6c1d420d7544a5cbc799f61e351d701ddc099da61da3f0855f6ed5a1617abac7",
       "mode": "100644"
     },
     {
