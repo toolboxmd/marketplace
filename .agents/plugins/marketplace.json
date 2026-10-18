@@ -5,20 +5,6 @@
   },
   "plugins": [
     {
-      "name": "karpathy-wiki",
-      "description": "Auto-maintained LLM wiki based on Andrej Karpathy's pattern.",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/toolboxmd/karpathy-wiki.git",
-        "sha": "d8107e727f4b585a9927cad813f90fda6b559ef3"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Developer Tools"
-    },
-    {
       "name": "agentsmd",
       "description": "Align agent work with mission and Project Direction, then shape, deliver, and prove valuable outcomes through owned workflows.",
       "source": {

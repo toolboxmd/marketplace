@@ -453,7 +453,7 @@ class GeneratedScopeTests(unittest.TestCase):
             candidate.mkdir()
             base_catalog = {
                 "plugins": [
-                    {"name": "karpathy-wiki", "sha": "k" * 40},
+                    {"name": "pinned-plugin", "sha": "k" * 40},
                     {"name": "other-plugin", "sha": "u" * 40},
                     {"name": "agentsmd", "release": "v8.5.1", "sha": "a" * 40},
                 ]

@@ -5,7 +5,6 @@ load supported host-native distributions from the same accepted Project releases
 Codex, Claude Code, and Grok Build add this marketplace, then install the
 plugins they want:
 
-- `karpathy-wiki@toolboxmd`
 - `agentsmd@toolboxmd`
 - `codex-thinking-knob@toolboxmd` (Codex only)
 
@@ -35,10 +34,10 @@ codex plugin marketplace add toolboxmd/marketplace
 }
 ```
 
-Then enable plugins as `karpathy-wiki@toolboxmd` or `agentsmd@toolboxmd`.
+Then enable plugins in the `<name>@toolboxmd` form, such as `agentsmd@toolboxmd`.
 
-If you previously enabled `karpathy-wiki@karpathy-wiki-local` or
-`agentsmd@agentsmd-local`, rename those keys to the `*@toolboxmd` form.
+If you previously enabled `agentsmd@agentsmd-local`, rename that key to
+`agentsmd@toolboxmd`.
 
 ### Grok Build
 
@@ -49,7 +48,6 @@ grok plugin marketplace add toolboxmd/marketplace
 Then install by name (trust hooks only from this publisher):
 
 ```bash
-grok plugin install karpathy-wiki --trust
 grok plugin install agentsmd --trust
 ```
 
@@ -61,7 +59,6 @@ later plugin release is not live until `grok plugin update <name>`.
 After the marketplace is added:
 
 ```bash
-codex plugin add karpathy-wiki@toolboxmd
 codex plugin add agentsmd@toolboxmd
 ```
 
@@ -84,22 +81,21 @@ codex plugin remove codex-thinking-knob@toolboxmd
 ```
 
 Uninstall is per plugin. Removing one plugin leaves the others installed.
-Removing the marketplace is optional and host-specific. Wiki data, the wiki
-pointer, and per-wiki runtime files survive uninstalling karpathy-wiki.
+Removing the marketplace is optional and host-specific.
 
 ## Local sibling checkouts
 
-For live checkouts next to each other (this machine: `karpathy-wiki` and
-`agentsmd` as siblings), generate host indexes from this catalog:
+For live checkouts next to each other (for example `agentsmd` and
+`agent-observer` as siblings), generate host indexes from this catalog:
 
 ```bash
 python3 scripts/render_catalog.py --local-root /path/to/sibling-root
 ```
 
 Then add that sibling root as marketplace toolboxmd on each host. Each generated index includes only the catalog entries supporting that host.
-Do not hand-edit generated JSON indexes. Do not nest plugins inside karpathy-wiki.
+Do not hand-edit generated JSON indexes. Do not nest one plugin inside another.
 
-Codex local sources stay inside that sibling root (`./karpathy-wiki`, and so
+Codex local sources stay inside that sibling root (`./agentsmd`, and so
 on). Grok and Claude indexes for local-dev use the same names and in-root
 paths.
 

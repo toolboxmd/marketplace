@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.127] - 2026-10-18
+
+### Changed
+
+- Retire karpathy-wiki from the marketplace (Closes #193)
+
 ## [1.5.126] - 2026-10-16
 
 ### Changed
