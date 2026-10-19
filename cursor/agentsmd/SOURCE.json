@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.2.0",
-  "commit": "2f04c90a926a986f82ebba00971cfb5f98ffbe01",
+  "release": "v17.3.0",
+  "commit": "ee1a08c3153a0145420ee2822e5f75cbb72f3b00",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "7c891dd7c6f29a5349291c42861eac2c5e8650fdca6765b2abfc0a80072bfba4",
+      "sha256": "1916ace28f1b5e449da80b6a3113c72c5d8868158ce81d416eb7949ab6157ff9",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "2372b27fe0ec9eab7a449a95f65983176de6e12531a8da268068f2675d33925b",
+      "sha256": "4f951d34abc997ae0f115f6ae801b8d1b00c9f0012ef05ac567f59abec240deb",
       "mode": "100644"
     },
     {
@@ -71,19 +71,19 @@
     {
       "path": "docs/adr/0001-persistent-host-automation.md",
       "source": "docs/adr/0001-persistent-host-automation.md",
-      "sha256": "ef2856ac59bc4d08c69ead330a8a2195b55fb1befba1f2af5f02b8efe13f4e31",
+      "sha256": "b092b53518ad39623bcb2010a50ea607d21a074b7dc9638d0235c82567e9aa33",
       "mode": "100644"
     },
     {
       "path": "docs/musecode.md",
       "source": "docs/musecode.md",
-      "sha256": "6c1d420d7544a5cbc799f61e351d701ddc099da61da3f0855f6ed5a1617abac7",
+      "sha256": "8d4fe2bfa639034db26cd67d8a4e1639282e997894fdc1ddc7bdc09d35c5de5d",
       "mode": "100644"
     },
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "7a139f201e1475e6eea20969c72d9f1536b4dcce5fec53ef6d0da2da81e11860",
+      "sha256": "9fe68194415c3d3c3d01439ac9eeaaabc1ef109b774487b1ec2cb18f469b6095",
       "mode": "100644"
     },
     {
@@ -107,7 +107,7 @@
     {
       "path": "skills/operations/SKILL.md",
       "source": "skills/operations/SKILL.md",
-      "sha256": "f8b28880b459dfa0392de23e30e1e6cef57bdc2133d171a62cf98a379552790f",
+      "sha256": "585d9da3a4c19b315fcfa2aa300fe52edcb47e558cff365ef8d2dea529cce496",
       "mode": "100644"
     },
     {
@@ -245,7 +245,7 @@
     {
       "path": "skills/operations/procedures/project-direction/evals/evals.json",
       "source": "skills/operations/procedures/project-direction/evals/evals.json",
-      "sha256": "46165431f76cc0f6488e9e765108fd32d74688defff25a46cbd69bdc63b6a9a5",
+      "sha256": "0b708f6e025bc9e7d9d9cde64f50647a0968dab9c4b05b15c6c6d2893403b237",
       "mode": "100644"
     },
     {
@@ -263,13 +263,13 @@
     {
       "path": "skills/operations/procedures/project-direction/references/context.md",
       "source": "skills/operations/procedures/project-direction/references/context.md",
-      "sha256": "ae82432b535e16a1612dd01d352fefa77649602a2f15e972842ecac19b98963c",
+      "sha256": "5c8aa23523255cd607e3fdd1bfe8bddf4885a14298f21ff47ad96b3320d0f422",
       "mode": "100644"
     },
     {
       "path": "skills/operations/procedures/project-direction/references/file-contracts.md",
       "source": "skills/operations/procedures/project-direction/references/file-contracts.md",
-      "sha256": "428001cb6a703c52b0e692692adca4009a07fa516c3a94b4af293f747bf06df7",
+      "sha256": "d8bef0731c86b80801ed8530b25b9cf4da8f2c761fe966c427beaf320e35e8ad",
       "mode": "100644"
     },
     {
@@ -293,7 +293,7 @@
     {
       "path": "skills/operations/procedures/project-verification/index.md",
       "source": "skills/operations/procedures/project-verification/index.md",
-      "sha256": "ffd6f2cd50983b13fa4b29a5c59ea82b522140217f2501fda19359122bde9fb1",
+      "sha256": "9283447352a6350d0d1fae0864fed8726851f49dfa797928a513a142d5b8fba4",
       "mode": "100644"
     },
     {
@@ -347,7 +347,7 @@
     {
       "path": "skills/operations/procedures/reflection/references/learning-and-placement.md",
       "source": "skills/operations/procedures/reflection/references/learning-and-placement.md",
-      "sha256": "dd06f89333dbcdc5c4aefdf2050c1c8781fe5fadf7967c7c65b435d53b18aa32",
+      "sha256": "c66288a98122d62beb50102546ffa2f90f98755570afa40bccfb507d6a613b42",
       "mode": "100644"
     },
     {
@@ -383,7 +383,7 @@
     {
       "path": "skills/operations/procedures/research/references/recall.md",
       "source": "skills/operations/procedures/research/references/recall.md",
-      "sha256": "95e10962430f6f0a51495d21016c6fa83aafa716f5c9c68cbd72a3a68eaff113",
+      "sha256": "eac9e60ca095484d1fda20428dd1c49ac11d076d7d6189708d272adb406fe4a4",
       "mode": "100644"
     },
     {
@@ -509,7 +509,7 @@
     {
       "path": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
       "source": "skills/operations/procedures/writing-for-agents/SKILL-MECHANICS.md",
-      "sha256": "69f8167a792ed98d3f0753fc1f8f2bad3d00709475700292beb141b97edaa914",
+      "sha256": "ff9337027919c6b8073f61b839745d6df34046d24b161c2389c9f289ee70a1fa",
       "mode": "100644"
     },
     {
@@ -521,7 +521,7 @@
     {
       "path": "skills/operations/references/bounded-delegation.md",
       "source": "skills/operations/references/bounded-delegation.md",
-      "sha256": "eefea54ede676843bc8f8a23a1b74dbb5719782a92ec6a58114acbbd2969a4a3",
+      "sha256": "9f80b6f1e1cfc21d905681b6aa646d032e586227d1e5463b1ca3348eb3edcd2d",
       "mode": "100644"
     },
     {
@@ -539,13 +539,13 @@
     {
       "path": "skills/operations/references/external-handoffs.md",
       "source": "skills/operations/references/external-handoffs.md",
-      "sha256": "d68b27b0f9af7180b3949a40d28855ab294030ac1fdeb8dfb34c27c54619040c",
+      "sha256": "874172316057cdc04843c8c7886de00e31b1772bff07147945b8b3c5b39fbe13",
       "mode": "100644"
     },
     {
       "path": "skills/operations/references/finalization.md",
       "source": "skills/operations/references/finalization.md",
-      "sha256": "2997f3e661a55b5bf34796de1c13b043acb933d32d47de5d58c00ad973e8fab7",
+      "sha256": "4ac42c72ec53dfd4103826a8d087f9928adc0472c2394d265dde60dac464bc5d",
       "mode": "100644"
     },
     {
@@ -557,7 +557,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "80e37ca090fca2d923108fa9941bb6c9afbc9e54583b64a020693247310ae77c",
+      "sha256": "ff2bcc8d55ef99a4bf4c10e162a9e3c53a7bd540d7c4628d1622c790c75520b2",
       "mode": "100644"
     },
     {
@@ -575,7 +575,7 @@
     {
       "path": "skills/operations/references/scoped-proof.md",
       "source": "skills/operations/references/scoped-proof.md",
-      "sha256": "082945f23c1c8b028865f1df618d14da2a48f827277d57f4cf558c4d0882be34",
+      "sha256": "c23356fa957294aa8676e59b02e796cfc92c04e3772ce05f373aba85c3d3e813",
       "mode": "100644"
     },
     {
@@ -587,7 +587,7 @@
     {
       "path": "skills/operations/references/verification.md",
       "source": "skills/operations/references/verification.md",
-      "sha256": "5d42183478bb42b5d2af3c65d57c25c0f1f0550dac1c42a270b38f4dc84de348",
+      "sha256": "14cc4f78e63ee1a3f23ce5ab964343651cb19e801c915c7bce20e4b8af2dd7e8",
       "mode": "100644"
     },
     {
