@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.4.1",
-  "commit": "ce17c3b47844414ce28a964911c94a1f5e3b986a",
+  "release": "v17.4.2",
+  "commit": "15b1dd5d59de91a8e0f66b9c49fa80571bf63834",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "9d7f09c28e786f050970f74bbe51268bd00c2eabd809b4137677fbaf76bf8039",
+      "sha256": "f5ae0ab9b8053e055c0c9586467487287d960394697326c45ed4481d68cb8d05",
       "mode": "100644"
     },
     {
