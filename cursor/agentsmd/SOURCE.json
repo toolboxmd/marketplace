@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.3.0",
-  "commit": "ee1a08c3153a0145420ee2822e5f75cbb72f3b00",
+  "release": "v17.3.1",
+  "commit": "aaf01bdd6d8cb8175f2a112edf75483abb879ba5",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -47,7 +47,7 @@
     {
       "path": "SKILL_CATALOGUE.md",
       "source": "SKILL_CATALOGUE.md",
-      "sha256": "1916ace28f1b5e449da80b6a3113c72c5d8868158ce81d416eb7949ab6157ff9",
+      "sha256": "d32b1ca31dac3ef2798f868b0227af7b2b22d894bded3ebdf9eea1fce9477645",
       "mode": "100644"
     },
     {
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "4f951d34abc997ae0f115f6ae801b8d1b00c9f0012ef05ac567f59abec240deb",
+      "sha256": "b7c22efda6705238ce769052caa44989cafc089639961343183795d6a61e48a4",
       "mode": "100644"
     },
     {
@@ -77,7 +77,7 @@
     {
       "path": "docs/musecode.md",
       "source": "docs/musecode.md",
-      "sha256": "8d4fe2bfa639034db26cd67d8a4e1639282e997894fdc1ddc7bdc09d35c5de5d",
+      "sha256": "f2462d37eea56db843ed00b2cc86b7f5b67d099aca33f7fbc2ba8a81308abb1b",
       "mode": "100644"
     },
     {
@@ -521,7 +521,7 @@
     {
       "path": "skills/operations/references/bounded-delegation.md",
       "source": "skills/operations/references/bounded-delegation.md",
-      "sha256": "9f80b6f1e1cfc21d905681b6aa646d032e586227d1e5463b1ca3348eb3edcd2d",
+      "sha256": "d6ee900b591c87127b7453bcc62b590017615b68525e02a368fb54e1b7c21c68",
       "mode": "100644"
     },
     {
