@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.4.6",
-  "commit": "49329745df32a430e1911233da7aa5d7ef2a41bb",
+  "release": "v17.4.7",
+  "commit": "bdc91d138162b53d75f2c88caff9be14baa8ce96",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "bf298d6fd50fb6189ffefffa3ae00a6f4f06bcce701f32daedb648ec892d3845",
+      "sha256": "78a1021dc7f32f3ca91dc72b7e36c28bf9bdfe65c2400f63afd88b5c50ef8af9",
       "mode": "100644"
     },
     {
@@ -521,7 +521,7 @@
     {
       "path": "skills/operations/references/bounded-delegation.md",
       "source": "skills/operations/references/bounded-delegation.md",
-      "sha256": "d6ee900b591c87127b7453bcc62b590017615b68525e02a368fb54e1b7c21c68",
+      "sha256": "eb27eb73665aca06ebb77803c9c1834cefa984af8e44ec7551fb0a5566793273",
       "mode": "100644"
     },
     {
