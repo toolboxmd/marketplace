@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.5.0",
-  "commit": "cbe8032b2ab03ce0d1c73ecb19696f9c5c01cd44",
+  "release": "v17.6.0",
+  "commit": "77d76deb49e3fbfaa85a5d950327d8ed246548c5",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "bced06dd852ad4d0a236c2eaef74aa5bb7a37dacef0be04220a3b4ff9208de06",
+      "sha256": "bc085d0c9fb1584969c08e275bf99bbda4b0985a4abea93dd89198a93bab99cc",
       "mode": "100644"
     },
     {
@@ -497,7 +497,7 @@
     {
       "path": "skills/operations/procedures/version-control/references/project-policy.md",
       "source": "skills/operations/procedures/version-control/references/project-policy.md",
-      "sha256": "4ea31df00ed4ff9b78f4ace09373098b2f464db0eebe60c5d019bfb68ba2354d",
+      "sha256": "bb2337226e5523b67788e87949d7f1dd579f16f7f88441cb350f42641ac4e73d",
       "mode": "100644"
     },
     {
@@ -635,13 +635,13 @@
     {
       "path": "tools/versionctl/src/versionctl/files.py",
       "source": "tools/versionctl/src/versionctl/files.py",
-      "sha256": "26f0c225fdfa36faed7ba46a0cc48a5fe1ca069cdb3ccfa3185d357315b78687",
+      "sha256": "0a6fd4de43631f0d67b8ea1c9f048ab6a188f525cfda28ff4d175c5b6402d4a9",
       "mode": "100644"
     },
     {
       "path": "tools/versionctl/src/versionctl/policy.py",
       "source": "tools/versionctl/src/versionctl/policy.py",
-      "sha256": "b252968c78faa025c02f725d1bed8438878884fb670e2995eb5eed7f015481f4",
+      "sha256": "d92a4aa14c19c8dbb3b8863fa5f6036a712e6f139e0572513d900ffdc181a97c",
       "mode": "100644"
     },
     {
@@ -659,7 +659,7 @@
     {
       "path": "tools/versionctl/src/versionctl/service.py",
       "source": "tools/versionctl/src/versionctl/service.py",
-      "sha256": "97ab7d246a0fa39e2b84629a2df3005e269c57e4a0199438478925a1eccbf7ad",
+      "sha256": "f6c4ea14eca4059cdfc36622ea19210a60008a15ac8fac4c8c787e1d005ca503",
       "mode": "100644"
     }
   ]
