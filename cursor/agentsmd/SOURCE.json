@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.4.9",
-  "commit": "23e0674b73daa76b4e91b38eaa6b654225d8077a",
+  "release": "v17.5.0",
+  "commit": "cbe8032b2ab03ce0d1c73ecb19696f9c5c01cd44",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "74f2a307e550dffc78a77e38b01cb54fc3a54d1543a1ca8e0c00d9ab58ac10a8",
+      "sha256": "bced06dd852ad4d0a236c2eaef74aa5bb7a37dacef0be04220a3b4ff9208de06",
       "mode": "100644"
     },
     {
@@ -83,7 +83,7 @@
     {
       "path": "docs/opencode.md",
       "source": "docs/opencode.md",
-      "sha256": "790c8a8d1fd9468f6db14c7b2b1eea6259ea4624929e6c8fab9706644147b7dc",
+      "sha256": "a9fb71e5fe1c1ae08d49ae474c7c59a89b0c1bfa359741233414e6fe4238146a",
       "mode": "100644"
     },
     {
