@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.6.0",
-  "commit": "77d76deb49e3fbfaa85a5d950327d8ed246548c5",
+  "release": "v17.6.1",
+  "commit": "8e1eb3044fd41c6b90a755bf6ada207ff199413d",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "bc085d0c9fb1584969c08e275bf99bbda4b0985a4abea93dd89198a93bab99cc",
+      "sha256": "f6495dd9e8268c82bfefd92cdf716be417a45e83507b765c3100f8165827db90",
       "mode": "100644"
     },
     {
@@ -557,7 +557,7 @@
     {
       "path": "skills/operations/references/orchestration.md",
       "source": "skills/operations/references/orchestration.md",
-      "sha256": "ffa115c39fc22ff47f3cfaaf6e7535c64bfa75c939c9914271b3c3ea96a4ef20",
+      "sha256": "82e3761dfb56c71b7c984a5c980cd32880e6c1e65207ffc5653c09a206118529",
       "mode": "100644"
     },
     {
