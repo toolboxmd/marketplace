@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.157] - 2026-11-26
+
+### Changed
+
+- Promote agent-observer v1.8.0 through Toolybara
+
 ## [1.5.156] - 2026-11-26
 
 ### Changed
