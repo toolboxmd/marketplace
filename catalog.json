@@ -41,8 +41,8 @@
       "category": "Developer Tools",
       "description": "Make routine agent work on this Mac measurable across Codex, Claude Code, OpenCode and Grok Build, so routing and workflow decisions use reproducible evidence from real tasks.",
       "kind": "agent-module",
-      "release": "v1.9.1",
-      "sha": "4239284f6405584944ae1a97744dc68635a29463",
+      "release": "v1.10.0",
+      "sha": "e9b2642aca82eb3c2628c43f0ffba747975b5c4f",
       "projectRecord": {
         "path": ".toolboxmd/project.json",
         "sha256": "18c1e18d548cbf75f83210bdacc5bf7da8acc280a8ca9c7961664b29216aa773"
