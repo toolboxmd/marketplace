@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "project": "agentsmd",
-  "release": "v17.9.0",
-  "commit": "5c7abaada0bf382fa4fc85c662750a4a41374d9b",
+  "release": "v17.10.0",
+  "commit": "d79e78bd5b1f33fa16d5a45fcf8e6ec3f5857654",
   "projectRecord": {
     "path": ".toolboxmd/project.json",
     "sha256": "3f6e9f6926e3c72eb39d465b4baf7c1de31125dd019960bcf609fec556c34c47"
@@ -59,7 +59,7 @@
     {
       "path": "VERSION",
       "source": "VERSION",
-      "sha256": "f7075b95e837d51ee7994f81966c028552b818ed8016ba7d90789d6b9430460a",
+      "sha256": "669f477a98b06ea775ff8430ec98a1787774edbd22832491ad43792e63aa56e8",
       "mode": "100644"
     },
     {
@@ -131,7 +131,7 @@
     {
       "path": "skills/operations/procedures/code-review/references/review-method.md",
       "source": "skills/operations/procedures/code-review/references/review-method.md",
-      "sha256": "f9cd9b5d09e49690c4a7bf9964014190655f973041c569910336378c2d4a3210",
+      "sha256": "778f0647e2757784c98bfd6040bd2da65acb0b3c037232f23cac2dc4b646524a",
       "mode": "100644"
     },
     {
